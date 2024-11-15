@@ -1,6 +1,6 @@
 # Python Sample Project
 
-![A fun little logo to boost engagement.](banner.png)
+![A fun little logo to boost engagement.](config_files/banner.png)
 
 This is a blueprint README.md file for you to use as a guideline on how to format your porject outline.
 
@@ -77,7 +77,7 @@ This should inform anyone who looks at your project repository on how they can i
 
 Give some outline as to what should be achieved at what time during project development.
 You could also create a visual guide, such as this
-![An example schedule](schedule.png)
+![An example schedule](config_files/schedule.png)
 
 to make sure all relevant aspects of developing an application are accounted for with sufficient time, and in sensible order.
 This can also help you and the tutors to make sure the development does not go off the rails, and thus ensure a finished project at the deadline.
