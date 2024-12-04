@@ -2,8 +2,10 @@ from flask import Flask
 from src.ui.routes import Routes
 
 def create_app():
+    # TODO put this pathes to envs
     app = Flask(__name__,
-                template_folder=r'C:\Users\Admin\Desktop\programs\Uni\pypiepi\html',)
+                template_folder=r'C:\Users\Admin\Desktop\programs\Uni\pypiepi\html',
+                static_folder=r'C:\Users\Admin\Desktop\programs\Uni\pypiepi\html\css')
     app.config.from_object('src.ui.configs.configs.Config')
 
 

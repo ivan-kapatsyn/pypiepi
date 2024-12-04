@@ -10,6 +10,7 @@ class User:
         self.username = username
         self.password = password
 
+    # TODO authenticate should not get a whole db as a parameter
     def authenticate(self, user_db):
         user = user_db.get(self.username)
         if user and user['password'] == self.password:
