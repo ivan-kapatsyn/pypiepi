@@ -1,4 +1,4 @@
-
+# TODO Remove this after the database is implemented
 # Dummy user database
 USERS = {
     "user1": {"password": "password123", "bio": "This is User 1's bio."},
