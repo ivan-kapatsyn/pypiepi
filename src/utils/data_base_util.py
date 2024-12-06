@@ -50,7 +50,7 @@ class DataBaseUtil:
 
         try:
             self.connection = psycopg2.connect(
-                dbname='postgres',
+                dbname= 'postgres',
                 user='postgres',
                 password='melisahu',
                 host='localhost',
