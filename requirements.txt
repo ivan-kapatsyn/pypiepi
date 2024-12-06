@@ -3,4 +3,5 @@ numpy
 flask
 flask-wtf
 python-dotenv
+psycopg2
 bcrypt
