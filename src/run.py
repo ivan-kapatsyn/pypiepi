@@ -1,0 +1,20 @@
+from flask import Flask
+from src.ui.routes import Routes
+
+def create_app():
+    # TODO put this pathes to envs
+    app = Flask(__name__,
+                template_folder=r'..\html',
+                static_folder=r'..\html\css')
+    app.config.from_object('src.ui.configs.configs.Config')
+
+
+    app.register_blueprint(Routes.main_bp)
+
+    return app
+
+
+
+if __name__ == '__main__':
+    app = create_app()
+    app.run(debug=True)
