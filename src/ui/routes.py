@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from src.ui.forms import LoginForm
-from src.backend.user import User, USERS
+from src.backend.user import User
 
 
 class Routes(object):
