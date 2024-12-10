@@ -1,16 +1,9 @@
-# TODO Assuming data_base_util.py is implemented with functions:
-#  find_user_by_username(username: str), save_user(user_data: Dict), users_with_remember_me()
+# TODO data_base_util Dummy
 import data_base_util
 
 from password_utils import verify_password, hash_password
 from typing import List
 
-# TODO Remove this after the database is implemented
-# Dummy user database
-USERS = {
-    "user1": {"password": "password123", "bio": "This is User 1's bio."},
-    "user2": {"password": "securepass", "bio": "Welcome to User 2's personal bio page."}
-}
 
 class DuplicationError(Exception):
     pass
