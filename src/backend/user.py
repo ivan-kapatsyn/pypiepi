@@ -1,7 +1,7 @@
 # TODO data_base_util Dummy
-import data_base_util
+from src.backend.data_base_util import find_user_by_username, save_user, users_with_remember_me
 
-from password_utils import verify_password, hash_password
+from src.backend.password_utils import verify_password, hash_password
 from typing import List
 
 
@@ -20,7 +20,7 @@ class User:
         Returns a user instance if authentication is successful, None otherwise.
         """
 
-        user_data = data_base_util.find_user_by_username(username)
+        user_data = find_user_by_username(username)
         if not user_data:
             return None
 
@@ -36,13 +36,13 @@ class User:
             Returns an instance of the created User.
             """
 
-            if data_base_util.find_user_by_username(username):
+            if find_user_by_username(username):
                 raise DuplicationError(f"User with username '{username}' already exists.")
 
             hashed_password = hash_password(password)
             new_user_data = {"username": username, "password": hashed_password, "remember_me": remember_me}
 
-            data_base_util.save_user(new_user_data)
+            save_user(new_user_data)
             return cls(username, hashed_password, remember_me)
 
     @classmethod
@@ -51,7 +51,7 @@ class User:
         Returns a list of matching User instances.
         """
 
-        users_data = data_base_util.users_with_remember_me()
+        users_data = users_with_remember_me()
 
         matching_users = [user for user in users_data if user["username"].startswith(username_substr.lower())]
 
