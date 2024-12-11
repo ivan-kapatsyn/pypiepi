@@ -18,7 +18,7 @@
                             let suggestionsBox = $('#suggestions');
                             suggestionsBox.empty();
                             data.forEach(function (suggestion) {
-                                suggestionsBox.append(`<div>${suggestion}</div>`);
+                                suggestionsBox.append(`<div class="suggestion-item" data-suggestion="${suggestion}">${suggestion['username']}</div>`);
                             });
                             suggestionsBox.show();
                         }
@@ -36,6 +36,27 @@
             $(document).click(function (event) {
                 if (!$(event.target).closest('#username-field, #suggestions').length) {
                     $('#suggestions').empty().hide();
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).on('click', '.suggestion-item', function () {
+            let suggestion = $(this).data('suggestion');
+            $('#username-field').val(suggestion);
+            $('#suggestions').empty().hide();
+
+            // Send suggestion to the backend
+            $.ajax({
+                url: '/process_suggestion',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ suggestion: suggestion }),
+                success: function (response) {
+                    console.log(response.result);  // Log the response from the backend
+                },
+                error: function (error) {
+                    console.error('Error processing suggestion:', error);
                 }
             });
         });
