@@ -48,6 +48,6 @@ class AddToUser(DataBaseUtil):
 if __name__ == "__main__":
     try:
         add_to_user = AddToUser()
-        add_to_user.import_csv("user_table_data.csv")
+        add_to_user.import_csv("data_folder/user_table_data.csv")
     except Exception as error:
         print(f"Error: {error}")
