@@ -1,41 +1,16 @@
-# Python Sample Project
+# Tutor Me: A Tool for Students, by Students
 
-![A fun little logo to boost engagement.](config_files/banner.png)
-
-This is a blueprint README.md file for you to use as a guideline on how to format your porject outline.
-
-Here are some more resources on how to format a markdown file for your project repository:
-- [GitHub Markdown Guide](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
-- [QuickRef Markdown Cheatsheet](https://quickref.me/markdown)
-- [DevHints Markdown Cheatsheet](https://devhints.io/markdown)
-
-One example of a previous project repository can be found [here](https://gitlab.gwdg.de/alrun.naake/caterpillar). Please note that some details of the repository and project structure have changed in the meantime, however, this might give you a rough idea on how to structure your work.
 ----
-## Description
+![Logo](config_files/banner_group.png)
 
-For your project, you should mention here
+## Description
 
 - what your project is
 - why you chose this project and goal, and
 - how you plan to achieve it.
 
-In the section on how you aim to achive your goal(s), you may want to include sub-sections for each of the main features your project is comprised of.
-However, keep this part rather short, and preferably move details into the __functionalities__ section.
-
 ----
 ## Functionalities
-
-Add your plans (with external libraries if you plan on using any) for any of these subsections, if applicable to your project.
-As mentioned in the **outline document**, at least 60% of these have to be implemented.
-
-### Data Sources and Retrieval
-
-Will your data be sourced
-- From an open dataset (eg. kaggle, data paper,...)
-- Collected from an API or a Webcrawler
-- From your own research
-
-Reference your data source(s) as well as any tools you will use to collect it, such as API libraries, conversion tools etc.
 
 ### Data Storage and Handling
 
@@ -76,26 +51,16 @@ This should inform anyone who looks at your project repository on how they can i
 ## Timeline
 
 Give some outline as to what should be achieved at what time during project development.
-You could also create a visual guide, such as this
-![An example schedule](config_files/schedule.png)
-
-to make sure all relevant aspects of developing an application are accounted for with sufficient time, and in sensible order.
-This can also help you and the tutors to make sure the development does not go off the rails, and thus ensure a finished project at the deadline.
 
 ----
 ## Group Details
 
-Here, you should provide a group name you want to be referred to as, as well as the names (and optionally contact info) of all group members.
-Additionally, define a group leader, i.e. one person in your group that is the primary contact if tutors want to communicate with your group.
-Also mention here which tutor is assigned to your project.
-
-Example:
-- Group name: 
-- Group code: 
-- Group repository: 
-- Tutor responsible:  
-- Group team leader: 
-- Group members:
+- Name: PyPieπ
+- Code: G11
+- Repository: [GitHub](https://github.com/ivan-kapatsyn/pypiepi)
+- Tutor Responsible: Frederik Hennecke
+- Team leader: Ivan Kapatsyn
+- Group members: Birte Maria Becker, Andrii Demydenko, Melis Ahu Gülcigil, Ivan Kapatsyn
 
 Include also the (detailed) contribution of each group member to the development of the project.
 
