@@ -1,20 +1,18 @@
 from typing import List
 
-from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
-
 from src.backend.user import User
 from src.ui.forms.login_form import LoginForm
+from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
 
-
-class Routes(object):
-    main_bp = Blueprint('main', __name__)
+class LoginRoutes:
+    main_bp = Blueprint('login', __name__, url_prefix='/login')
 
     @staticmethod
     @main_bp.route('/process_suggestion', methods=['GET', 'POST'])
     def process_suggestion():
         suggestion = request.json
 
-        redirect_url = url_for('main.personal_bio', user_id=suggestion['user_id'])
+        redirect_url = url_for('login.personal_bio', user_id=suggestion['user_id'])
         return jsonify({'redirect': redirect_url})
 
     @staticmethod
@@ -28,18 +26,18 @@ class Routes(object):
         return jsonify([{
             'username': user.username,
             'user_id': user.user_id
-        }for user in suggestions])
+        } for user in suggestions])
 
     @staticmethod
-    @main_bp.route('/login', methods=['GET', 'POST'])
-    def login():
+    @main_bp.route('/index', methods=['GET', 'POST'])
+    def index():
         form = LoginForm()
         if request.method == 'POST' and form.validate_on_submit():
             username = form.username.data
             password = form.password.data
 
             if User.authenticate(username, password):
-                return redirect(url_for('main.personal_bio', username=username))
+                return redirect(url_for('login.personal_bio', username=username))
             else:
                 flash('Invalid username or password', 'danger')
         # TODO extract the path from the utils
