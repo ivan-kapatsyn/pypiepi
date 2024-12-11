@@ -1,3 +1,5 @@
+from typing import List
+
 from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
 
 from src.backend.user import User
@@ -12,10 +14,10 @@ class Routes(object):
     def get_suggestions():
         query = request.args.get('query', '')
         if query:
-            suggestions = User.search_for_a_saved_users(query)
+            suggestions: List[User] = User.search_for_a_saved_users(query)
         else:
             suggestions = []
-        return jsonify(suggestions)
+        return jsonify([user.username for user in suggestions])
 
     @staticmethod
     @main_bp.route('/login', methods=['GET', 'POST'])

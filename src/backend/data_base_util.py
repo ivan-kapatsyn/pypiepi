@@ -15,7 +15,7 @@ def save_user(user_data):
     pass
 
 def users_with_remember_me():
-    return {user: details for user, details in USERS.items() if details["remember_me"]}
+    return [{'username': user, **details} for user, details in USERS.items() if details["remember_me"]]
 
 def get_user_ids():
     return [user["user_id"] for user in USERS.values()]
