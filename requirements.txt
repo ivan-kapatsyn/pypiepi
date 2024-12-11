@@ -1,2 +1,6 @@
 pandas
 numpy
+flask
+flask-wtf
+python-dotenv
+bcrypt
