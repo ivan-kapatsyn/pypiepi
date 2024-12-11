@@ -10,6 +10,12 @@ USERS = {
 def find_user_by_username(username: str):
     return USERS[username]
 
+def find_user_by_id(user_id: str):
+    for user in USERS:
+        if USERS[user]['user_id'] == user_id:
+            return {'username': user, **USERS[user]}
+    return None
+
 def save_user(user_data):
     pass
 

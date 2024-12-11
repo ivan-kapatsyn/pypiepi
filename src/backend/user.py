@@ -1,5 +1,6 @@
 # TODO data_base_util Dummy
-from src.backend.data_base_util import find_user_by_username, save_user, users_with_remember_me, get_user_ids
+from src.backend.data_base_util import find_user_by_username, save_user, users_with_remember_me, get_user_ids, \
+    find_user_by_id
 
 from src.utils.password_utils import PasswordUtils
 from typing import List
@@ -11,11 +12,13 @@ class DuplicationError(Exception):
     pass
 
 class User:
-    def __init__(self, user_id: str, username: str, password: str, remember_me: bool = False):
+    def __init__(self, user_id: str, username: str, password: str, remember_me: bool = False, bio=None):
         self.user_id = user_id
         self.username = username
         self.password = password
         self.remember_me = remember_me
+        # Todo replace it with Student/Turor info
+        self.bio = bio
 
     @classmethod
     def authenticate(cls, username: str, password: str):
@@ -77,3 +80,8 @@ class User:
         Returns a random 16-character string
         """
         return token_hex(8)
+
+    @classmethod
+    def get_user_by_id(cls, user_id: str):
+        # Todo remake it to retrieve a User instanse by its id in the db
+        return cls(**find_user_by_id(user_id))
