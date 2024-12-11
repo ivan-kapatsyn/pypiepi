@@ -12,10 +12,10 @@ class Routes(object):
     @staticmethod
     @main_bp.route('/process_suggestion', methods=['GET', 'POST'])
     def process_suggestion():
-        suggestion = request.json.get('suggestion')  # Get the suggestion from the request
-        # Call your Python function with the suggestion
-        result = some_function_to_handle_click(suggestion)
-        return jsonify({'status': 'success', 'result': result})
+        suggestion = request.json
+
+        redirect_url = url_for('main.personal_bio', user_id=suggestion['user_id'])
+        return jsonify({'redirect': redirect_url})
 
     @staticmethod
     @main_bp.route('/get_suggestions', methods=['GET', 'POST'])
@@ -49,11 +49,8 @@ class Routes(object):
     @staticmethod
     @main_bp.route('/personal_bio/<user_id>')
     def personal_bio(user_id):
-        user = User.search_for_a_saved_users(user_id)
-        if not user:
-            flash('User not found', 'danger')
-            return redirect(url_for('main.login'))
+        user = User.get_user_by_id(user_id)
 
-        # TODO extract the path from the utils
         personal_bio_page = r'personal_bio.html'
-        return render_template(personal_bio_page, username=username, bio=user['bio'])
+        # Todo remake bio when implementing Student and Tutor functionality
+        return render_template(personal_bio_page, username=user.username, bio=f"This is {user.bio}'s page")
