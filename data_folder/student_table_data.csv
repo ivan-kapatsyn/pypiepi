@@ -1,8 +1,6 @@
 studentid, userid,firstname,lastname,course
 01,202345671,arthur,morgan,pyhsic
-02,202345672,john,doe,data-science
-03,202345673,jane,doe,biology
-04,202345674,john,marston,marketing
-05,202345675,mary,stuart,business economics
+02,202345674,john,marston,marketing
+03,202345675,mary,stuart,business economics
 
 
