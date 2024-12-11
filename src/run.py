@@ -26,4 +26,4 @@ if __name__ == '__main__':
     threading.Timer(1, open_browser).start()
 
     # TODO debug=True make the browser load the page twice. Solve it
-    app.run(debug=True)
+    app.run(debug=False)

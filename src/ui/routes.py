@@ -1,10 +1,21 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
-from src.ui.forms import LoginForm
+from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
+
 from src.backend.user import User
+from src.ui.forms.login_form import LoginForm
 
 
 class Routes(object):
     main_bp = Blueprint('main', __name__)
+
+    @staticmethod
+    @main_bp.route('/get_suggestions', methods=['GET', 'POST'])
+    def get_suggestions():
+        query = request.args.get('query', '')
+        if query:
+            suggestions = User.search_for_a_saved_users(query)
+        else:
+            suggestions = []
+        return jsonify(suggestions)
 
     @staticmethod
     @main_bp.route('/login', methods=['GET', 'POST'])
@@ -14,8 +25,7 @@ class Routes(object):
             username = form.username.data
             password = form.password.data
 
-            user = User(username, password)
-            if user.authenticate(USERS):
+            if User.authenticate(username, password):
                 return redirect(url_for('main.personal_bio', username=username))
             else:
                 flash('Invalid username or password', 'danger')
@@ -26,7 +36,7 @@ class Routes(object):
     @staticmethod
     @main_bp.route('/personal_bio/<username>')
     def personal_bio(username):
-        user = USERS.get(username)
+        user = username
         if not user:
             flash('User not found', 'danger')
             return redirect(url_for('main.login'))

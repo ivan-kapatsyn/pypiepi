@@ -6,12 +6,48 @@
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 </head>
 <body>
+    <script>
+        $(document).ready(function () {
+            $('#username-field').on('input', function () {
+                let query = $(this).val();
+                if (query.length > 0) {
+                    $.ajax({
+                        url: '/get_suggestions',
+                        method: 'GET',
+                        data: { query: query },
+                        success: function (data) {
+                            let suggestionsBox = $('#suggestions');
+                            suggestionsBox.empty();
+                            data.forEach(function (suggestion) {
+                                suggestionsBox.append(`<div>${suggestion}</div>`);
+                            });
+                            suggestionsBox.show();
+                        }
+                    });
+                } else {
+                    $('#suggestions').empty().hide();
+                }
+            });
+
+            $(document).on('click', '#suggestions div', function () {
+                $('#username-field').val($(this).text());
+                $('#suggestions').empty().hide();
+            });
+
+            $(document).click(function (event) {
+                if (!$(event.target).closest('#username-field, #suggestions').length) {
+                    $('#suggestions').empty().hide();
+                }
+            });
+        });
+    </script>
     <h1>Login</h1>
     <form method="POST">
         {{ form.hidden_tag() }}
         <div>
             {{ form.username.label }}<br>
-            {{ form.username(size=32) }}
+             {{ form.username(size=20, id="username-field") }}
+            <div id="suggestions"></div>
         </div>
         <div>
             {{ form.password.label }}<br>
