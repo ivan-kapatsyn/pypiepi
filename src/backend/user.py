@@ -12,12 +12,12 @@ class DuplicationError(Exception):
     pass
 
 class User:
-    def __init__(self, user_id: str, username: str, password: str, remember_me: bool = False, bio=None):
+    def __init__(self, user_id: str, username: str, password: str, remember_me: bool = False, bio: str = None):
         self.user_id = user_id
         self.username = username
         self.password = password
         self.remember_me = remember_me
-        # Todo replace it with Student/Turor info
+        # TODO replace with Student/Tutor info
         self.bio = bio
 
     @classmethod
@@ -31,8 +31,7 @@ class User:
             return None
 
         if PasswordUtils.verify_password(password, user_data["password"]):
-            return cls(user_data["user_id"], user_data["username"], user_data["password"],
-                       user_data.get("remember_me", False))
+            return cls(**user_data)
         return None
 
     @classmethod
@@ -58,7 +57,7 @@ class User:
                              "remember_me": remember_me}
 
             save_user(new_user_data)
-            return cls(new_user_id, username, hashed_password, remember_me)
+            return cls(**new_user_data)
 
     @classmethod
     def search_for_a_saved_users(cls, username_substr: str) -> List["User"]:
@@ -71,8 +70,7 @@ class User:
         # TODO remake on the data base side
         matching_users = [user for user in users_data if user['username'].startswith(username_substr.lower())]
 
-        return [cls(user["user_id"], user["username"], user["password"], user["remember_me"])
-                for user in matching_users]
+        return [cls(**user) for user in matching_users]
 
     @staticmethod
     def generate_user_id() -> str:
@@ -83,5 +81,8 @@ class User:
 
     @classmethod
     def get_user_by_id(cls, user_id: str):
-        # Todo remake it to retrieve a User instance by its id in the db
-        return cls(**find_user_by_id(user_id))
+        # TODO remake it to retrieve a User instance by its id in the db
+        user = find_user_by_id(user_id)
+        if user:
+            return cls(**user)
+        return None
