@@ -83,5 +83,5 @@ class User:
 
     @classmethod
     def get_user_by_id(cls, user_id: str):
-        # Todo remake it to retrieve a User instanse by its id in the db
+        # Todo remake it to retrieve a User instance by its id in the db
         return cls(**find_user_by_id(user_id))

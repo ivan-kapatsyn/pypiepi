@@ -2,7 +2,8 @@ import threading
 import webbrowser
 
 from flask import Flask
-from src.ui.routes import Routes
+
+from src.ui.route_components.login_routes import LoginRoutes
 from src.utils.path_util import PathUtil
 
 
@@ -12,13 +13,14 @@ def create_app():
                 static_folder=PathUtil.get_static_path())
     app.config.from_object('src.ui.configs.configs.Config')
 
-
-    app.register_blueprint(Routes.main_bp)
+    routes = [LoginRoutes]
+    for route in routes:
+        app.register_blueprint(route.main_bp)
 
     return app
 
 def open_browser():
-    webbrowser.open_new("http://127.0.0.1:5000/login")
+    webbrowser.open_new("http://127.0.0.1:5000/login/index")
 
 
 if __name__ == '__main__':
