@@ -32,14 +32,17 @@ class LoginRoutes:
     @main_bp.route('/index', methods=['GET', 'POST'])
     def index():
         form = LoginForm()
-        if request.method == 'POST' and form.validate_on_submit():
-            username = form.username.data
-            password = form.password.data
+        if request.method == 'POST':
+            if form.submit.data and form.validate_on_submit():
+                username = form.username.data
+                password = form.password.data
 
-            if User.authenticate(username, password):
-                return redirect(url_for('login.personal_bio', username=username))
-            else:
-                flash('Invalid username or password', 'danger')
+                if User.authenticate(username, password):
+                    return redirect(url_for('login.personal_bio', username=username))
+                else:
+                    flash('Invalid username or password', 'danger')
+            if form.register_new_user.data:
+                return redirect(url_for('register.new_user'))
         # TODO extract the path from the utils
         login_page = r'login.html'
         return render_template(login_page, form=form)
