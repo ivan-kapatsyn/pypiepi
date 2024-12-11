@@ -66,7 +66,7 @@ class User:
         users_data = users_with_remember_me()
 
         # TODO remake on the data base side
-        matching_users = [user for user in users_data if user["username"].startswith(username_substr.lower())]
+        matching_users = [user for user in users_data if user['username'].startswith(username_substr.lower())]
 
         return [cls(user["user_id"], user["username"], user["password"], user["remember_me"])
                 for user in matching_users]

@@ -4,15 +4,14 @@
     <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-</head>
-<body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#username-field').on('input', function () {
                 let query = $(this).val();
                 if (query.length > 0) {
                     $.ajax({
-                        url: '/get_suggestions',
+                        url: 'http://127.0.0.1:5000/get_suggestions',
                         method: 'GET',
                         data: { query: query },
                         success: function (data) {
@@ -41,6 +40,9 @@
             });
         });
     </script>
+</head>
+<body>
+
     <h1>Login</h1>
     <form method="POST">
         {{ form.hidden_tag() }}
