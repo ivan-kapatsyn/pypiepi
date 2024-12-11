@@ -11,7 +11,7 @@
                 let query = $(this).val();
                 if (query.length > 0) {
                     $.ajax({
-                        url: '/get_suggestions',
+                        url: 'http://127.0.0.1:5000/login/get_suggestions',
                         method: 'GET',
                         data: { query: query },
                         success: function (data) {
@@ -51,7 +51,7 @@
 
             // Send suggestion to the backend
             $.ajax({
-                url: 'login/process_suggestion',
+                url: 'http://127.0.0.1:5000/login/process_suggestion',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ username: username, user_id: userId }),
