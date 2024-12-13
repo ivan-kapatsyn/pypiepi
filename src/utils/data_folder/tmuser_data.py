@@ -3,12 +3,12 @@ from src.utils.data_base_util import DataBaseUtil
 import psycopg2
 
 data = [
-    ["userid", "username", "password", "usertyp"],
-    [202345671, "arthur.morgan", "password123", "student"],
-    [202345672, "john.doe", "newpassword", "admin"],
-    [202345673, "jane.doe", "mypassword", "admin"],
-    [202345674, "john.marston", "mypasswordisbetter", "student"],
-    [202345675, "mary.stuart", "stupidpassword", "tutor"],
+    ["userid", "username", "password", "usertyp", "remember_me"],
+    [202345671, "arthur.morgan", "password123", "student", "TRUE"],
+    [202345672, "john.doe", "newpassword", "admin", "TRUE"],
+    [202345673, "jane.doe", "mypassword", "admin", "FALSE"],
+    [202345674, "john.marston", "mypasswordisbetter", "student", "FALSE"],
+    [202345675, "mary.stuart", "stupidpassword", "tutor", "TRUE"],
 ]
 
 csv_file = "../../../data_folder/user_table_data.csv"
@@ -34,7 +34,7 @@ class AddToUser(DataBaseUtil):
 
                 for row in reader:
                     print(f"Row: {row}")
-                    insert_query = f"INSERT INTO tmuser (userid, username, password, usertyp) VALUES ({row[0]}, '{row[1]}', '{row[2]}', '{row[3]}');"
+                    insert_query = f"INSERT INTO tmuser (userid, username, password, usertyp, remember_me) VALUES ({row[0]}, '{row[1]}', '{row[2]}', '{row[3]}', '{row[4]}');"
                     self.cursor.execute(insert_query)
 
             self.connection.commit()
