@@ -1,75 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register New User</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('#username-field').on('input', function () {
-                let query = $(this).val();
-                if (query.length > 0) {
-                    $.ajax({
-                        url: 'http://127.0.0.1:5000/login/get_suggestions',
-                        method: 'GET',
-                        data: { query: query },
-                        success: function (data) {
-                            let suggestionsBox = $('#suggestions');
-                            suggestionsBox.empty();
-                            data.forEach(function (suggestion) {
-                                suggestionsBox.append(
-                                    `<div class="suggestion-item" data-username="${suggestion.username}" data-user-id="${suggestion.user_id}">${suggestion.username}</div>`
-                                );
-                            });
-                            suggestionsBox.show();
-                        }
-                    });
-                } else {
-                    $('#suggestions').empty().hide();
-                }
-            });
+        function toggleFields() {
+            const usertype = document.getElementById("usertype").value;
+            const studentField = document.getElementById("student-field");
+            const tutorField1 = document.getElementById("tutor-field-1");
+            const tutorField2 = document.getElementById("tutor-field-2");
+            const adminField1 = document.getElementById("admin-field-1");
+            const adminField2 = document.getElementById("admin-field-2");
+            const adminField3 = document.getElementById("admin-field-3");
 
-            $(document).on('click', '#suggestions div', function () {
-                $('#username-field').val($(this).text());
-                $('#suggestions').empty().hide();
-            });
+            // Hide all fields initially
+            studentField.style.display = 'none';
+            tutorField1.style.display = 'none';
+            tutorField2.style.display = 'none';
+            adminField1.style.display = 'none';
+            adminField2.style.display = 'none';
+            adminField3.style.display = 'none';
 
-            $(document).click(function (event) {
-                if (!$(event.target).closest('#username-field, #suggestions').length) {
-                    $('#suggestions').empty().hide();
-                }
-            });
-        });
-    </script>
-    <script>
-        $(document).on('click', '.suggestion-item', function () {
-            let username = $(this).data('username');
-            let userId = $(this).data('user-id');
-            $('#username-field').val(username);
-            $('#suggestions').empty().hide();
-
-            // Send suggestion to the backend
-            $.ajax({
-                url: 'http://127.0.0.1:5000/login/process_suggestion',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ username: username, user_id: userId }),
-                success: function (response) {
-                    if (response.redirect) {
-                        window.location.href = response.redirect; // Perform the redirect
-                    }
-                },
-                error: function (error) {
-                    console.error('Error processing suggestion:', error);
-                }
-            });
-        });
+            // Show fields based on usertype
+            if (usertype === 'student') {
+                studentField.style.display = 'block';
+            } else if (usertype === 'tutor') {
+                tutorField1.style.display = 'block';
+                tutorField2.style.display = 'block';
+            } else if (usertype === 'admin') {
+                adminField1.style.display = 'block';
+                adminField2.style.display = 'block';
+                adminField3.style.display = 'block';
+            }
+        }
     </script>
 </head>
 <body>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.username.label }} {{ form.username(size=32) }}
+        </div>
+        <div>
+            {{ form.name.label }} {{ form.name(size=32) }}
+        </div>
+        <div>
+            {{ form.surname.label }} {{ form.surname(size=32) }}
+        </div>
+        <div>
+            {{ form.password.label }} {{ form.password(size=32) }}
+        </div>
+        <div>
+            {{ form.usertype.label }} {{ form.usertype(id="usertype", onchange="toggleFields()") }}
+        </div>
 
-    <h1>Create a new account</h1>
-    <p>{{ message }}</p>
+        <!-- Dynamic Fields -->
+        <div id="student-field" style="display: none;">
+            <label for="student-info">Enrollment number:</label>
+            <input type="text" name="student_info" id="student-info">
+        </div>
+
+        <div id="tutor-field-1" style="display: none;">
+            <label for="tutor-info-1">Tutor register number:</label>
+            <input type="text" name="tutor_info_1" id="tutor-info-1">
+        </div>
+        <div id="tutor-field-2" style="display: none;">
+            <label for="tutor-info-2">Qualification:</label>
+            <input type="text" name="tutor_info_2" id="tutor-info-2">
+        </div>
+
+        <div id="admin-field-1" style="display: none;">
+            <label for="admin-info-1">Admin number:</label>
+            <input type="text" name="admin_info_1" id="admin-info-1">
+        </div>
+        <div id="admin-field-2" style="display: none;">
+            <label for="admin-info-2">Start date:</label>
+            <input type="text" name="admin_info_2" id="admin-info-2">
+        </div>
+        <div id="admin-field-3" style="display: none;">
+            <label for="admin-info-3">Role in TutorMe:</label>
+            <input type="text" name="admin_info_3" id="admin-info-3">
+        </div>
+
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
 </body>
 </html>
+
