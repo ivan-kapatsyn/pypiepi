@@ -180,12 +180,12 @@ if __name__ == "__main__":
         print("Table doesn't exist")
 
 # ----DROP TABLE
-initialiser = Initialise()
-result = initialiser.drop_table(initialiser.cursor)
-if result:
-    print("Table was dropped")
-else:
-    print("There was a problem. The Table was not dropped")
+#initialiser = Initialise()
+#result = initialiser.drop_table(initialiser.cursor)
+#if result:
+#    print("Table was dropped")
+#else:
+#    print("There was a problem. The Table was not dropped")
 
 # ---------
 if __name__ == '__main__':
