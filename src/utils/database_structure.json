@@ -38,7 +38,7 @@
         {"column_name": "date", "data_type": "DATE", "constraints": "NOT NULL" },
         {"column_name": "time", "data_type": "TIME", "constraints": "NOT NULL" },
         {"column_name": "roomNR", "data_type": "VARCHAR(50)", "constraints": "NOT NULL" },
-        {"column_name": "titel", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
+        {"column_name": "title", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "description", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "maxNumbersStudents", "data_type": "INTEGER", "constraints": "NOT NULL" }
       ]
