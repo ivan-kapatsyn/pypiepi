@@ -1,9 +1,9 @@
 # TODO data_base_util Dummy
 from src.backend.data_base_util import find_user_by_username, save_user, users_with_remember_me, get_user_ids, \
-    find_user_by_id, add_course_to_tutor
+    find_user_by_id, add_course_to_tutor, add_student_to_course
 
 from src.utils.password_utils import PasswordUtils
-from typing import List, Optional
+from typing import List, Optional, Union
 from secrets import token_hex
 import logging
 
@@ -124,13 +124,13 @@ class TimeWindow:
         self.start_time = start_time
         self.end_time = end_time
 
-class Course:
-    def __init__(self, name: str):
-        self.name = name
-
 class Evaluation:
     def __init__(self, ratings: Optional[List[int]] = None):
         self.ratings = ratings or []
+
+class Room:
+    def __init__(self, name: str):
+        self.name = name
 
 class Tutor(User):
     # TODO attributes based on the issue and JSON data base structure, might change later
@@ -157,6 +157,39 @@ class Tutor(User):
         if course in self.active_courses:
             logger.warning(f"Course '{course.name}' is already assigned to tutor '{self.username}'.")
             return
-        add_course_to_tutor(self.tutor_id, course)
+        add_course_to_tutor(self, course)
         self.active_courses.append(course)
         logger.info(f"Course '{course.name}' added to tutor '{self.username}'.")
+
+
+class Student(User):
+    pass
+
+
+class Course:
+    def __init__(self, name: str, qualification: "Qualification", max_participants: int, tutor: Tutor,
+                 students: Optional[List["Student"]] = None,
+                 schedule: Optional[List["TimeWindow"]] = None,
+                 location: Optional[Union["Room", List["Room"]]] = None,
+                 evaluation: Optional["Evaluation"] = None,
+                 announcements: Optional[List[str]] = None):
+        self.name = name
+        self.qualification = qualification
+        self.max_participants = max_participants
+        self.tutor = tutor
+        self.students = students or []
+        self.schedule = schedule or []
+        self.location = location
+        self.evaluation = evaluation
+        self.announcements = announcements or []
+
+    def add_student(self, student: "Student"):
+        """
+        Add a student to the course, ensuring the maximum limit isn't exceeded.
+        """
+        if len(self.students) >= self.max_participants:
+            logger.warning(f"Cannot add student: Maximum participants ({self.max_participants}) reached.")
+            return
+        add_student_to_course(student, self)
+        self.students.append(student)
+        logger.info(f"Student '{student}' added to course '{self.name}'.")
