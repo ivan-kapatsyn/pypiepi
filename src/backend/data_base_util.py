@@ -30,5 +30,8 @@ def users_with_remember_me():
 def get_user_ids():
     return [user["userID"] for user in USERS.values()]
 
-def add_course_to_tutor(tutor_id, course):
+def add_course_to_tutor(tutor, course):
+    pass
+
+def add_student_to_course(student, course):
     pass
