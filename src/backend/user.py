@@ -1,6 +1,6 @@
 # TODO data_base_util Dummy
 from src.backend.data_base_util import find_user_by_username, save_user, users_with_remember_me, get_user_ids, \
-    find_user_by_id
+    find_user_by_id, add_course_to_tutor
 
 from src.utils.password_utils import PasswordUtils
 from typing import List, Optional
@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 # TODO put later elsewhere
 class DuplicationError(Exception):
     pass
+
 
 class User:
     def __init__(self, user_id: str, username: str, password: str, remember_me: bool = False, bio: str = None):
@@ -112,3 +113,50 @@ class User:
             remember_me=user.get("remember_me", False),
             bio=user.get("bio")
         )
+
+class Qualification:
+    def __init__(self, name: str):
+        self.name = name
+
+class TimeWindow:
+    def __init__(self, day: str, start_time: str, end_time: str):
+        self.day = day
+        self.start_time = start_time
+        self.end_time = end_time
+
+class Course:
+    def __init__(self, name: str):
+        self.name = name
+
+class Evaluation:
+    def __init__(self, ratings: Optional[List[int]] = None):
+        self.ratings = ratings or []
+
+class Tutor(User):
+    # TODO attributes based on the issue and JSON data base structure, might change later
+    def __init__(self, user_id: str, username: str, password: str,
+                 tutor_id: str, first_name: str, last_name: str,
+                 remember_me: bool = False, bio: str = None,
+                 qualifications: Optional[List["Qualification"]] = None,
+                 available_time: Optional[List["TimeWindow"]] = None,
+                 active_courses: Optional[List["Course"]] = None,
+                 evaluation: Optional["Evaluation"] = None):
+        super().__init__(user_id, username, password, remember_me, bio)
+        self.tutor_id = tutor_id
+        self.first_name = first_name
+        self.last_name = last_name
+        self.qualifications = qualifications or []
+        self.available_time = available_time or []
+        self.active_courses = active_courses or []
+        self.evaluation = evaluation
+
+    def add_course(self, course: "Course"):
+        """
+        Add a new course to the tutor's active courses.
+        """
+        if course in self.active_courses:
+            logger.warning(f"Course '{course.name}' is already assigned to tutor '{self.username}'.")
+            return
+        add_course_to_tutor(self.tutor_id, course)
+        self.active_courses.append(course)
+        logger.info(f"Course '{course.name}' added to tutor '{self.username}'.")
