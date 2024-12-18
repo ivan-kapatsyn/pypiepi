@@ -22,9 +22,7 @@ try:
                                 password    varchar(40) NOT NULL,
                                 userTyp    varchar(40) NOT NULL
  ) '''
-
     conn.commit()
-
 
 except Exception as error:
     print("Ein Fehler ist aufgetreten:", error)
