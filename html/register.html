@@ -9,34 +9,46 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function toggleFields() {
-            const usertype = document.getElementById("usertype").value;
-            const studentField = document.getElementById("student-field");
-            const tutorField1 = document.getElementById("tutor-field-1");
-            const tutorField2 = document.getElementById("tutor-field-2");
-            const adminField1 = document.getElementById("admin-field-1");
-            const adminField2 = document.getElementById("admin-field-2");
-            const adminField3 = document.getElementById("admin-field-3");
+    const usertype = document.getElementById("usertype").value;
 
-            // Hide all fields initially
-            studentField.style.display = 'none';
-            tutorField1.style.display = 'none';
-            tutorField2.style.display = 'none';
-            adminField1.style.display = 'none';
-            adminField2.style.display = 'none';
-            adminField3.style.display = 'none';
+    // Group fields by user type
+    const studentFields = [
+        document.getElementById("student-field")
+    ];
+    const tutorFields = [
+        document.getElementById("tutor-field-1"),
+        document.getElementById("tutor-field-2")
+    ];
+    const adminFields = [
+        document.getElementById("admin-field-1"),
+        document.getElementById("admin-field-2"),
+        document.getElementById("admin-field-3")
+    ];
 
-            // Show fields based on usertype
-            if (usertype === 'student') {
-                studentField.style.display = 'block';
-            } else if (usertype === 'tutor') {
-                tutorField1.style.display = 'block';
-                tutorField2.style.display = 'block';
-            } else if (usertype === 'admin') {
-                adminField1.style.display = 'block';
-                adminField2.style.display = 'block';
-                adminField3.style.display = 'block';
-            }
-        }
+    // Combine all fields into one list
+    const allFields = [...studentFields, ...tutorFields, ...adminFields];
+
+    // Hide all fields initially
+    allFields.forEach(field => {
+        if (field) field.style.display = 'none';
+    });
+
+    // Show fields based on usertype
+    if (usertype === 'student') {
+        studentFields.forEach(field => {
+            if (field) field.style.display = 'block';
+        });
+    } else if (usertype === 'tutor') {
+        tutorFields.forEach(field => {
+            if (field) field.style.display = 'block';
+        });
+    } else if (usertype === 'admin') {
+        adminFields.forEach(field => {
+            if (field) field.style.display = 'block';
+        });
+    }
+}
+
     </script>
 </head>
 <body>
