@@ -34,7 +34,6 @@ finally:
     if conn is not None:
         conn.close()
 
-
 # -----------------------------------
 class DataBaseUtil:
     def __init__(self, table_name, dbname, user, password, host='localhost', port=5433):
