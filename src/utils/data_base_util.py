@@ -10,7 +10,7 @@ conn = None
 
 try:
     # Korrigierte Verbindungszeichenkette mit UTF-8
-    conn_string = "dbname='postgres' user='postgres' password='melisahu' host='localhost' port='5432'"
+    conn_string = "dbname='postgres' user='postgres' password='melisahu' host='localhost' port='5433'"
     conn = psycopg2.connect(conn_string)
 
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -39,14 +39,13 @@ finally:
 
 # -----------------------------------
 class DataBaseUtil:
-    def __init__(self, table_name, dbname, user, password, host='localhost', port=5432):
+    def __init__(self, table_name, dbname, user, password, host='localhost', port=5433):
         self.__connection = None
         self.cursor = None
-
-        self.conn_string = "dbname='postgres' user='postgres' password='melisahu' host='localhost' port='5432'"
-        conn = psycopg2.connect(conn_string)
-
         self.table_name = table_name
+
+        #self.conn_string = "dbname='postgres' user='postgres' password='melisahu' host='localhost' port='5433'"
+        #conn = psycopg2.connect(conn_string)
 
         try:
             self.connection = psycopg2.connect(
@@ -54,17 +53,40 @@ class DataBaseUtil:
                 user='postgres',
                 password='melisahu',
                 host='localhost',
-                port='5432'
+                port='5433'
             )
             self.cursor = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         except Exception as error:
             print(f"Fehler beim Herstellen der Verbindung: {error}")
 
+    def create_user(self, username, password):
+        try:
+            create_user_query = f"CREATE USER {username} WITH PASSWORD '{password}';"
+            self.cursor.execute(create_user_query)
+            self.connection.commit()
+            print(f"Benutzer '{username}' wurde erstellt.")
+        except Exception as error:
+            print(f"Fehler beim Erstellen des Benutzers: {error}")
+
+    def grant_all_privileges(self, username, dbname):
+        try:
+            grant_privileges_query = f"GRANT ALL PRIVILEGES ON DATABASE {dbname} TO {username};"
+            self.cursor.execute(grant_privileges_query)
+            self.connection.commit()
+            print(f"Alle Berechtigungen auf die Datenbank '{dbname}' wurden an '{username}' gewährt.")
+        except Exception as error:
+            print(f"Fehler beim Gewähren der Berechtigungen: {error}")
+
     def check_if_table_exists(self, table_name) -> bool:
         cur = None
         try:
-            query = f'''SELECT EXISTS(SELECT * FROM {table_name});'''
+            query = f'''SELECT EXISTS (
+                        SELECT 1
+                        FROM information_schema.tables
+                        WHERE table_schema = 'public'
+                        AND table_name = '{table_name}'
+                    );'''
             self.cursor.execute(query, (table_name,))
             result = self.cursor.fetchone()
             return result[0]
@@ -74,6 +96,8 @@ class DataBaseUtil:
             return False
 
     def close_connection(self):
+        if self.cursor is not None:
+            self.cursor.close()
         if self.connection is not None:
             self.connection.close()
 
@@ -83,7 +107,7 @@ class DataBaseUtil:
 
 class Initialise(DataBaseUtil):
     def __init__(self):
-        super().__init__(self, 'postgres', 'postgres', 'melisahu', 'localhost', 5432, )
+        super().__init__(self, 'postgres', 'postgres', 'melisahu', 'localhost', 5433, )
 
     @staticmethod
     def drop_table(cursor):
@@ -105,7 +129,7 @@ class Initialise(DataBaseUtil):
 
 class CreateTableFromJSON(DataBaseUtil):
     def __init__(self):
-        super().__init__('postgres', 'postgres', 'melisahu', 'localhost', 5432)
+        super().__init__('postgres', 'postgres', 'melisahu', 'localhost', 5433)
 
     def create_table(self, json_file):
         try:
@@ -164,6 +188,7 @@ class CreateTableFromJSON(DataBaseUtil):
 
             self.cursor.connection.commit()
             print("Alle Tabellen wurden erfolgreich erstellt.")
+            self.connection.close()
 
         except Exception as error:
             print(f"Fehler ist aufgetreten: {error}")
@@ -173,21 +198,34 @@ class CreateTableFromJSON(DataBaseUtil):
 # ----CHECK IF TABLE EXIST
 if __name__ == "__main__":
     table_name = 'user'
-    if DataBaseUtil(table_name, 'postgres', 'postgres', 'melisahu', 'localhost', 5432).check_if_table_exists(
+    if DataBaseUtil(table_name, 'postgres', 'postgres', 'melisahu', 'localhost', 5433).check_if_table_exists(
             table_name):
         print("Table exists")
     else:
         print("Table doesn't exist")
 
 # ----DROP TABLE
-#initialiser = Initialise()
-#result = initialiser.drop_table(initialiser.cursor)
-#if result:
-#    print("Table was dropped")
-#else:
-#    print("There was a problem. The Table was not dropped")
+initialiser = Initialise()
+result = initialiser.drop_table(initialiser.cursor)
+if result:
+    print("Table was dropped")
+else:
+    print("There was a problem. The Table was not dropped")
 
-# ---------
+# ---------CREATE THE TABLES
 if __name__ == '__main__':
     db_creator = CreateTableFromJSON()
     db_creator.create_table("database_structure.json")
+
+if __name__ == '__main__':
+    db_util = DataBaseUtil(table_name='user', dbname='postgres', user='postgres', password='melisahu', host='localhost',
+                           port=5433)
+
+    # Benutzer erstellen
+    db_util.create_user('neuer_benutzer', 'dein_passwort')
+
+    # Berechtigungen gewähren
+    db_util.grant_all_privileges('neuer_benutzer', 'postgres')
+
+    # Verbindung schließen
+    db_util.close_connection()
