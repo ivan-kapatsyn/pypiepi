@@ -51,13 +51,13 @@
 
     </script>
     <script>
-        function addTutorAttribute() {
-            const list = document.getElementById("tutor-attributes-list");
+        function addListAttribute(list_id, input_name, attribute_name) {
+            const list = document.getElementById(list_id);
             const newItem = document.createElement("div");
             newItem.className = "attribute-item";
             newItem.innerHTML = `
-        <input type="text" name="tutor_info_2[]" class="tutor-info" placeholder="Enter a qualification">
-        <button type="button" onclick="removeTutorAttribute(this)">Remove</button>
+        <input type="text" name="${input_name}" class="tutor-info" placeholder="Enter a ${attribute_name}">
+        <button type="button" onclick="removeTutorAttribute(this)">X</button>
     `;
             list.appendChild(newItem);
         }
@@ -98,15 +98,16 @@
         <input type="text" name="tutor_info_1" id="tutor-info-1">
     </div>
     <div id="tutor-field-2" style="display: none;">
-    <label>Qualifications:</label>
-    <div id="tutor-attributes-list">
-        <div class="attribute-item">
-            <input type="text" name="tutor_info_2[]" class="tutor-info" placeholder="Enter a qualification">
-            <button type="button" onclick="removeTutorAttribute(this)">Remove</button>
+        <label>Qualifications:</label>
+        <div id="tutor-qualification-attribute-list">
+            <div class="attribute-item">
+                <input type="text" name="tutor_info_2[]" class="tutor-info" placeholder="Enter a qualification">
+                <button type="button" onclick="removeTutorAttribute(this)">X</button>
+            </div>
         </div>
+        <button type="button" id="add-tutor-attribute" onclick="addListAttribute('tutor-qualification-attribute-list', 'tutor_info_2[]', 'qualification')" style="margin-left: 20px">+</button>
     </div>
-    <button type="button" id="add-tutor-attribute" onclick="addTutorAttribute()">Add Qualification</button>
-</div>
+    
 
 
     <div id="admin-field-1" style="display: none;">
