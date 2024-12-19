@@ -13,3 +13,9 @@ form div {
 h1 {
     color: #333;
 }
+
+#tutor-attributes-list .attribute-item {
+    margin-left: 20px; /* Adjust this value to control the shift */
+}
+
+
