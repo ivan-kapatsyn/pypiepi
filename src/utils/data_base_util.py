@@ -1,56 +1,24 @@
-from multiprocessing import connection
-
 import psycopg2
 import psycopg2.extras
 import json
-import csv
 
-cur = None
-conn = None
+from src.utils.env_variable_util import EnvVariableUtil
 
-try:
-    # Korrigierte Verbindungszeichenkette mit UTF-8
-    conn_string = "dbname='postgres' user='postgres' password='melisahu' host='localhost' port='5433'"
-    conn = psycopg2.connect(conn_string)
-
-    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
-    # Tabelle erstellen
-    create_script = ''' CREATE TABLE IF NOT EXISTS "user" (
-                                userID      int PRIMARY KEY,
-                                username    varchar(40) NOT NULL,
-                                password    varchar(40) NOT NULL,
-                                userTyp    varchar(40) NOT NULL
- ) '''
-    conn.commit()
-
-except Exception as error:
-    print("Ein Fehler ist aufgetreten:", error)
-
-finally:
-    # Überprüfen, ob cur und conn nicht None sind, bevor du sie schließt
-    if cur is not None:
-        cur.close()
-    if conn is not None:
-        conn.close()
 
 # -----------------------------------
 class DataBaseUtil:
-    def __init__(self, table_name, dbname, user, password, host='localhost', port=5433):
+    def __init__(self, table_name):
         self.__connection = None
         self.cursor = None
         self.table_name = table_name
 
-        #self.conn_string = "dbname='postgres' user='postgres' password='melisahu' host='localhost' port='5433'"
-        #conn = psycopg2.connect(conn_string)
-
         try:
             self.connection = psycopg2.connect(
-                dbname= 'postgres',
-                user='postgres',
-                password='melisahu',
-                host='localhost',
-                port='5433'
+                dbname=EnvVariableUtil.get_env_variable("DBNAME"),
+                user=EnvVariableUtil.get_env_variable("USER"),
+                password=EnvVariableUtil.get_env_variable("PASSWORD"),
+                host=EnvVariableUtil.get_env_variable("HOST"),
+                port=EnvVariableUtil.get_env_variable("PORT")
             )
             self.cursor = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -87,6 +55,26 @@ class DataBaseUtil:
             self.cursor.execute(query, (table_name,))
             result = self.cursor.fetchone()
             return result[0]
+        except Exception as error:
+            print(f"Fehler ist aufgetreten: {error}")
+            return False
+
+    @staticmethod
+    def initialise_db():
+        DataBaseUtil.drop_all_the_tables()
+        DataBaseUtil.create_schemes("database_structure.json")
+        DataBaseUtil.populate_tables()
+
+    @classmethod
+    def drop_all_the_tables(cls, cursor=None):
+        try:
+            query = f'''DROP SCHEMA public CASCADE;
+                                CREATE SCHEMA public;    
+                                GRANT ALL ON SCHEMA public TO public;
+                                '''
+            cursor.execute(query)
+            cursor.connection.commit()
+            return True
 
         except Exception as error:
             print(f"Fehler ist aufgetreten: {error}")
@@ -98,37 +86,8 @@ class DataBaseUtil:
         if self.connection is not None:
             self.connection.close()
 
-
-# --------------------------------------------------
-
-
-class Initialise(DataBaseUtil):
-    def __init__(self):
-        super().__init__(self, 'postgres', 'postgres', 'melisahu', 'localhost', 5433, )
-
-    @staticmethod
-    def drop_table(cursor):
-        try:
-            query = f'''DROP SCHEMA public CASCADE;
-                        CREATE SCHEMA public;    
-                        GRANT ALL ON SCHEMA public TO public;
-                        '''
-            cursor.execute(query)
-            cursor.connection.commit()
-            return True
-
-        except Exception as error:
-            print(f"Fehler ist aufgetreten: {error}")
-            return False
-
-
-# -------------------------------------------------------
-
-class CreateTableFromJSON(DataBaseUtil):
-    def __init__(self):
-        super().__init__('postgres', 'postgres', 'melisahu', 'localhost', 5433)
-
-    def create_table(self, json_file):
+    @classmethod
+    def create_schemes(cls,json_file):
         try:
             with open(json_file) as file:
                 data = json.load(file)
@@ -190,6 +149,10 @@ class CreateTableFromJSON(DataBaseUtil):
         except Exception as error:
             print(f"Fehler ist aufgetreten: {error}")
             return False
+
+    @classmethod
+    def populate_tables(cls):
+        pass
 
 
 # ----CHECK IF TABLE EXIST
