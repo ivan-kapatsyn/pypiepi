@@ -1,16 +1,19 @@
+from pathlib import Path
+from typing import Dict, List
 import psycopg2
 import psycopg2.extras
 import json
-
+from psycopg2._psycopg import cursor
+from typing import Any, Dict, List, Tuple
 from src.utils.env_variable_util import EnvVariableUtil
+from src.utils.path_util import PathUtil
 
 
 # -----------------------------------
 class DataBaseUtil:
-    def __init__(self, table_name):
+    def __init__(self):
         self.__connection = None
         self.cursor = None
-        self.table_name = table_name
 
         try:
             self.connection = psycopg2.connect(
@@ -24,6 +27,7 @@ class DataBaseUtil:
 
         except Exception as error:
             print(f"Fehler beim Herstellen der Verbindung: {error}")
+
 
     def create_user(self, username, password):
         try:
@@ -44,7 +48,6 @@ class DataBaseUtil:
             print(f"Fehler beim Gewähren der Berechtigungen: {error}")
 
     def check_if_table_exists(self, table_name) -> bool:
-        cur = None
         try:
             query = f'''SELECT EXISTS (
                         SELECT 1
@@ -59,39 +62,30 @@ class DataBaseUtil:
             print(f"Fehler ist aufgetreten: {error}")
             return False
 
-    @staticmethod
-    def initialise_db():
-        DataBaseUtil.drop_all_the_tables()
-        DataBaseUtil.create_schemes("database_structure.json")
-        DataBaseUtil.populate_tables()
-
-    @classmethod
-    def drop_all_the_tables(cls, cursor=None):
-        try:
-            query = f'''DROP SCHEMA public CASCADE;
-                                CREATE SCHEMA public;    
-                                GRANT ALL ON SCHEMA public TO public;
-                                '''
-            cursor.execute(query)
-            cursor.connection.commit()
-            return True
-
-        except Exception as error:
-            print(f"Fehler ist aufgetreten: {error}")
-            return False
-
     def close_connection(self):
         if self.cursor is not None:
             self.cursor.close()
         if self.connection is not None:
             self.connection.close()
 
-    @classmethod
-    def create_schemes(cls,json_file):
+
+    def drop_all_the_tables(self):
+        try:
+            query = f'''DROP SCHEMA public CASCADE;
+                                CREATE SCHEMA public;    
+                                GRANT ALL ON SCHEMA public TO public;
+                                '''
+            self.cursor.execute(query)
+            self.connection.commit()
+            return True
+        except Exception as error:
+            print(f"Fehler ist aufgetreten: {error}")
+            return False
+
+    def create_schemes(self,json_file):
         try:
             with open(json_file) as file:
                 data = json.load(file)
-
             tables = data.get("tables", [])
             for table in tables:
                 table_name = table.get("table_name")
@@ -144,48 +138,128 @@ class DataBaseUtil:
 
             self.cursor.connection.commit()
             print("Alle Tabellen wurden erfolgreich erstellt.")
-            self.connection.close()
+            #self.connection.close()
 
         except Exception as error:
             print(f"Fehler ist aufgetreten: {error}")
             return False
 
-    @classmethod
-    def populate_tables(cls):
-        pass
+
+    def insert_one(self, table_name: str, obj: Dict[str, any], condition: str, dublicate: bool = False) -> None:
+        try:
+            query = f"SELECT 1 FROM {table_name} WHERE {condition} = %s;"
+            self.cursor.execute(query, (obj[condition],))
+            exists = self.cursor.fetchone()
+
+            if exists and not dublicate:
+                print(f"Duplicate entry already exists for {condition}: {obj[condition]}")
+                return
+
+            columns = obj.keys()
+            values = tuple(obj.values())
+            placeholders = ", ".join(["%s"] * len(columns))
+            insert_query = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders});"
+            self.cursor.execute(insert_query, values)
+            self.connection.commit()
+            print(f"Object inserted successfully into {table_name}: {obj[condition]}")
+
+        except Exception as e:
+            self.connection.rollback()
+            raise Exception(f"Error inserting {table_name}: {e}")
+
+    def insert_many(self, table_name: str, objects: List[Dict[str, any]], condition: str,
+                    dublicate: bool = False) -> None:
+        errors = []
+        for obj in objects:
+            try:
+                self.insert_one(table_name, obj, condition, dublicate)
+            except Exception as e:
+                errors.append((obj, str(e)))
+
+        if errors:
+            print(errors)
+            for obj, err in errors:
+                print(f"Error inserting {table_name}: {err}")
 
 
-# ----CHECK IF TABLE EXIST
+
 if __name__ == "__main__":
-    table_name = 'user'
-    if DataBaseUtil(table_name, 'postgres', 'postgres', 'melisahu', 'localhost', 5433).check_if_table_exists(
-            table_name):
-        print("Table exists")
-    else:
-        print("Table doesn't exist")
+    db_util = DataBaseUtil()
+    try:
+        table_name = 'tmuser'
+        if db_util.check_if_table_exists(
+                table_name):
+            print("Table exists")
+        else:
+            print("Table doesn't exist")
 
-# ----DROP TABLE
-initialiser = Initialise()
-result = initialiser.drop_table(initialiser.cursor)
-if result:
-    print("Table was dropped")
-else:
-    print("There was a problem. The Table was not dropped")
 
-# ---------CREATE THE TABLES
-if __name__ == '__main__':
-    db_creator = CreateTableFromJSON()
-    db_creator.create_table("database_structure.json")
+        result = db_util.drop_all_the_tables()
+        if result:
+            print("Table was dropped")
+        else:
+            print("There was a problem. The Table was not dropped")
 
-if __name__ == '__main__':
-    db_util = DataBaseUtil(table_name='user', dbname='postgres', user='postgres', password='melisahu', host='localhost',
-                           port=5433)
+        # Benutzer erstellen
+        #db_util.create_user(username="new_user", password="password")
 
-    # Benutzer erstellen
-    db_util.create_user('neuer_benutzer', 'dein_passwort')
+        # Berechtigungen gewähren
+        #db_util.grant_all_privileges(username="new_user", dbname=EnvVariableUtil.get_env_variable("DBNAME"))
 
-    # Berechtigungen gewähren
-    db_util.grant_all_privileges('neuer_benutzer', 'postgres')
+        from pathlib import Path
 
-    # Verbindung schließen
-    db_util.close_connection()
+        # Absoluter Pfad zum Hauptverzeichnis
+        base_path = Path(__file__).resolve().parents[2]  # Zwei Ebenen über 'utils'
+        json_file_path = base_path / "data_folder" / "database_structure.json"
+
+        # Nutze den Pfad für die JSON-Datei
+        if not json_file_path.exists():
+            raise FileNotFoundError(f"Die Datei {json_file_path} wurde nicht gefunden.")
+        db_util.create_schemes(json_file_path)
+
+        #inserts into the database
+        obj1 = {
+                "user_id": 202345671,
+                "username": "arthur_morgan",
+                "password": "password123",
+                "user_typ": "student",
+                "remember_me": "TRUE"}
+
+        objects = [
+            {
+                "user_id": 202345672,
+                "username": "john_doe",
+                "password": "newpassword",
+                "user_typ": "admin",
+                "remember_me": "TRUE"
+            },
+            {   "user_id": 202345673,
+                "username": "jane_doe",
+                "password": "mypassword",
+                "user_typ": "admin",
+                "remember_me": "TRUE"
+            },
+            {   "user_id": 202345671,
+                "username": "arthur_morgan",
+                "password": "password123",
+                "user_typ": "student",
+                "remember_me": "TRUE"
+                }
+                ]
+
+        try:
+            db_util.insert_one("tmuser", obj1, condition="user_id", dublicate=True)
+            db_util.insert_many("tmuser", objects, condition="user_id", dublicate=False)
+
+        except Exception as e:
+            print(e)
+
+    except Exception as error:
+        print(f"Ein Fehler ist aufgetreten: {error}")
+
+    finally:
+        # Verbindung schließen
+        if db_util:
+            print("Schließe die Datenbank-Verbindung...")
+            db_util.close_connection()
+
