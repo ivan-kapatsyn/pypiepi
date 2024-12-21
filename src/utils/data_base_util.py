@@ -1,8 +1,8 @@
-from pathlib import Path
 from typing import Dict, List
 import psycopg2
 import psycopg2.extras
 import json
+from pathlib import Path
 from psycopg2._psycopg import cursor
 from typing import Any, Dict, List, Tuple
 from src.utils.env_variable_util import EnvVariableUtil
@@ -206,13 +206,12 @@ if __name__ == "__main__":
         # Berechtigungen gewähren
         #db_util.grant_all_privileges(username="new_user", dbname=EnvVariableUtil.get_env_variable("DBNAME"))
 
-        from pathlib import Path
+
 
         # Absoluter Pfad zum Hauptverzeichnis
         base_path = Path(__file__).resolve().parents[2]  # Zwei Ebenen über 'utils'
         json_file_path = base_path / "data_folder" / "database_structure.json"
 
-        # Nutze den Pfad für die JSON-Datei
         if not json_file_path.exists():
             raise FileNotFoundError(f"Die Datei {json_file_path} wurde nicht gefunden.")
         db_util.create_schemes(json_file_path)
@@ -260,6 +259,6 @@ if __name__ == "__main__":
     finally:
         # Verbindung schließen
         if db_util:
-            print("Schließe die Datenbank-Verbindung...")
+            print("Closing the connection...")
             db_util.close_connection()
 
