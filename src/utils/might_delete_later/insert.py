@@ -7,7 +7,7 @@ class DublicateError(Exception):
 
 class InsertData(DataBaseUtil):
     def __init__(self):
-        super().__init__('postgres', 'postgres', 'melisahu', 'localhost', 5432, )
+        super().__init__()
 
     def insert_one(self, table_name: str,  obj: Dict[str, any], condition: str, dublicate: bool = False) -> None:
         try:

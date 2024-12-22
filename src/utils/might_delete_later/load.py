@@ -8,7 +8,7 @@ class LoadError(Exception):
 
 class DataLoader(DataBaseUtil):
     def __init__(self):
-        super().__init__('postgres', 'postgres', 'melisahu', 'localhost', 5432, )
+        super().__init__()
 
     def fetch_one(self, query: str, params: Tuple[Any, ...] = ()) -> Dict[str, Any]:
         try:
