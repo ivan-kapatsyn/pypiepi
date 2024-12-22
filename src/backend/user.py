@@ -7,18 +7,13 @@ from src.backend.course import Course
 from src.backend.evaluation import Evaluation
 from src.backend.time_window import TimeWindow
 from src.backend.qualification import Qualification
+from src.backend.exceptions import DuplicationError
 
 from typing import List, Optional
 from secrets import token_hex
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
-
-
-# TODO put later elsewhere
-class DuplicationError(Exception):
-    pass
-
 
 class User:
     def __init__(self, user_id: str, username: str, password: str, remember_me: bool = False, bio: str = None,
@@ -35,7 +30,9 @@ class User:
     @classmethod
     def authenticate(cls, username: str, password: str) -> Optional["User"]:
         """
-        Returns a user instance if authentication is successful, None otherwise.
+        Authenticate a user by username and password.
+        Returns:
+            User instance if successful, None otherwise.
         """
         user_data = find_user_by_username(username)
         if not user_data or not PasswordUtils.verify_password(password, user_data["password"]):
@@ -54,32 +51,35 @@ class User:
 
     @classmethod
     def register_new_user(cls, username: str, password: str, remember_me: bool = False) -> "User":
-            """
-            Raises DuplicationError if a user with the same username already exists.
-            Returns an instance of the created User.
-            """
-            if find_user_by_username(username):
-                raise DuplicationError(f"User with username '{username}' already exists.")
+        """
+        Registers a new user.
+        Raises:
+            DuplicationError: If the username already exists.
+        Returns:
+            User instance of the new user.
+        """
+        if find_user_by_username(username):
+            raise DuplicationError(f"User with username '{username}' already exists.")
 
-            hashed_password = PasswordUtils.hash_password(password)
-            user_id = cls._generate_unique_user_id()
+        hashed_password = PasswordUtils.hash_password(password)
+        user_id = cls._generate_unique_user_id()
 
-            new_user_data = {
-                "userID": user_id,
-                "username": username,
-                "password": hashed_password,
-                "remember_me": remember_me
-            }
+        new_user_data = {
+            "userID": user_id,
+            "username": username,
+            "password": hashed_password,
+            "remember_me": remember_me
+        }
 
-            save_user(new_user_data)
-            logger.info(f"User registered successfully with username: {username}")
+        save_user(new_user_data)
+        logger.info(f"User registered successfully with username: {username}")
 
-            return cls(
-                user_id=user_id,
-                username=username,
-                password=hashed_password,
-                remember_me=remember_me,
-            )
+        return cls(
+            user_id=user_id,
+            username=username,
+            password=hashed_password,
+            remember_me=remember_me,
+        )
 
     @classmethod
     def search_for_a_saved_users(cls, username_substr: str) -> List["User"]:
@@ -101,7 +101,7 @@ class User:
         """
         Returns a random 16-character string
         """
-        user_ids = get_user_ids()
+        user_ids = set(get_user_ids())
         while True:
             user_id = token_hex(8)
             if user_id not in user_ids:
@@ -149,6 +149,7 @@ class Tutor(User):
         if course in self.active_courses:
             logger.warning(f"Course '{course.name}' is already assigned to tutor '{self.username}'.")
             return
+
         add_course_to_tutor(self, course)
         self.active_courses.append(course)
         logger.info(f"Course '{course.name}' added to tutor '{self.username}'.")
