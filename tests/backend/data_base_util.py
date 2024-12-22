@@ -9,11 +9,75 @@ class DataBaseUtilTestCase(unittest.TestCase):
         self.assertEqual(DataBaseUtil().check_if_table_exists(
                 table_name), True)
 
-    def test_some_values_initialised(self):
-        DataBaseUtil.initialise_db
-        #
+    def test_load_data(self):
+        table_name = 'tmuser'
+        condition = 'user_id'
+        value = '202345672'
 
-        raise NotImplementedError
+        expected_result = {
+            'user_id': 202345672,
+            'username': 'john_doe',
+            'password': 'newpassword',
+            'user_typ': 'admin',
+            'remember_me': True,
+        }
+        self.assertEqual(DataBaseUtil().load_data(table_name, condition, value),expected_result)
+
+
+    def test_delete_data(self):
+        table_name = 'tmuser'
+        condition = 'user_id'
+        value = '202345672'
+        self.assertEqual(DataBaseUtil().delete_data(table_name, condition, value),None)
+
+
+    def test_insert_one_data(self):
+        obj1 = {
+            "user_id": 202345671,
+            "username": "arthur_morgan",
+            "password": "password123",
+            "user_typ": "student",
+            "remember_me": "TRUE"}
+        db_util = DataBaseUtil()
+
+        db_util.insert_one("tmuser", obj1, condition="user_id", dublicate=True)
+        loaded_data = db_util.load_data("tmuser", "user_id", 202345671)
+        self.assertEqual(loaded_data['user_id'], 202345671)
+        self.assertEqual(loaded_data['username'], "arthur_morgan")
+        self.assertEqual(loaded_data['password'], "password123")
+        self.assertEqual(loaded_data['user_typ'], "student")
+        self.assertEqual(loaded_data['remember_me'], True)
+
+
+    def test_insert_many_data(self):
+        objects = [
+            {
+                "user_id": 202345672,
+                "username": "john_doe",
+                "password": "newpassword",
+                "user_typ": "admin",
+                "remember_me": True
+            },
+            {
+                "user_id": 202345671,
+                "username": "arthur_morgan",
+                "password": "password123",
+                "user_typ": "student",
+                "remember_me": True
+             }
+        ]
+        db_util = DataBaseUtil()
+        db_util.insert_many("tmuser", objects, condition="user_id", dublicate=False)
+
+        for obj in objects:
+            loaded_data = db_util.load_data("tmuser", "user_id", obj["user_id"])
+            self.assertEqual(loaded_data['user_id'], obj['user_id'])
+            self.assertEqual(loaded_data['username'], obj['username'])
+            self.assertEqual(loaded_data['password'], obj['password'])
+            self.assertEqual(loaded_data['user_typ'], obj['user_typ'])
+            self.assertEqual(loaded_data['remember_me'], obj['remember_me'])
+
+
 
 
 
