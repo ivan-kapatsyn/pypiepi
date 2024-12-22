@@ -4,7 +4,7 @@ import psycopg2.extras
 import json
 from pathlib import Path
 from psycopg2._psycopg import cursor
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Callable
 from src.utils.env_variable_util import EnvVariableUtil
 from src.utils.path_util import PathUtil
 
@@ -67,7 +67,6 @@ class DataBaseUtil:
             self.cursor.close()
         if self.connection is not None:
             self.connection.close()
-
 
     def drop_all_the_tables(self):
         try:
@@ -182,6 +181,60 @@ class DataBaseUtil:
                 print(f"Error inserting {table_name}: {err}")
 
 
+    def fetch_one(self, query: str, params: Tuple[Any, ...] = ()) -> Dict[str, Any]:
+        try:
+            self.cursor.execute(query, params)
+            result = self.cursor.fetchone()
+            if result:
+                columns = [desc[0] for desc in self.cursor.description]
+                return dict(zip(columns, result))
+            return None
+        except Exception as error:
+            raise Exception(f"Fehler beim Ausführen von fetch_one: {error}")
+
+
+    def fetch_all(self, query: str, params: Tuple[Any, ...] = ()) -> List[Dict[str, Any]]:
+        try:
+            self.cursor.execute(query, params)
+            results = self.cursor.fetchall()
+            if results:
+                columns = [desc[0] for desc in self.cursor.description]
+                return [dict(zip(columns, row)) for row in results]
+            return []
+        except Exception as error:
+            raise Exception(f"Fehler beim Ausführen von fetch_all: {error}")
+
+    def load_data(self, table_name: str, condition: str, value:any ) -> Dict[str, Any]:
+        query = f'SELECT * FROM {table_name} WHERE {condition} = %s;'
+        result = self.fetch_one(query, (value,))
+
+        if not result:
+            raise Exception(f"No entry found where {condition} = {value}.")
+        return result
+
+    def load_many(self, table_name: str, filter_function: Callable[[Dict[str,Any]], bool]) -> List[Dict[str, Any]]:
+
+        query = f'SELECT * FROM {table_name};'
+        results = self.fetch_all(query)
+        return [result for result in results if filter_function(result)]
+
+    #def filter_function(obj):
+    #    return obj['username'].startswith('A')
+
+    def delete_data(self, table_name: str, condition: str, value: Any) -> None:
+        try:
+            query = f'DELETE FROM {table_name} WHERE {condition} = %s;'
+            self.cursor.execute(query, (value,))
+            if self.cursor.rowcount == 0:  # Prüft, ob Zeilen betroffen sind
+                raise Exception(f"No entry found where {condition} = {value}.")
+            self.connection.commit()
+            print(f"Successfully deleted entry where {condition} = {value}.")
+        except Exception as error:
+            self.connection.rollback()
+            print(f"Fehler beim Löschen der Daten: {error}")
+            raise
+
+
 
 if __name__ == "__main__":
     db_util = DataBaseUtil()
@@ -205,8 +258,6 @@ if __name__ == "__main__":
 
         # Berechtigungen gewähren
         #db_util.grant_all_privileges(username="new_user", dbname=EnvVariableUtil.get_env_variable("DBNAME"))
-
-
 
         # Absoluter Pfad zum Hauptverzeichnis
         base_path = Path(__file__).resolve().parents[2]  # Zwei Ebenen über 'utils'
@@ -252,6 +303,17 @@ if __name__ == "__main__":
 
         except Exception as e:
             print(e)
+
+        try:
+            user = db_util.load_data('tmuser', 'user_id', 202345671)
+            print(f"Searched user: {user}")
+        except Exception as e:
+            print(f"Fehler beim Laden der Daten: {e}")
+
+        try:
+            db_util.delete_data("tmuser", "user_id", 202345671)
+        except Exception as e:
+            print(f"Ein Fehler ist aufgetreten: {e}")
 
     except Exception as error:
         print(f"Ein Fehler ist aufgetreten: {error}")
