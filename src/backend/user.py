@@ -1,12 +1,16 @@
 # TODO data_base_util Dummy
 from src.backend.data_base_util import find_user_by_username, save_user, users_with_remember_me, get_user_ids, \
-    find_user_by_id, add_course_to_tutor, add_student_to_course
+    find_user_by_id, add_course_to_tutor
 
 from src.utils.password_utils import PasswordUtils
-from typing import List, Optional, Union
+from src.backend.course import Course
+from src.backend.evaluation import Evaluation
+from src.backend.time_window import TimeWindow
+from src.backend.qualification import Qualification
+
+from typing import List, Optional
 from secrets import token_hex
 import logging
-
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
@@ -17,13 +21,16 @@ class DuplicationError(Exception):
 
 
 class User:
-    def __init__(self, user_id: str, username: str, password: str, remember_me: bool = False, bio: str = None):
+    def __init__(self, user_id: str, username: str, password: str, remember_me: bool = False, bio: str = None,
+                 first_name: str = None, last_name: str = None):
         self.user_id = user_id
         self.username = username
         self.password = password
         self.remember_me = remember_me
         # TODO replace with Student/Tutor info
         self.bio = bio
+        self.first_name = first_name
+        self.last_name = last_name
 
     @classmethod
     def authenticate(cls, username: str, password: str) -> Optional["User"]:
@@ -40,7 +47,9 @@ class User:
             username=user_data["username"],
             password=user_data["password"],
             remember_me=user_data.get("remember_me", False),
-            bio=user_data.get("bio")
+            bio=user_data.get("bio", None),
+            first_name=user_data.get("first_name", None),
+            last_name=user_data.get("last_name", None),
         )
 
     @classmethod
@@ -83,7 +92,8 @@ class User:
         matching_users = [user for user in users_data if user['username'].startswith(username_substr.lower())]
 
         return [cls(user_id=user["userID"], username=user["username"], password=user["password"],
-                    remember_me=user.get("remember_me", False), bio=user.get("bio"))
+                    remember_me=user.get("remember_me", False), bio=user.get("bio", None),
+                    first_name=user.get("first_name", None), last_name=user.get("last_name", None))
                 for user in matching_users]
 
     @staticmethod
@@ -111,26 +121,10 @@ class User:
             username=user["username"],
             password=user["password"],
             remember_me=user.get("remember_me", False),
-            bio=user.get("bio")
+            bio=user.get("bio", None),
+            first_name=user.get("first_name", None),
+            last_name=user.get("last_name", None)
         )
-
-class Qualification:
-    def __init__(self, name: str):
-        self.name = name
-
-class TimeWindow:
-    def __init__(self, day: str, start_time: str, end_time: str):
-        self.day = day
-        self.start_time = start_time
-        self.end_time = end_time
-
-class Evaluation:
-    def __init__(self, ratings: Optional[List[int]] = None):
-        self.ratings = ratings or []
-
-class Room:
-    def __init__(self, name: str):
-        self.name = name
 
 class Tutor(User):
     # TODO attributes based on the issue and JSON data base structure, might change later
@@ -141,10 +135,8 @@ class Tutor(User):
                  available_time: Optional[List["TimeWindow"]] = None,
                  active_courses: Optional[List["Course"]] = None,
                  evaluation: Optional["Evaluation"] = None):
-        super().__init__(user_id, username, password, remember_me, bio)
+        super().__init__(user_id, username, password, remember_me, bio, first_name, last_name)
         self.tutor_id = tutor_id
-        self.first_name = first_name
-        self.last_name = last_name
         self.qualifications = qualifications or []
         self.available_time = available_time or []
         self.active_courses = active_courses or []
@@ -161,35 +153,5 @@ class Tutor(User):
         self.active_courses.append(course)
         logger.info(f"Course '{course.name}' added to tutor '{self.username}'.")
 
-
 class Student(User):
     pass
-
-
-class Course:
-    def __init__(self, name: str, qualification: "Qualification", max_participants: int, tutor: Tutor,
-                 students: Optional[List["Student"]] = None,
-                 schedule: Optional[List["TimeWindow"]] = None,
-                 location: Optional[Union["Room", List["Room"]]] = None,
-                 evaluation: Optional["Evaluation"] = None,
-                 announcements: Optional[List[str]] = None):
-        self.name = name
-        self.qualification = qualification
-        self.max_participants = max_participants
-        self.tutor = tutor
-        self.students = students or []
-        self.schedule = schedule or []
-        self.location = location
-        self.evaluation = evaluation
-        self.announcements = announcements or []
-
-    def add_student(self, student: "Student"):
-        """
-        Add a student to the course, ensuring the maximum limit isn't exceeded.
-        """
-        if len(self.students) >= self.max_participants:
-            logger.warning(f"Cannot add student: Maximum participants ({self.max_participants}) reached.")
-            return
-        add_student_to_course(student, self)
-        self.students.append(student)
-        logger.info(f"Student '{student}' added to course '{self.name}'.")
