@@ -261,14 +261,14 @@ class DataBaseUtil:
         return [dict(zip(columns, row)) for row in results]
 
 #------LOAD ONE DATA------
-    def load_data(self, table_name: str, condition: str, value:any ) ->  Dict[str, Any]:
-        query = f'SELECT * FROM {table_name} WHERE {condition} = %s;'
+    def load_data(self, table_name: str, column: str, value:any ) -> DictRow:
+        query = f'SELECT * FROM {table_name} WHERE {column} = %s;'
         result_load = self.fetch_one(query, (value,))
 
         if result_load is None:
-            raise Exception(f"No entry found where {condition} = {value}.")
-
-        return result_load
+            raise Exception(f"No entry found where {column} = {value}.")
+        else:
+            return result_load
 
 
 #------LOAD MANY DATA-------
