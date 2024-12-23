@@ -12,26 +12,20 @@ class DataBaseUtilTestCase(unittest.TestCase):
     def test_load_data(self):
         table_name = 'tmuser'
         condition = 'user_id'
-        value = '202345672'
+        value = 202345671
 
-        expected_result = {
-            'user_id': 202345672,
-            'username': 'john_doe',
-            'password': 'newpassword',
-            'user_typ': 'admin',
-            'remember_me': True,
-        }
+        expected_result = [202345671, 'arthur_morgan', 'password123', 'student', True]
         self.assertEqual(DataBaseUtil().load_data(table_name, condition, value),expected_result)
 
 
     def test_delete_data(self):
         table_name = 'tmuser'
         condition = 'user_id'
-        value = '202345672'
+        value = '202345671'
         self.assertEqual(DataBaseUtil().delete_data(table_name, condition, value),None)
 
 
-    def test_insert_one_data(self):
+    def test_insert_data(self):
         obj1 = {
             "user_id": 202345671,
             "username": "arthur_morgan",
@@ -40,7 +34,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
             "remember_me": "TRUE"}
         db_util = DataBaseUtil()
 
-        db_util.insert_one("tmuser", obj1, condition="user_id", dublicate=True)
+        db_util.insert_one("tmuser", obj1, column="user_id", dublicate=True)
         loaded_data = db_util.load_data("tmuser", "user_id", 202345671)
         self.assertEqual(loaded_data['user_id'], 202345671)
         self.assertEqual(loaded_data['username'], "arthur_morgan")
@@ -67,7 +61,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
              }
         ]
         db_util = DataBaseUtil()
-        db_util.insert_many("tmuser", objects, condition="user_id", dublicate=False)
+        db_util.insert_many("tmuser", objects, column="user_id", dublicate=True)
 
         for obj in objects:
             loaded_data = db_util.load_data("tmuser", "user_id", obj["user_id"])
@@ -76,11 +70,6 @@ class DataBaseUtilTestCase(unittest.TestCase):
             self.assertEqual(loaded_data['password'], obj['password'])
             self.assertEqual(loaded_data['user_typ'], obj['user_typ'])
             self.assertEqual(loaded_data['remember_me'], obj['remember_me'])
-
-
-
-
-
 
 
 if __name__ == '__main__':
