@@ -1,10 +1,12 @@
-from typing import Dict, List
 import psycopg2
 import psycopg2.extras
 import json
 from pathlib import Path
 from psycopg2._psycopg import cursor
 from typing import Any, Dict, List, Tuple, Callable
+
+from psycopg2.extras import DictRow
+
 from src.utils.env_variable_util import EnvVariableUtil
 from src.utils.path_util import PathUtil
 
@@ -15,6 +17,7 @@ class DataBaseUtil:
         self.__connection = None
         self.cursor = None
 
+#------CONNECTION TO THE DATABASE----------
         try:
             self.connection = psycopg2.connect(
                 dbname=EnvVariableUtil.get_env_variable("DBNAME"),
@@ -28,59 +31,76 @@ class DataBaseUtil:
         except Exception as error:
             print(f"Fehler beim Herstellen der Verbindung: {error}")
 
-
-    def create_user(self, username, password):
+#---EXECUTE COMMAND----
+    def execute_command(self, sql_query: str = None, params: tuple = None, fetch_one: bool = False, log_message: str =None):
         try:
-            create_user_query = f"CREATE USER {username} WITH PASSWORD '{password}';"
-            self.cursor.execute(create_user_query)
-            self.connection.commit()
-            print(f"Benutzer '{username}' wurde erstellt.")
-        except Exception as error:
-            print(f"Fehler beim Erstellen des Benutzers: {error}")
+            self.cursor.execute(sql_query, params)
+            if log_message:
+                print(log_message)
+            if fetch_one:
+                return self.cursor.fetchone()
 
-    def grant_all_privileges(self, username, dbname):
-        try:
-            grant_privileges_query = f"GRANT ALL PRIVILEGES ON DATABASE {dbname} TO {username};"
-            self.cursor.execute(grant_privileges_query)
-            self.connection.commit()
-            print(f"Alle Berechtigungen auf die Datenbank '{dbname}' wurden an '{username}' gewährt.")
-        except Exception as error:
-            print(f"Fehler beim Gewähren der Berechtigungen: {error}")
-
-    def check_if_table_exists(self, table_name) -> bool:
-        try:
-            query = f'''SELECT EXISTS (
-                        SELECT 1
-                        FROM information_schema.tables
-                        WHERE table_schema = 'public'
-                        AND table_name = '{table_name}'
-                    );'''
-            self.cursor.execute(query, (table_name,))
-            result = self.cursor.fetchone()
-            return result[0]
-        except Exception as error:
-            print(f"Fehler ist aufgetreten: {error}")
-            return False
-
-    def close_connection(self):
-        if self.cursor is not None:
-            self.cursor.close()
-        if self.connection is not None:
-            self.connection.close()
-
-    def drop_all_the_tables(self):
-        try:
-            query = f'''DROP SCHEMA public CASCADE;
-                                CREATE SCHEMA public;    
-                                GRANT ALL ON SCHEMA public TO public;
-                                '''
-            self.cursor.execute(query)
             self.connection.commit()
             return True
         except Exception as error:
             print(f"Fehler ist aufgetreten: {error}")
-            return False
+            self.connection.rollback()
+            return None
 
+# -------CREATING A USER----------------
+    def create_user(self, username, password):
+        create_user_query = f"CREATE USER {username} WITH PASSWORD '{password}';"
+        return self.execute_command(
+            sql_query=create_user_query,
+            params=(username, password),
+            log_message=f"Benutzer '{username}' wurde erstellt.")
+
+#-------GIVING THE USER ALL PRIVILEGES--------
+    def grant_all_privileges(self, username, dbname):
+        grant_privileges_query = f"GRANT ALL PRIVILEGES ON DATABASE {dbname} TO {username};"
+        return self.execute_command(
+            sql_query=grant_privileges_query,
+            params=(username, dbname),
+            log_message=f"Alle Berechtigungen auf die Datenbank '{dbname}' wurden an '{username}' gewährt."
+        )
+
+#------CHECK IF TABLE EXIST---------
+    def check_if_table_exists(self, table_name) -> bool:
+        query = f'''SELECT EXISTS (
+                        SELECT 1
+                        FROM information_schema.tables
+                        WHERE table_schema = 'public'
+                        AND table_name = '{table_name}'
+                    );
+                '''
+        result_exist = self.execute_command(
+                sql_query=query,
+                params=(table_name,),
+                fetch_one=True,
+                log_message=f"Table '{table_name}' exists."
+            )
+        return result_exist[0] if result_exist else False
+
+#-----CLOSE CONNECTION--------
+    def close_connection(self):
+        if self.cursor is not None:
+            self.cursor.close()
+        if self.__connection is not None:
+            self.__connection.close()
+
+# -------DROP ALL TABLES----------
+    def drop_all_the_tables(self):
+            query = f'''DROP SCHEMA public CASCADE;
+                                    CREATE SCHEMA public;    
+                                    GRANT ALL ON SCHEMA public TO public;
+                                    '''
+            result_dropping = self.execute_command(
+                sql_query=query,
+                log_message="All tables were dropped."
+            )
+            return result_dropping is None
+
+#-------CREATES THE SCHEMES FOR THE DATABASE--------
     def create_schemes(self,json_file):
         try:
             with open(json_file) as file:
@@ -137,102 +157,144 @@ class DataBaseUtil:
 
             self.cursor.connection.commit()
             print("Alle Tabellen wurden erfolgreich erstellt.")
-            #self.connection.close()
 
         except Exception as error:
             print(f"Fehler ist aufgetreten: {error}")
             return False
 
+#------INSERT ONE TO THE DATABASE--------
+    def insert_one(self, table_name: str, obj: Dict[str, any], column: str, dublicate: bool = False) -> None:
+        query_check = f"SELECT 1 FROM {table_name} WHERE {column} = %s;"
+        result = self.execute_command(
+            sql_query=query_check,
+            params=(obj[column],),
+            fetch_one=True,
+            log_message=None  # Keine Log-Nachricht für den Check
+        )
 
-    def insert_one(self, table_name: str, obj: Dict[str, any], condition: str, dublicate: bool = False) -> None:
-        try:
-            query = f"SELECT 1 FROM {table_name} WHERE {condition} = %s;"
-            self.cursor.execute(query, (obj[condition],))
-            exists = self.cursor.fetchone()
+        if result:
+            print(f"Duplicate entry already exists for {column}: {obj[column]}")
+            return
 
-            if exists and not dublicate:
-                print(f"Duplicate entry already exists for {condition}: {obj[condition]}")
-                return
+        # Einfügen des neuen Objekts
+        columns = obj.keys()
+        values = tuple(obj.values())
+        placeholders = ", ".join(["%s"] * len(columns))
+        insert_query = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders});"
 
-            columns = obj.keys()
-            values = tuple(obj.values())
-            placeholders = ", ".join(["%s"] * len(columns))
-            insert_query = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders});"
-            self.cursor.execute(insert_query, values)
-            self.connection.commit()
-            print(f"Object inserted successfully into {table_name}: {obj[condition]}")
+        self.execute_command(
+            sql_query=insert_query,
+            params=values,
+            log_message=f"Object inserted successfully into {table_name}: {obj[column]}"
+        )
 
-        except Exception as e:
-            self.connection.rollback()
-            raise Exception(f"Error inserting {table_name}: {e}")
-
-    def insert_many(self, table_name: str, objects: List[Dict[str, any]], condition: str,
-                    dublicate: bool = False) -> None:
+# ------INSERT MANY TO THE DATABASE--------
+    def insert_many(self, table_name: str, objects: List[Dict[str, any]], column: str, dublicate: bool = False) -> None:
+        print(f"Inserting into {table_name}...")  # Debug output
         errors = []
+
         for obj in objects:
-            try:
-                self.insert_one(table_name, obj, condition, dublicate)
-            except Exception as e:
-                errors.append((obj, str(e)))
+            initial_key_value = obj[column]
+
+            if dublicate:
+                while True:
+                    query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
+                    self.execute_command(query_check, (initial_key_value,))
+                    exists = self.cursor.fetchone()[0]
+
+                    if not exists:
+                        break  # Exit loop if the value does not exist
+
+                    # Increment the key value by 1
+                    initial_key_value += 1
+
+                # Update the object with the new key value
+                obj[column] = initial_key_value
+                print(f"Updated object key: {obj[column]}")  # Debug output
+
+            # Prepare the insert statement
+            columns = ', '.join(obj.keys())
+            values_placeholder = ', '.join(['%s'] * len(obj))
+            query = f'INSERT INTO {table_name} ({columns}) VALUES ({values_placeholder});'
+
+            # Execute the insert command
+            self.execute_command(
+                sql_query=query,
+                params=tuple(obj.values()),
+                )
+            print(f"Inserted {obj} into {table_name}")  # Debug output
+
 
         if errors:
-            print(errors)
+            print("Errors encountered during insertion:")
             for obj, err in errors:
-                print(f"Error inserting {table_name}: {err}")
+                print(f"Error inserting into {table_name}: {err}")
 
-
-    def fetch_one(self, query: str, params: Tuple[Any, ...] = ()) -> Dict[str, Any]:
-        try:
-            self.cursor.execute(query, params)
-            result = self.cursor.fetchone()
-            if result:
-                columns = [desc[0] for desc in self.cursor.description]
-                return dict(zip(columns, result))
+    #------FETCH ONE--------
+    def fetch_one(self, query: str, params: Tuple[Any, ...] = ()) -> DictRow | None:
+        result_fetch_one = self.execute_command(
+            sql_query=query,
+            params=params,
+            fetch_one=True,
+            log_message=None
+        )
+        if result_fetch_one is True:
             return None
-        except Exception as error:
-            raise Exception(f"Fehler beim Ausführen von fetch_one: {error}")
+        return result_fetch_one
 
-
+#------FETCH MANY-------
     def fetch_all(self, query: str, params: Tuple[Any, ...] = ()) -> List[Dict[str, Any]]:
-        try:
-            self.cursor.execute(query, params)
-            results = self.cursor.fetchall()
-            if results:
-                columns = [desc[0] for desc in self.cursor.description]
-                return [dict(zip(columns, row)) for row in results]
+        results = self.execute_command(
+            sql_query=query,
+            params=params,
+            fetch_one=False,
+            log_message=None
+        )
+
+        if results is None:  # Wenn ein Fehler auftritt
             return []
-        except Exception as error:
-            raise Exception(f"Fehler beim Ausführen von fetch_all: {error}")
 
-    def load_data(self, table_name: str, condition: str, value:any ) -> Dict[str, Any]:
+        if isinstance(results, bool):  # Wenn es True zurückgibt
+            return []  # Keine Zeilen gefunden
+
+        columns = [desc[0] for desc in self.cursor.description]
+        return [dict(zip(columns, row)) for row in results]
+
+#------LOAD ONE DATA------
+    def load_data(self, table_name: str, condition: str, value:any ) ->  Dict[str, Any]:
         query = f'SELECT * FROM {table_name} WHERE {condition} = %s;'
-        result = self.fetch_one(query, (value,))
+        result_load = self.fetch_one(query, (value,))
 
-        if not result:
+        if result_load is None:
             raise Exception(f"No entry found where {condition} = {value}.")
-        return result
 
+        return result_load
+
+
+#------LOAD MANY DATA-------
     def load_many(self, table_name: str, filter_function: Callable[[Dict[str,Any]], bool]) -> List[Dict[str, Any]]:
-
         query = f'SELECT * FROM {table_name};'
         results = self.fetch_all(query)
         return [result for result in results if filter_function(result)]
 
-    #def filter_function(obj):
-    #    return obj['username'].startswith('A')
+#-----FILTER FUNCTION FOR LOADING MANY DATA-------
+    @staticmethod
+    def filter_function(obj):
+        return obj['username'].startswith('A')
 
+#-----DELETING DATA---------
     def delete_data(self, table_name: str, condition: str, value: Any) -> None:
-        try:
-            query = f'DELETE FROM {table_name} WHERE {condition} = %s;'
-            self.cursor.execute(query, (value,))
-            if self.cursor.rowcount == 0:  # Prüft, ob Zeilen betroffen sind
-                raise Exception(f"No entry found where {condition} = {value}.")
-            self.connection.commit()
-            print(f"Successfully deleted entry where {condition} = {value}.")
-        except Exception as error:
-            self.connection.rollback()
-            print(f"Fehler beim Löschen der Daten: {error}")
-            raise
+        query = f'DELETE FROM {table_name} WHERE {condition} = %s;'
+        affected_rows = self.execute_command(
+            sql_query=query,
+            params=(value,),
+            fetch_one=False,
+            log_message=f"Attempting to delete entry where {condition} = {value}"
+        )
+        if affected_rows == 0:
+            print(f"No entry found where {condition} = {value}.")
+
+        print(f"Successfully deleted entry where {condition} = {value}.")
 
 
 
@@ -298,25 +360,33 @@ if __name__ == "__main__":
                 ]
 
         try:
-            db_util.insert_one("tmuser", obj1, condition="user_id", dublicate=True)
-            db_util.insert_many("tmuser", objects, condition="user_id", dublicate=False)
+            db_util.insert_one("tmuser", obj1, column="user_id", dublicate=True)
+
+            db_util.insert_many("tmuser", objects, column="user_id", dublicate=True)
 
         except Exception as e:
             print(e)
 
         try:
-            user = db_util.load_data('tmuser', 'user_id', 202345671)
-            print(f"Searched user: {user}")
+            load_one_user = db_util.load_data('tmuser', 'user_id', 202345671)
+            if load_one_user:
+                print(f"Searched user: {load_one_user}")
         except Exception as e:
             print(f"Fehler beim Laden der Daten: {e}")
 
         try:
-            db_util.delete_data("tmuser", "user_id", 202345671)
+            load_many_user = db_util.load_many(table_name='tmuser', filter_function=DataBaseUtil.filter_function)
+            print(f"Searched user: {load_many_user}")
         except Exception as e:
-            print(f"Ein Fehler ist aufgetreten: {e}")
+            print(f"Fehler beim Laden der Daten: {e}")
+
+        #try:
+        #    db_util.delete_data("tmuser", "user_id", 202345671)
+        #except Exception as e:
+        #    print(f"Error: {e}")
 
     except Exception as error:
-        print(f"Ein Fehler ist aufgetreten: {error}")
+        print(f"Error 2.0: {error}")
 
     finally:
         # Verbindung schließen
