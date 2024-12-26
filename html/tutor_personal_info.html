@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Personal Bio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='tutor_personal_info.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.querySelector('.dropdown-btn').addEventListener('click', () => {
+            document.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        function logout() {
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+<body>
+<header class="header">
+        <div class="login-info">
+            <button class="dropdown-btn">Login Info</button>
+            <div class="dropdown-menu">
+                <p>Username: <span id="username">JohnDoe</span></p>
+                <label>
+                    <input type="checkbox" id="stay-remembered" checked> Stay remembered on this device
+                </label>
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+        <div class="logo">
+            <h1>Logo</h1>
+        </div>
+    </header>
+</body>
+</html>
