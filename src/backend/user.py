@@ -96,21 +96,23 @@ class User:
                     first_name=user.get("first_name", None), last_name=user.get("last_name", None))
                 for user in matching_users]
 
-    @staticmethod
-    def _generate_unique_user_id(user_type: Literal["user", "tutor"]) -> str:
+    @classmethod
+    def _generate_unique_user_id(cls) -> str:
         """
-        Returns a random 16-character string
+        Returns a random 16-character string.
         """
-        user_ids = []
-        if user_type == "user":
-            user_ids = set(get_user_ids())
-        elif user_type == "tutor":
-            user_ids = set(get_tutor_ids())
-
+        user_ids = cls.get_ids()
         while True:
             user_id = token_hex(8)
             if user_id not in user_ids:
                 return user_id
+
+    @classmethod
+    def get_ids(cls) -> set:
+        """
+        Retrieves all user IDs.
+        """
+        return set(get_user_ids())
 
     @classmethod
     def get_user_by_id(cls, user_id: str) -> Optional["User"]:
@@ -196,6 +198,13 @@ class Tutor(User):
         """
         return [TimeWindow(day, "9:00", "18:00")
                 for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]]
+
+    @classmethod
+    def get_ids(cls) -> set:
+        """
+        Retrieves all tutor IDs.
+        """
+        return set(get_tutor_ids())
 
 class Student(User):
     pass
