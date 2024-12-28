@@ -1,75 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register New User</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('#username-field').on('input', function () {
-                let query = $(this).val();
-                if (query.length > 0) {
-                    $.ajax({
-                        url: 'http://127.0.0.1:5000/login/get_suggestions',
-                        method: 'GET',
-                        data: { query: query },
-                        success: function (data) {
-                            let suggestionsBox = $('#suggestions');
-                            suggestionsBox.empty();
-                            data.forEach(function (suggestion) {
-                                suggestionsBox.append(
-                                    `<div class="suggestion-item" data-username="${suggestion.username}" data-user-id="${suggestion.user_id}">${suggestion.username}</div>`
-                                );
-                            });
-                            suggestionsBox.show();
-                        }
-                    });
-                } else {
-                    $('#suggestions').empty().hide();
-                }
+        function toggleFields() {
+            const usertype = document.getElementById("usertype").value;
+
+            // Group fields by user type
+            const studentFields = [
+                document.getElementById("student-field")
+            ];
+            const tutorFields = [
+                document.getElementById("tutor-field-1"),
+                document.getElementById("tutor-field-2")
+            ];
+            const adminFields = [
+                document.getElementById("admin-field-1"),
+                document.getElementById("admin-field-2"),
+                document.getElementById("admin-field-3")
+            ];
+
+            // Combine all fields into one list
+            const allFields = [...studentFields, ...tutorFields, ...adminFields];
+
+            // Hide all fields initially
+            allFields.forEach(field => {
+                if (field) field.style.display = 'none';
             });
 
-            $(document).on('click', '#suggestions div', function () {
-                $('#username-field').val($(this).text());
-                $('#suggestions').empty().hide();
-            });
+            // Show fields based on usertype
+            if (usertype === 'student') {
+                studentFields.forEach(field => {
+                    if (field) field.style.display = 'block';
+                });
+            } else if (usertype === 'tutor') {
+                tutorFields.forEach(field => {
+                    if (field) field.style.display = 'block';
+                });
+            } else if (usertype === 'admin') {
+                adminFields.forEach(field => {
+                    if (field) field.style.display = 'block';
+                });
+            }
+        }
 
-            $(document).click(function (event) {
-                if (!$(event.target).closest('#username-field, #suggestions').length) {
-                    $('#suggestions').empty().hide();
-                }
-            });
-        });
     </script>
     <script>
-        $(document).on('click', '.suggestion-item', function () {
-            let username = $(this).data('username');
-            let userId = $(this).data('user-id');
-            $('#username-field').val(username);
-            $('#suggestions').empty().hide();
+        function addListAttribute(list_id, input_name, attribute_name) {
+            const list = document.getElementById(list_id);
+            const newItem = document.createElement("div");
+            newItem.className = "attribute-item";
+            newItem.innerHTML = `
+        <input type="text" name="${input_name}" class="tutor-info" placeholder="Enter a ${attribute_name}">
+        <button type="button" onclick="removeTutorAttribute(this)">X</button>
+    `;
+            list.appendChild(newItem);
+        }
 
-            // Send suggestion to the backend
-            $.ajax({
-                url: 'http://127.0.0.1:5000/login/process_suggestion',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ username: username, user_id: userId }),
-                success: function (response) {
-                    if (response.redirect) {
-                        window.location.href = response.redirect; // Perform the redirect
-                    }
-                },
-                error: function (error) {
-                    console.error('Error processing suggestion:', error);
-                }
-            });
-        });
+        function removeTutorAttribute(button) {
+            const item = button.parentElement;
+            item.remove();
+        }
     </script>
 </head>
 <body>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.username.label }} {{ form.username(size=32) }}
+    </div>
+    <div>
+        {{ form.name.label }} {{ form.name(size=32) }}
+    </div>
+    <div>
+        {{ form.surname.label }} {{ form.surname(size=32) }}
+    </div>
+    <div>
+        {{ form.password.label }} {{ form.password(size=32) }}
+    </div>
+    <div>
+        {{ form.usertype.label }} {{ form.usertype(id="usertype", onchange="toggleFields()") }}
+    </div>
 
-    <h1>Create a new account</h1>
-    <p>{{ message }}</p>
+    <!-- Dynamic Fields -->
+    <div id="student-field" style="">
+        <label for="student-info">Enrollment number:</label>
+        <input type="text" name="student_info" id="student-info">
+    </div>
+
+    <div id="tutor-field-1" style="display: none;">
+        <label for="tutor-info-1">Tutor register number:</label>
+        <input type="text" name="tutor_info_1" id="tutor-info-1">
+    </div>
+    <div id="tutor-field-2" style="display: none;">
+        <label>Qualifications:</label>
+        <div id="tutor-qualification-attribute-list">
+            <div class="attribute-item">
+                <input type="text" name="tutor_info_2[]" class="tutor-info" placeholder="Enter a qualification">
+                <button type="button" onclick="removeTutorAttribute(this)">X</button>
+            </div>
+        </div>
+        <button type="button" id="add-tutor-attribute" onclick="addListAttribute('tutor-qualification-attribute-list', 'tutor_info_2[]', 'qualification')" style="margin-left: 20px">+</button>
+    </div>
+    
+
+
+    <div id="admin-field-1" style="display: none;">
+        <label for="admin-info-1">Admin number:</label>
+        <input type="text" name="admin_info_1" id="admin-info-1">
+    </div>
+    <div id="admin-field-2" style="display: none;">
+        <label for="admin-info-2">Start date:</label>
+        <input type="text" name="admin_info_2" id="admin-info-2">
+    </div>
+    <div id="admin-field-3" style="display: none;">
+        <label for="admin-info-3">Role in TutorMe:</label>
+        <input type="text" name="admin_info_3" id="admin-info-3">
+    </div>
+
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
 </body>
 </html>
+
