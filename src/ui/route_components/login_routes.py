@@ -12,7 +12,7 @@ class LoginRoutes:
     def process_suggestion():
         suggestion = request.json
 
-        redirect_url = url_for('login.personal_bio', user_id=suggestion['user_id'])
+        redirect_url = url_for('tutor.personal_bio', user_id=suggestion['user_id'])
         return jsonify({'redirect': redirect_url})
 
     @staticmethod
@@ -38,7 +38,7 @@ class LoginRoutes:
                 password = form.password.data
                 user = User.authenticate(username, password)
                 if user is not None:
-                    return redirect(url_for('login.personal_bio', user_id=user.user_id))
+                    return redirect(url_for('tutor.personal_bio', user_id=user.user_id))
                 else:
                     flash('Invalid username or password', 'danger')
             if form.register_new_user.data:
