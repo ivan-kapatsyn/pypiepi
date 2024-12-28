@@ -5,7 +5,6 @@ from src.backend.qualification import Qualification
 from src.backend.time_window import TimeWindow
 from src.backend.room import Room
 from src.backend.evaluation import Evaluation
-from src.backend.user import Tutor, Student
 
 from typing import Optional, List, Union
 import logging
@@ -13,7 +12,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 class Course:
-    def __init__(self, name: str, qualification: "Qualification", max_participants: int, tutor: Tutor,
+    def __init__(self, name: str, qualification: "Qualification", max_participants: int, tutor: "Tutor",
                  students: Optional[List["Student"]] = None,
                  schedule: Optional[List["TimeWindow"]] = None,
                  location: Optional[Union["Room", List["Room"]]] = None,
