@@ -5,31 +5,55 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='tutor_personal_info.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" defer></script>
     <script>
-        document.querySelector('.dropdown-btn').addEventListener('click', () => {
-            document.querySelector('.dropdown-menu').classList.toggle('show');
+        const stayRememberedCheckbox = document.getElementById('stay-remembered');
+
+        stayRememberedCheckbox.addEventListener('change', () => {
+            if (stayRememberedCheckbox.checked) {
+                alert('You will stay remembered on this device.');
+            } else {
+                alert('You will not stay remembered on this device.');
+            }
         });
 
-        function logout() {
+        const logoutButton = document.querySelector('.logout');
+
+        logoutButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            alert('Redirecting to login page...');
             window.location.href = 'login.html';
-        }
+        });
     </script>
 </head>
 <body>
-<header class="header">
-        <div class="login-info">
-            <button class="dropdown-btn">Login Info</button>
-            <div class="dropdown-menu">
-                <p>Username: <span id="username">JohnDoe</span></p>
-                <label>
-                    <input type="checkbox" id="stay-remembered" checked> Stay remembered on this device
+<header class="d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
+    <!-- Logo -->
+    <div class="header-logo">
+        <img src="{{ url_for('static', filename='banner.png') }}" alt="Logo" style="height: 50px;">
+    </div>
+    <!-- Login Info Dropdown -->
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-bs-toggle="dropdown" aria-expanded="false">
+            Login Info
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><span class="dropdown-item">Username: {{ username }}</span></li>
+            <li>
+                <label class="dropdown-item">
+                    <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
+                    remembered on this device
                 </label>
-                <button onclick="logout()">Logout</button>
-            </div>
-        </div>
-        <div class="logo">
-            <h1>Logo</h1>
-        </div>
-    </header>
+            </li>
+            <li>
+                <a class="dropdown-item" href="http://127.0.0.1:5000/login/index">Logout</a>
+            </li>
+        </ul>
+    </div>
+</header>
+
+
 </body>
 </html>

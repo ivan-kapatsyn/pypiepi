@@ -70,6 +70,7 @@ body {
     background-color: #555;
 }
 
-.logo h1 {
+.header-logo {
     margin: 0;
+    align-self: center;
 }
