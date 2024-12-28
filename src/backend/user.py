@@ -1,15 +1,15 @@
 # TODO data_base_util Dummy
 from src.backend.data_base_util import find_user_by_username, save_user, users_with_remember_me, get_user_ids, \
-    find_user_by_id, add_course_to_tutor
+    find_user_by_id, register_token_exists, remove_register_token, save_tutor, get_tutor_ids
 
 from src.utils.password_utils import PasswordUtils
 from src.backend.course import Course
 from src.backend.evaluation import Evaluation
 from src.backend.time_window import TimeWindow
 from src.backend.qualification import Qualification
-from src.backend.exceptions import DuplicationError
+from src.backend.exceptions import DuplicationError, WrongTokenError
 
-from typing import List, Optional
+from typing import List, Optional, Literal
 from secrets import token_hex
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -62,7 +62,7 @@ class User:
             raise DuplicationError(f"User with username '{username}' already exists.")
 
         hashed_password = PasswordUtils.hash_password(password)
-        user_id = cls._generate_unique_user_id()
+        user_id = cls._generate_unique_user_id("user")
 
         new_user_data = {
             "userID": user_id,
@@ -97,11 +97,16 @@ class User:
                 for user in matching_users]
 
     @staticmethod
-    def _generate_unique_user_id() -> str:
+    def _generate_unique_user_id(user_type: Literal["user", "tutor"]) -> str:
         """
         Returns a random 16-character string
         """
-        user_ids = set(get_user_ids())
+        user_ids = []
+        if user_type == "user":
+            user_ids = set(get_user_ids())
+        elif user_type == "tutor":
+            user_ids = set(get_tutor_ids())
+
         while True:
             user_id = token_hex(8)
             if user_id not in user_ids:
@@ -142,17 +147,55 @@ class Tutor(User):
         self.active_courses = active_courses or []
         self.evaluation = evaluation
 
-    def add_course(self, course: "Course"):
+    @staticmethod
+    def register_new_tutor(username: str, first_name: str, last_name: str, password: str,
+                          tutor_register_number: int, qualifications: List["Qualification"]) -> str:
         """
-        Add a new course to the tutor's active courses.
+        Register a new tutor with validation and default settings.
         """
-        if course in self.active_courses:
-            logger.warning(f"Course '{course.name}' is already assigned to tutor '{self.username}'.")
-            return
+        if find_user_by_username(username):
+            raise DuplicationError(f"User with username '{username}' already exists.")
 
-        add_course_to_tutor(self, course)
-        self.active_courses.append(course)
-        logger.info(f"Course '{course.name}' added to tutor '{self.username}'.")
+        if not register_token_exists(tutor_register_number):
+            raise WrongTokenError(f"Invalid register token '{tutor_register_number}'.")
+        remove_register_token(tutor_register_number)
+
+        available_time = Tutor._default_available_time()
+        evaluation = Evaluation()
+
+        user_id = User._generate_unique_user_id("user")
+        user_data = {
+            "userID": user_id,
+            "username": username,
+            "password": PasswordUtils.hash_password(password),
+            "remember_me": False,
+            "bio": None,
+            "first_name": first_name,
+            "last_name": last_name
+        }
+
+        tutor_data = {
+            "userID": user_id,
+            "tutorID": User._generate_unique_user_id("tutor"),
+            "qualifications": qualifications,
+            "available_time": available_time,
+            "active_courses": None,
+            "evaluation": evaluation
+        }
+
+        save_user(user_data)
+        save_tutor(tutor_data)
+
+        logger.info(f"Tutor registered successfully with username: {username}")
+        return user_id
+
+    @staticmethod
+    def _default_available_time() -> List[TimeWindow]:
+        """
+        Generate default available time for a tutor.
+        """
+        return [TimeWindow(day, "9:00", "18:00")
+                for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]]
 
 class Student(User):
     pass
