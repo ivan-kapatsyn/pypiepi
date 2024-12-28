@@ -8,16 +8,30 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" defer></script>
     <script>
-        const stayRememberedCheckbox = document.getElementById('stay-remembered');
+        $(document).ready(function () {
+            // Attach click event to rememberCheckbox
+            $('#rememberCheckbox').on('change', function () {
+                const isChecked = $(this).is(':checked'); // Check if the checkbox is checked
+                const userId = '{{ user_id }}'; // Replace with dynamic user ID if available
 
-        stayRememberedCheckbox.addEventListener('change', () => {
-            if (stayRememberedCheckbox.checked) {
-                alert('You will stay remembered on this device.');
-            } else {
-                alert('You will not stay remembered on this device.');
-            }
+                // AJAX request
+                $.ajax({
+                    url: `http://127.0.0.1:5000/tutor/${userId}/toggle_remeber_me`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({remember_me: isChecked}),
+                    success: function (response) {
+                        console.log('Remember me toggled:', response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error toggling remember me:', status, error);
+                    }
+                });
+            });
         });
+    </script>
 
+    <script>
         const logoutButton = document.querySelector('.logout');
 
         logoutButton.addEventListener('click', (event) => {
@@ -43,7 +57,7 @@
             <li><span class="dropdown-item">Username: {{ username }}</span></li>
             <li>
                 <label class="dropdown-item">
-                    <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
+                    <input type="checkbox" id="rememberCheckbox"  {% if remember_me %}checked{% endif %}> Stay
                     remembered on this device
                 </label>
             </li>
