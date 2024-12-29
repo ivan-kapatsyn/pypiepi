@@ -1,6 +1,6 @@
 # TODO data_base_util Dummy
 from src.backend.data_base_util import find_user_by_username, save_user, users_with_remember_me, get_user_ids, \
-    find_user_by_id, register_token_exists, remove_register_token, save_tutor, get_tutor_ids
+    find_user_by_id, register_token_exists, remove_register_token, save_tutor, get_tutor_ids, find_tutor_by_user_id
 
 from src.utils.password_utils import PasswordUtils
 from src.backend.course import Course
@@ -9,7 +9,7 @@ from src.backend.time_window import TimeWindow
 from src.backend.qualification import Qualification
 from src.backend.exceptions import DuplicationError, WrongTokenError
 
-from typing import List, Optional, Literal
+from typing import List, Optional
 from secrets import token_hex
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -120,17 +120,35 @@ class User:
         Retrieve a user by their ID.
         """
         # TODO remake it to retrieve a User instance by its id in the db
-        user = find_user_by_id(user_id)
-        if not user:
+        user_data = find_user_by_id(user_id)
+        if not user_data:
             return None
+
+        tutor_data = find_tutor_by_user_id(user_id)
+        if tutor_data:
+            return Tutor(
+                user_id=user_data["userID"],
+                username=user_data["username"],
+                password=user_data["password"],
+                remember_me=user_data.get("remember_me", False),
+                bio=user_data.get("bio", None),
+                first_name=user_data.get("firstName", None),
+                last_name=user_data.get("lastName", None),
+                tutor_id=tutor_data["tutorID"],
+                qualifications=tutor_data.get("qualifications", []),
+                available_time=tutor_data.get("available_time", []),
+                active_courses=tutor_data.get("active_courses", []),
+                evaluation=tutor_data.get("evaluation", None),
+            )
+
         return cls(
-            user_id=user["userID"],
-            username=user["username"],
-            password=user["password"],
-            remember_me=user.get("remember_me", False),
-            bio=user.get("bio", None),
-            first_name=user.get("first_name", None),
-            last_name=user.get("last_name", None)
+            user_id=user_data["userID"],
+            username=user_data["username"],
+            password=user_data["password"],
+            remember_me=user_data.get("remember_me", False),
+            bio=user_data.get("bio", None),
+            first_name=user_data.get("first_name", None),
+            last_name=user_data.get("last_name", None)
         )
 
 class Tutor(User):

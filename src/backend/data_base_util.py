@@ -25,6 +25,9 @@ def find_user_by_username(username: str):
 def find_user_by_id(user_id: str):
     return USERS.get(user_id, {})
 
+def find_tutor_by_user_id(user_id: str):
+    return next((tutor for tutor in TUTORS.values() if tutor["userID"] == user_id), None)
+
 def save_user(user_data):
     pass
 
