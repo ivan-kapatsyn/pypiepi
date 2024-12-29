@@ -155,7 +155,7 @@ class DataBaseUtil:
             return False
 
 #------INSERT ONE TO THE DATABASE--------
-    def insert_one(self, table_name: str, obj: Dict[str, any], column: str, dublicate: bool = False) -> None:
+    def insert_one(self, table_name: str, obj: Dict[str, any], column: str) -> None:
         query_check = f"SELECT 1 FROM {table_name} WHERE {column} = %s;"
         result = self.execute_command(
             sql_query=query_check,
@@ -221,7 +221,7 @@ class DataBaseUtil:
             for obj, err in errors:
                 print(f"Error inserting into {table_name}: {err}")
 
-    #------FETCH ONE--------
+#------FETCH ONE--------
     def fetch_one(self, query: str, params: Tuple[Any, ...] = ()) -> DictRow | None:
         result_fetch_one = self.execute_command(
             sql_query=query,
@@ -309,8 +309,20 @@ class DataBaseUtil:
 
         print(f"Successfully deleted entry where {condition} = {value}.")
 
+#-----INITIALISE DATABASE--------
+    def initialise(self, json_file: str) -> None:
+        print("Initializing the database...")
+        # Drop existing tables
+        self.drop_all_the_tables()
+
+        # Create new schema
+        self.create_schemes(json_file)
+
+        # Optionally, insert initial data or perform any other setup here
+        print("Database initialized successfully.")
+
 #-----CLOSE CONNECTION--------
-    def close_connection(self):
+    def __del__(self):
         if self.cursor is not None:
             self.cursor.close()
         if self.__connection is not None:
