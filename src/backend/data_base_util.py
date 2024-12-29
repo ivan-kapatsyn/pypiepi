@@ -51,3 +51,6 @@ def remove_register_token(register_number):
 
 def save_tutor(tutor_data):
     pass
+
+def edit_remember_me(user_id: str, val: bool):
+    USERS[user_id]["remember_me"] = val

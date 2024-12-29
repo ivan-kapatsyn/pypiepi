@@ -1,6 +1,7 @@
 # TODO data_base_util Dummy
 from src.backend.data_base_util import find_user_by_username, save_user, users_with_remember_me, get_user_ids, \
-    find_user_by_id, register_token_exists, remove_register_token, save_tutor, get_tutor_ids, find_tutor_by_user_id
+    find_user_by_id, register_token_exists, remove_register_token, save_tutor, get_tutor_ids, find_tutor_by_user_id, \
+    edit_remember_me
 
 from src.utils.password_utils import PasswordUtils
 from src.backend.course import Course
@@ -150,6 +151,13 @@ class User:
             first_name=user_data.get("first_name", None),
             last_name=user_data.get("last_name", None)
         )
+
+    def toggle_saved_button(self):
+        """
+        Toggles the 'remember_me' field between True and False.
+        """
+        self.remember_me = not self.remember_me
+        edit_remember_me(self.user_id, self.remember_me)
 
 class Tutor(User):
     # TODO attributes based on the issue and JSON data base structure, might change later
