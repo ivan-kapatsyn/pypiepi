@@ -29,7 +29,7 @@ class DataBaseUtil:
             self.cursor = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         except Exception as error:
-            print(f"Fehler beim Herstellen der Verbindung: {error}")
+            print(f"Error to connect with the database: {error}")
 
 #---EXECUTE COMMAND----
     def execute_command(self, sql_query: str = None, params: tuple = None, fetch_one: bool = False, log_message: str =None):
@@ -43,7 +43,7 @@ class DataBaseUtil:
             self.connection.commit()
             return True
         except Exception as error:
-            print(f"Fehler ist aufgetreten: {error}")
+            print(f"Error by execute command: {error}")
             self.connection.rollback()
             return None
 
@@ -53,7 +53,7 @@ class DataBaseUtil:
         return self.execute_command(
             sql_query=create_user_query,
             params=(username, password),
-            log_message=f"Benutzer '{username}' wurde erstellt.")
+            log_message=f"User '{username}' was created.")
 
 #-------GIVING THE USER ALL PRIVILEGES--------
     def grant_all_privileges(self, username, dbname):
@@ -61,7 +61,7 @@ class DataBaseUtil:
         return self.execute_command(
             sql_query=grant_privileges_query,
             params=(username, dbname),
-            log_message=f"Alle Berechtigungen auf die Datenbank '{dbname}' wurden an '{username}' gewährt."
+            log_message=f"Grant all privileges on database '{dbname}' to '{username}'."
         )
 
 #------CHECK IF TABLE EXIST---------
@@ -80,13 +80,6 @@ class DataBaseUtil:
                 log_message=f"Table '{table_name}' exists."
             )
         return result_exist[0] if result_exist else False
-
-#-----CLOSE CONNECTION--------
-    def close_connection(self):
-        if self.cursor is not None:
-            self.cursor.close()
-        if self.__connection is not None:
-            self.__connection.close()
 
 # -------DROP ALL TABLES----------
     def drop_all_the_tables(self):
@@ -109,11 +102,11 @@ class DataBaseUtil:
             for table in tables:
                 table_name = table.get("table_name")
                 if not table_name:
-                    raise ValueError("Fehlender Tabellenname in der JSON-Datei.")
+                    raise ValueError("Mising table name in the JSON file.")
 
                 columns = table.get("columns", [])
                 if not columns:
-                    raise ValueError(f"Keine Spalten für die Tabelle {table_name} definiert.")
+                    raise ValueError(f"No rows defined at the table {table_name}.")
 
                 column_definitions = []
                 foreign_keys = []
@@ -124,26 +117,26 @@ class DataBaseUtil:
                     constraints = column.get("constraints", "")
 
                     if not column_name or not data_type:
-                        raise ValueError(f"Fehlende Spaltendefinition in der Tabelle {table_name}: {column}")
+                        raise ValueError(f"Missing column definition in the table {table_name}: {column}")
 
                     column_name = str(column_name).strip()
                     data_type = str(data_type).strip()
                     constraints = str(constraints).strip()
 
-                    # Wenn es sich um einen FOREIGN KEY handelt, füge ihn zu einer separaten Liste hinzu
+                    # If it is a FOREIGN KEY, add it to a separate list
                     if "FOREIGN KEY" in constraints:
                         foreign_keys.append(
                             f"FOREIGN KEY ({column_name}) {constraints.split('FOREIGN KEY')[1].strip()}")
-                        constraints = ""  # Foreign key constraint sollte nicht in der Spaltendefinition stehen
+                        constraints = ""
 
-                    # Erstelle die Spaltendefinition
+                    # Create the column definition
                     column_definition = f"{column_name} {data_type} {constraints}".strip()
                     column_definitions.append(column_definition)
 
-                # Baue die CREATE TABLE-Anweisung zusammen
+                # Creating the script for creating a table
                 create_table_script = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(column_definitions)}"
 
-                # Füge die FOREIGN KEYS hinzu, falls vorhanden
+                # add the FOREIGN KEYS if it's available
                 if foreign_keys:
                     create_table_script += f", {', '.join(foreign_keys)}"
 
@@ -152,14 +145,13 @@ class DataBaseUtil:
                 print(f"Create Table {table_name}")
                 print(create_table_script)
 
-                # Führe die SQL-Anweisung aus
                 self.cursor.execute(create_table_script)
 
             self.cursor.connection.commit()
-            print("Alle Tabellen wurden erfolgreich erstellt.")
+            print("All tables were created successfully.")
 
         except Exception as error:
-            print(f"Fehler ist aufgetreten: {error}")
+            print(f"Error by creating the database scheme: {error}")
             return False
 
 #------INSERT ONE TO THE DATABASE--------
@@ -169,14 +161,13 @@ class DataBaseUtil:
             sql_query=query_check,
             params=(obj[column],),
             fetch_one=True,
-            log_message=None  # Keine Log-Nachricht für den Check
+            log_message=None
         )
 
         if result:
             print(f"Duplicate entry already exists for {column}: {obj[column]}")
             return
 
-        # Einfügen des neuen Objekts
         columns = obj.keys()
         values = tuple(obj.values())
         placeholders = ", ".join(["%s"] * len(columns))
@@ -244,21 +235,12 @@ class DataBaseUtil:
 
 #------FETCH MANY-------
     def fetch_all(self, query: str, params: Tuple[Any, ...] = ()) -> List[Dict[str, Any]]:
-        results = self.execute_command(
-            sql_query=query,
-            params=params,
-            fetch_one=False,
-            log_message=None
-        )
-
-        if results is None:  # Wenn ein Fehler auftritt
+        self.execute_command(sql_query=query, params=params)  # Execute the command without fetch_one
+        if self.cursor.rowcount == 0:  # Check if no rows were returned
             return []
 
-        if isinstance(results, bool):  # Wenn es True zurückgibt
-            return []  # Keine Zeilen gefunden
-
-        columns = [desc[0] for desc in self.cursor.description]
-        return [dict(zip(columns, row)) for row in results]
+        columns = [desc[0] for desc in self.cursor.description]  # Get column names
+        return [dict(zip(columns, row)) for row in self.cursor.fetchall()]  # Fetch all rows
 
 #------LOAD ONE DATA------
     def load_data(self, table_name: str, column: str, value:any ) -> DictRow:
@@ -270,17 +252,48 @@ class DataBaseUtil:
         else:
             return result_load
 
-
-#------LOAD MANY DATA-------
-    def load_many(self, table_name: str, filter_function: Callable[[Dict[str,Any]], bool]) -> List[Dict[str, Any]]:
+# ------LOAD MANY DATA-------
+    def load_many(self, table_name: str, filter_function: Callable[[Dict[str, Any]], bool]) -> List[Dict[str, Any]]:
         query = f'SELECT * FROM {table_name};'
         results = self.fetch_all(query)
+        print(f"Fetched results from {table_name}: {results}")  # Debug output
         return [result for result in results if filter_function(result)]
 
-#-----FILTER FUNCTION FOR LOADING MANY DATA-------
+# -----FILTER FUNCTION FOR LOADING MANY DATA-------
     @staticmethod
     def filter_function(obj):
         return obj['username'].startswith('A')
+
+# ------LOAD/DELETE DATA WITH CONDITIONS------
+    def build_query(
+            self,
+            table_name: str,
+            conditions: List[Tuple[str, Any]],
+            operator: str,
+            query_type: str = "SELECT"
+    ) -> Tuple[str, List[Any]]:
+
+        if operator not in ("AND", "OR"):
+            raise ValueError("Operator muss 'AND' oder 'OR' sein.")
+
+        if query_type not in ("SELECT", "DELETE"):
+            raise ValueError("Nur 'SELECT' und 'DELETE' werden unterstützt.")
+
+        # Bedingungen zusammenstellen
+        condition_string = f" {operator} ".join([f"{col} = %s" for col, _ in conditions])
+
+        # Abfrage basierend auf Typ erstellen
+        if query_type == "SELECT":
+            query = f"SELECT * FROM {table_name} WHERE {condition_string};"
+        elif query_type == "DELETE":
+            query = f"DELETE FROM {table_name} WHERE {condition_string};"
+
+        # Parameter aus den Bedingungen extrahieren
+        params = [value for _, value in conditions]
+
+        # Abfrage ausführen (Simulation)
+        return query, params
+
 
 #-----DELETING DATA---------
     def delete_data(self, table_name: str, condition: str, value: Any) -> None:
@@ -296,6 +309,12 @@ class DataBaseUtil:
 
         print(f"Successfully deleted entry where {condition} = {value}.")
 
+#-----CLOSE CONNECTION--------
+    def close_connection(self):
+        if self.cursor is not None:
+            self.cursor.close()
+        if self.__connection is not None:
+            self.__connection.close()
 
 
 if __name__ == "__main__":
@@ -315,10 +334,10 @@ if __name__ == "__main__":
         else:
             print("There was a problem. The Table was not dropped")
 
-        # Benutzer erstellen
+        # create user
         #db_util.create_user(username="new_user", password="password")
 
-        # Berechtigungen gewähren
+        # giving all privileges
         #db_util.grant_all_privileges(username="new_user", dbname=EnvVariableUtil.get_env_variable("DBNAME"))
 
         # Absoluter Pfad zum Hauptverzeichnis
@@ -326,7 +345,7 @@ if __name__ == "__main__":
         json_file_path = base_path / "data_folder" / "database_structure.json"
 
         if not json_file_path.exists():
-            raise FileNotFoundError(f"Die Datei {json_file_path} wurde nicht gefunden.")
+            raise FileNotFoundError(f"The JSON-file {json_file_path} was not found.")
         db_util.create_schemes(json_file_path)
 
         #inserts into the database
@@ -367,29 +386,43 @@ if __name__ == "__main__":
         except Exception as e:
             print(e)
 
-        try:
-            load_one_user = db_util.load_data('tmuser', 'user_id', 202345671)
-            if load_one_user:
-                print(f"Searched user: {load_one_user}")
-        except Exception as e:
-            print(f"Fehler beim Laden der Daten: {e}")
+        #try:
+        #    load_one_user = db_util.load_data('tmuser', 'user_id', 202345671)
+        #    if load_one_user:
+        #        print(f"Searched user: {load_one_user}")
+        #except Exception as e:
+        #    print(f"Error loading the data: {e}")
 
         try:
             load_many_user = db_util.load_many(table_name='tmuser', filter_function=DataBaseUtil.filter_function)
             print(f"Searched user: {load_many_user}")
         except Exception as e:
-            print(f"Fehler beim Laden der Daten: {e}")
+            print(f"Error loading the data: {e}")
 
         #try:
         #    db_util.delete_data("tmuser", "user_id", 202345671)
         #except Exception as e:
         #    print(f"Error: {e}")
 
+        operator = "AND"
+        query_type = "SELECT"
+        table_name = "tmuser"
+        conditions = [("user_typ", "admin"), ("remember_me", "TRUE")]
+
+        # Create SQL-query
+        try:
+            query, params = db_util.build_query(table_name, conditions, operator, query_type)
+            result = db_util.fetch_all(query, params)
+            print(result)
+        except ValueError as e:
+            print(f"Error: {e}")
+
+
     except Exception as error:
-        print(f"Error 2.0: {error}")
+        print(f"Error: {error}")
 
     finally:
-        # Verbindung schließen
+        # closing the connection
         if db_util:
             print("Closing the connection...")
             db_util.close_connection()
