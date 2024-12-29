@@ -62,7 +62,7 @@ class User:
             raise DuplicationError(f"User with username '{username}' already exists.")
 
         hashed_password = PasswordUtils.hash_password(password)
-        user_id = cls._generate_unique_user_id("user")
+        user_id = cls._generate_unique_user_id()
 
         new_user_data = {
             "userID": user_id,
@@ -165,7 +165,7 @@ class Tutor(User):
         available_time = Tutor._default_available_time()
         evaluation = Evaluation()
 
-        user_id = User._generate_unique_user_id("user")
+        user_id = User._generate_unique_user_id()
         user_data = {
             "userID": user_id,
             "username": username,
@@ -178,7 +178,7 @@ class Tutor(User):
 
         tutor_data = {
             "userID": user_id,
-            "tutorID": User._generate_unique_user_id("tutor"),
+            "tutorID": User._generate_unique_user_id(),
             "qualifications": qualifications,
             "available_time": available_time,
             "active_courses": None,
