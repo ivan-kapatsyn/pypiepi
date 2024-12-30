@@ -155,29 +155,38 @@ class DataBaseUtil:
             return False
 
 #------INSERT ONE TO THE DATABASE--------
-    def insert_one(self, table_name: str, obj: Dict[str, any], column: str) -> None:
-        query_check = f"SELECT 1 FROM {table_name} WHERE {column} = %s;"
-        result = self.execute_command(
-            sql_query=query_check,
-            params=(obj[column],),
-            fetch_one=True,
-            log_message=None
-        )
+    def insert_one(self, table_name: str, obj: Dict[str, any], column: str, dublicate: bool = False) -> None:
+        print(f"Inserting in table {table_name}")
 
-        if result:
-            print(f"Duplicate entry already exists for {column}: {obj[column]}")
-            return
+        initial_key_value = obj[column]
 
-        columns = obj.keys()
-        values = tuple(obj.values())
-        placeholders = ", ".join(["%s"] * len(columns))
-        insert_query = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders});"
+        if dublicate:
+            while True:
+                query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
+                self.execute_command(query_check, (initial_key_value,))
+                exists = self.cursor.fetchone()[0]
 
-        self.execute_command(
-            sql_query=insert_query,
-            params=values,
-            log_message=f"Object inserted successfully into {table_name}: {obj[column]}"
-        )
+                if not exists:
+                    break
+
+                initial_key_value += 1
+
+                # Update the object with the new key value
+                obj[column] = initial_key_value
+                print(f"Updated object key: {obj[column]}")  # Debug output
+
+                # Prepare the insert statement
+            columns = ', '.join(obj.keys())
+            values_placeholder = ', '.join(['%s'] * len(obj))
+            query = f'INSERT INTO {table_name} ({columns}) VALUES ({values_placeholder});'
+
+            # Execute the insert command
+            self.execute_command(
+                sql_query=query,
+                params=tuple(obj.values()),
+            )
+            print(f"Inserted {obj} into {table_name}")  # Debug output
+
 
 # ------INSERT MANY TO THE DATABASE--------
     def insert_many(self, table_name: str, objects: List[Dict[str, any]], column: str, dublicate: bool = False) -> None:
@@ -214,7 +223,6 @@ class DataBaseUtil:
                 params=tuple(obj.values()),
                 )
             print(f"Inserted {obj} into {table_name}")  # Debug output
-
 
         if errors:
             print("Errors encountered during insertion:")
@@ -279,19 +287,15 @@ class DataBaseUtil:
         if query_type not in ("SELECT", "DELETE"):
             raise ValueError("Nur 'SELECT' und 'DELETE' werden unterstützt.")
 
-        # Bedingungen zusammenstellen
         condition_string = f" {operator} ".join([f"{col} = %s" for col, _ in conditions])
 
-        # Abfrage basierend auf Typ erstellen
         if query_type == "SELECT":
             query = f"SELECT * FROM {table_name} WHERE {condition_string};"
         elif query_type == "DELETE":
             query = f"DELETE FROM {table_name} WHERE {condition_string};"
 
-        # Parameter aus den Bedingungen extrahieren
         params = [value for _, value in conditions]
 
-        # Abfrage ausführen (Simulation)
         return query, params
 
 
