@@ -32,7 +32,7 @@ class DataBaseUtil:
             print(f"Error to connect with the database: {error}")
 
 #---EXECUTE COMMAND----
-    def execute_command(self, sql_query: str = None, params: tuple = None, fetch_one: bool = False, log_message: str =None):
+    def __execute_command(self, sql_query: str = None, params: tuple = None, fetch_one: bool = False, log_message: str =None):
         try:
             self.cursor.execute(sql_query, params)
             if log_message:
@@ -48,24 +48,24 @@ class DataBaseUtil:
             return None
 
 # -------CREATING A USER----------------
-    def create_user(self, username, password):
+    def __create_user(self, username, password):
         create_user_query = f"CREATE USER {username} WITH PASSWORD '{password}';"
-        return self.execute_command(
+        return self.__execute_command(
             sql_query=create_user_query,
             params=(username, password),
             log_message=f"User '{username}' was created.")
 
 #-------GIVING THE USER ALL PRIVILEGES--------
-    def grant_all_privileges(self, username, dbname):
+    def __grant_all_privileges(self, username, dbname):
         grant_privileges_query = f"GRANT ALL PRIVILEGES ON DATABASE {dbname} TO {username};"
-        return self.execute_command(
+        return self.__execute_command(
             sql_query=grant_privileges_query,
             params=(username, dbname),
             log_message=f"Grant all privileges on database '{dbname}' to '{username}'."
         )
 
 #------CHECK IF TABLE EXIST---------
-    def check_if_table_exists(self, table_name) -> bool:
+    def _check_if_table_exists(self, table_name) -> bool:
         query = f'''SELECT EXISTS (
                         SELECT 1
                         FROM information_schema.tables
@@ -73,7 +73,7 @@ class DataBaseUtil:
                         AND table_name = '{table_name}'
                     );
                 '''
-        result_exist = self.execute_command(
+        result_exist = self.__execute_command(
                 sql_query=query,
                 params=(table_name,),
                 fetch_one=True,
@@ -82,19 +82,19 @@ class DataBaseUtil:
         return result_exist[0] if result_exist else False
 
 # -------DROP ALL TABLES----------
-    def drop_all_the_tables(self):
+    def _drop_all_the_tables(self):
             query = f'''DROP SCHEMA public CASCADE;
                                     CREATE SCHEMA public;    
                                     GRANT ALL ON SCHEMA public TO public;
                                     '''
-            result_dropping = self.execute_command(
+            result_dropping = self.__execute_command(
                 sql_query=query,
                 log_message="All tables were dropped."
             )
             return result_dropping is None
 
 #-------CREATES THE SCHEMES FOR THE DATABASE--------
-    def create_schemes(self,json_file):
+    def __create_schemes(self, json_file):
         try:
             with open(json_file) as file:
                 data = json.load(file)
@@ -163,7 +163,7 @@ class DataBaseUtil:
         if dublicate:
             while True:
                 query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
-                self.execute_command(query_check, (initial_key_value,))
+                self.__execute_command(query_check, (initial_key_value,))
                 exists = self.cursor.fetchone()[0]
 
                 if not exists:
@@ -181,7 +181,7 @@ class DataBaseUtil:
             query = f'INSERT INTO {table_name} ({columns}) VALUES ({values_placeholder});'
 
             # Execute the insert command
-            self.execute_command(
+            self.__execute_command(
                 sql_query=query,
                 params=tuple(obj.values()),
             )
@@ -189,7 +189,7 @@ class DataBaseUtil:
 
 
 # ------INSERT MANY TO THE DATABASE--------
-    def insert_many(self, table_name: str, objects: List[Dict[str, any]], column: str, dublicate: bool = False) -> None:
+    def _insert_many(self, table_name: str, objects: List[Dict[str, any]], column: str, dublicate: bool = False) -> None:
         print(f"Inserting into {table_name}...")  # Debug output
         errors = []
 
@@ -199,7 +199,7 @@ class DataBaseUtil:
             if dublicate:
                 while True:
                     query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
-                    self.execute_command(query_check, (initial_key_value,))
+                    self.__execute_command(query_check, (initial_key_value,))
                     exists = self.cursor.fetchone()[0]
 
                     if not exists:
@@ -218,7 +218,7 @@ class DataBaseUtil:
             query = f'INSERT INTO {table_name} ({columns}) VALUES ({values_placeholder});'
 
             # Execute the insert command
-            self.execute_command(
+            self.__execute_command(
                 sql_query=query,
                 params=tuple(obj.values()),
                 )
@@ -230,8 +230,8 @@ class DataBaseUtil:
                 print(f"Error inserting into {table_name}: {err}")
 
 #------FETCH ONE--------
-    def fetch_one(self, query: str, params: Tuple[Any, ...] = ()) -> DictRow | None:
-        result_fetch_one = self.execute_command(
+    def __fetch_one(self, query: str, params: Tuple[Any, ...] = ()) -> DictRow | None:
+        result_fetch_one = self.__execute_command(
             sql_query=query,
             params=params,
             fetch_one=True,
@@ -242,8 +242,8 @@ class DataBaseUtil:
         return result_fetch_one
 
 #------FETCH MANY-------
-    def fetch_all(self, query: str, params: Tuple[Any, ...] = ()) -> List[Dict[str, Any]]:
-        self.execute_command(sql_query=query, params=params)  # Execute the command without fetch_one
+    def __fetch_all(self, query: str, params: Tuple[Any, ...] = ()) -> List[Dict[str, Any]]:
+        self.__execute_command(sql_query=query, params=params)  # Execute the command without fetch_one
         if self.cursor.rowcount == 0:  # Check if no rows were returned
             return []
 
@@ -253,7 +253,7 @@ class DataBaseUtil:
 #------LOAD ONE DATA------
     def load_data(self, table_name: str, column: str, value:any ) -> DictRow:
         query = f'SELECT * FROM {table_name} WHERE {column} = %s;'
-        result_load = self.fetch_one(query, (value,))
+        result_load = self.__fetch_one(query, (value,))
 
         if result_load is None:
             raise Exception(f"No entry found where {column} = {value}.")
@@ -263,7 +263,7 @@ class DataBaseUtil:
 # ------LOAD MANY DATA-------
     def load_many(self, table_name: str, filter_function: Callable[[Dict[str, Any]], bool]) -> List[Dict[str, Any]]:
         query = f'SELECT * FROM {table_name};'
-        results = self.fetch_all(query)
+        results = self.__fetch_all(query)
         print(f"Fetched results from {table_name}: {results}")  # Debug output
         return [result for result in results if filter_function(result)]
 
@@ -273,7 +273,7 @@ class DataBaseUtil:
         return obj['username'].startswith('A')
 
 # ------LOAD/DELETE DATA WITH CONDITIONS------
-    def build_query(
+    def _build_query(
             self,
             table_name: str,
             conditions: List[Tuple[str, Any]],
@@ -302,7 +302,7 @@ class DataBaseUtil:
 #-----DELETING DATA---------
     def delete_data(self, table_name: str, condition: str, value: Any) -> None:
         query = f'DELETE FROM {table_name} WHERE {condition} = %s;'
-        affected_rows = self.execute_command(
+        affected_rows = self.__execute_command(
             sql_query=query,
             params=(value,),
             fetch_one=False,
@@ -314,13 +314,13 @@ class DataBaseUtil:
         print(f"Successfully deleted entry where {condition} = {value}.")
 
 #-----INITIALISE DATABASE--------
-    def initialise(self, json_file: str) -> None:
+    def _initialise(self, json_file: str) -> None:
         print("Initializing the database...")
         # Drop existing tables
-        self.drop_all_the_tables()
+        self._drop_all_the_tables()
 
         # Create new schema
-        self.create_schemes(json_file)
+        self.__create_schemes(json_file)
 
         # Optionally, insert initial data or perform any other setup here
         print("Database initialized successfully.")
