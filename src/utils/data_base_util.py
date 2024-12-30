@@ -4,9 +4,7 @@ import json
 from pathlib import Path
 from psycopg2._psycopg import cursor
 from typing import Any, Dict, List, Tuple, Callable
-
 from psycopg2.extras import DictRow
-
 from src.utils.env_variable_util import EnvVariableUtil
 from src.utils.path_util import PathUtil
 
@@ -16,6 +14,7 @@ class DataBaseUtil:
     def __init__(self):
         self.__connection = None
         self.cursor = None
+
 
 #------CONNECTION TO THE DATABASE----------
         try:
@@ -30,6 +29,262 @@ class DataBaseUtil:
 
         except Exception as error:
             print(f"Error to connect with the database: {error}")
+
+
+# -----CLOSE CONNECTION--------
+    def __del__(self):
+        if self.cursor is not None:
+            self.cursor.close()
+        if self.__connection is not None:
+            self.__connection.close()
+
+
+# ------INSERT ONE TO THE DATABASE--------
+    def insert_one(self, table_name: str, obj: Dict[str, any], column: str, dublicate: bool = False) -> None:
+        print(f"Inserting in table {table_name}")
+
+        initial_key_value = obj[column]
+
+        if dublicate:
+            while True:
+                query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
+                self.__execute_command(query_check, (initial_key_value,))
+                exists = self.cursor.fetchone()[0]
+
+                if not exists:
+                    break
+
+                initial_key_value += 1
+
+            # Update the object with the new key value
+                obj[column] = initial_key_value
+                print(f"Updated object key: {obj[column]}")  # Debug output
+
+            # Prepare the insert statement
+            columns = ', '.join(obj.keys())
+            values_placeholder = ', '.join(['%s'] * len(obj))
+            query = f'INSERT INTO {table_name} ({columns}) VALUES ({values_placeholder});'
+
+            # Execute the insert command
+            self.__execute_command(
+                sql_query=query,
+                params=tuple(obj.values()),
+            )
+            print(f"Inserted {obj} into {table_name}")  # Debug output
+
+
+# ------INSERT MANY TO THE DATABASE--------
+    def insert_many(self, table_name: str, objects: List[Dict[str, any]], column: str,
+                    dublicate: bool = False) -> None:
+        if not objects:
+            print("No objects to insert.")  # Debug output
+            return
+
+        print(f"Inserting into {table_name}...")  # Debug output
+        if dublicate:
+            for obj in objects:
+                initial_key_value = obj[column]
+                while True:
+                    query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
+                    self.__execute_command(query_check, (initial_key_value,))
+                    exists = self.cursor.fetchone()[0]
+
+                    if not exists:
+                        break  # Exit loop if the value does not exist
+
+                     # Increment the key value by 1
+                    initial_key_value += 1
+
+                    # Update the object with the new key value
+                obj[column] = initial_key_value
+                print(f"Updated object key: {obj[column]}")  # Debug output
+
+                # Batch insert all objects
+        columns = ', '.join(objects[0].keys())
+        values_placeholder = ', '.join(['%s'] * len(objects[0]))
+        query = f"INSERT INTO {table_name} ({columns}) VALUES {', '.join(['(' + values_placeholder + ')' for _ in objects])};"
+        values = tuple(value for obj in objects for value in obj.values())
+
+        try:
+            print(f"Executing batch insert into {table_name} with {len(objects)} records.")  # Debug output
+            self.__execute_command(sql_query=query, params=values)
+            print(f"Successfully inserted {len(objects)} records into {table_name}.")  # Debug output
+        except Exception as e:
+            print(f"Error during batch insert into {table_name}: {e}")
+
+        # ------LOAD ONE DATA------
+        def load_one(self, table_name: str, column: str, value: any) -> DictRow:
+            query = f'SELECT * FROM {table_name} WHERE {column} = %s;'
+            result_load = self.__fetch_one(query, (value,))
+
+            if result_load is None:
+                raise Exception(f"No entry found where {column} = {value}.")
+            else:
+                return result_load
+
+
+# -------LOAD BY ID------
+    def load_one_by_id(self, table_name: str, id_column: str, id_value: Any) -> DictRow:
+        query = f'SELECT * FROM {table_name} WHERE {id_column} = %s;'
+        result_load = self.__fetch_one(query, (id_value,))
+        if result_load is None:
+            raise Exception(f"No entry found where {id_column} = {id_value}.")
+        return result_load
+
+
+# ------LOAD MANY DATA-------
+    def load_many(self, table_name: str, filter_function: str, values: List[Any]) -> List[Dict[str, Any]]:
+        if not values:
+            print("No values provided for loading.")  # Debug output
+            return []
+
+        placeholders = ', '.join(['%s'] * len(values)) if "%s" in filter_function else None
+        query = f"SELECT * FROM {table_name} WHERE {filter_function}"
+        if placeholders:
+            query = query.replace("%s", placeholders)
+
+        print(f"Executing query: {query} with values: {values}")  # Debug output
+
+        # Use self.__execute_command to handle execution and error management
+        results = self.__execute_command(
+            sql_query=query,
+            params=tuple(values),
+            fetch_one=False,
+            fetch_all=True,
+            log_message=f"Loading records from {table_name} with filter {filter_function}."
+            )
+
+        if results is not None:  # Check if results are not None (indicating no error occurred)
+            print(f"Successfully loaded {len(results)} records from {table_name}.")  # Debug output
+            return results
+        else:
+            print(f"Error during batch load in {table_name}.")  # Handle case if results are None
+            return []
+
+
+# -----DELETING ONE---------
+    def delete_one(self, table_name: str, id_column: str, id_value: Any) -> None:
+        query = f'DELETE FROM {table_name} WHERE {id_column} = %s;'
+        affected_rows = self.__execute_command(
+            sql_query=query,
+            params=(id_value,),
+            fetch_one=False,
+            fetch_all=False,
+            log_message=f"Attempting to delete entry where {id_column} = {id_value} from {table_name}."
+            )
+        if affected_rows == 0:
+            print(f"No entry found where {id_column} = {id_value}.")
+
+        print(f"Successfully deleted entry where {id_column} = {id_value} from {table_name}.")
+
+
+# ------DELETE MANY DATA--------
+    def delete_many(self, table_name: str, column: str, values: List[Any]) -> None:
+        if not values:
+            print("No values to delete.")  # Debug output
+            return
+
+        placeholders = ', '.join(['%s'] * len(values))
+        query = f"DELETE FROM {table_name} WHERE {column} IN ({placeholders});"
+
+        print(f"Deleting {len(values)} records from {table_name} where {column} matches.")  # Debug output
+        self.__execute_command(sql_query=query, params=tuple(values))
+        print(f"Successfully deleted {len(values)} records from {table_name}.")  # Debug output
+
+
+# -------UPDATE DATA--------
+    def update_data(self, table_name: str, column: str, updates: List[Dict[str, Any]]) -> None:
+        if not updates:
+            print("No updates provided.")  # Debug output
+            return
+
+        for update in updates:
+            set_clause = ', '.join([f"{key} = %s" for key in update.keys() if key != column])
+            where_clause = f"{column} = %s"
+            query = f"UPDATE {table_name} SET {set_clause} WHERE {where_clause};"
+
+            # Ensure that update has the key for the where clause
+            if column not in update:
+                print(f"Update must include the column used in WHERE clause: {column}.")  # Debug output
+                continue
+
+            values = tuple(update[key] for key in update.keys() if key != column) + (update[column],)
+
+            # Execute the update command
+            if self.__execute_command(sql_query=query, params=values):
+                print(f"Successfully updated in {table_name} where {column} = {update[column]}.")  # Debug output
+            else:
+                print(f"Failed to update in {table_name} where {column} = {update[column]}.")  # Debug output
+
+
+# -----INITIALISE DATABASE--------
+    def initialise(self, json_file: str) -> None:
+        print("Initializing the database...")
+        # Drop existing tables
+        self._drop_all_the_tables()
+
+        # Create new schema
+        self.__create_schemes(json_file)
+
+        # Optionally, insert initial data or perform any other setup here
+        print("Database initialized successfully.")
+
+# ------CHECK IF TABLE EXIST---------
+    def _check_if_table_exists(self, table_name) -> bool:
+        query = f'''SELECT EXISTS (
+                        SELECT 1
+                        FROM information_schema.tables
+                        WHERE table_schema = 'public'
+                        AND table_name = '{table_name}'
+                    );
+                '''
+        result_exist = self.__execute_command(
+            sql_query=query,
+            params=(table_name,),
+            fetch_one=True,
+            log_message=f"Table '{table_name}' exists."
+        )
+        return result_exist[0] if result_exist else False
+
+# -------DROP ALL TABLES----------
+    def _drop_all_the_tables(self):
+        query = f'''DROP SCHEMA public CASCADE;
+                                    CREATE SCHEMA public;    
+                                    GRANT ALL ON SCHEMA public TO public;
+                                    '''
+        result_dropping = self.__execute_command(
+            sql_query=query,
+            log_message="All tables were dropped."
+        )
+        return result_dropping is None
+
+
+# ------LOAD/DELETE DATA WITH CONDITIONS------
+    def _build_query(
+            self,
+            table_name: str,
+            conditions: List[Tuple[str, Any]],
+            operator: str,
+            query_type: str = "SELECT"
+    ) -> Tuple[str, List[Any]]:
+
+        if operator not in ("AND", "OR"):
+            raise ValueError("Operator muss 'AND' oder 'OR' sein.")
+
+        if query_type not in ("SELECT", "DELETE"):
+            raise ValueError("Nur 'SELECT' und 'DELETE' werden unterstützt.")
+
+        condition_string = f" {operator} ".join([f"{col} = %s" for col, _ in conditions])
+
+        if query_type == "SELECT":
+            query = f"SELECT * FROM {table_name} WHERE {condition_string};"
+        elif query_type == "DELETE":
+            query = f"DELETE FROM {table_name} WHERE {condition_string};"
+
+        params = [value for _, value in conditions]
+
+        return query, params
+
 
 #---EXECUTE COMMAND----
     def __execute_command(self, sql_query: str = None, params: tuple = None, fetch_one: bool = False, fetch_all: bool = False, log_message: str =None):
@@ -49,6 +304,7 @@ class DataBaseUtil:
             self.connection.rollback()
             return None
 
+
 # -------CREATING A USER----------------
     def __create_user(self, username, password):
         create_user_query = f"CREATE USER {username} WITH PASSWORD '{password}';"
@@ -56,6 +312,7 @@ class DataBaseUtil:
             sql_query=create_user_query,
             params=(username, password),
             log_message=f"User '{username}' was created.")
+
 
 #-------GIVING THE USER ALL PRIVILEGES--------
     def __grant_all_privileges(self, username, dbname):
@@ -66,34 +323,6 @@ class DataBaseUtil:
             log_message=f"Grant all privileges on database '{dbname}' to '{username}'."
         )
 
-#------CHECK IF TABLE EXIST---------
-    def _check_if_table_exists(self, table_name) -> bool:
-        query = f'''SELECT EXISTS (
-                        SELECT 1
-                        FROM information_schema.tables
-                        WHERE table_schema = 'public'
-                        AND table_name = '{table_name}'
-                    );
-                '''
-        result_exist = self.__execute_command(
-                sql_query=query,
-                params=(table_name,),
-                fetch_one=True,
-                log_message=f"Table '{table_name}' exists."
-            )
-        return result_exist[0] if result_exist else False
-
-# -------DROP ALL TABLES----------
-    def _drop_all_the_tables(self):
-            query = f'''DROP SCHEMA public CASCADE;
-                                    CREATE SCHEMA public;    
-                                    GRANT ALL ON SCHEMA public TO public;
-                                    '''
-            result_dropping = self.__execute_command(
-                sql_query=query,
-                log_message="All tables were dropped."
-            )
-            return result_dropping is None
 
 #-------CREATES THE SCHEMES FOR THE DATABASE--------
     def __create_schemes(self, json_file):
@@ -156,77 +385,6 @@ class DataBaseUtil:
             print(f"Error by creating the database scheme: {error}")
             return False
 
-#------INSERT ONE TO THE DATABASE--------
-    def insert_one(self, table_name: str, obj: Dict[str, any], column: str, dublicate: bool = False) -> None:
-        print(f"Inserting in table {table_name}")
-
-        initial_key_value = obj[column]
-
-        if dublicate:
-            while True:
-                query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
-                self.__execute_command(query_check, (initial_key_value,))
-                exists = self.cursor.fetchone()[0]
-
-                if not exists:
-                    break
-
-                initial_key_value += 1
-
-                # Update the object with the new key value
-                obj[column] = initial_key_value
-                print(f"Updated object key: {obj[column]}")  # Debug output
-
-                # Prepare the insert statement
-            columns = ', '.join(obj.keys())
-            values_placeholder = ', '.join(['%s'] * len(obj))
-            query = f'INSERT INTO {table_name} ({columns}) VALUES ({values_placeholder});'
-
-            # Execute the insert command
-            self.__execute_command(
-                sql_query=query,
-                params=tuple(obj.values()),
-            )
-            print(f"Inserted {obj} into {table_name}")  # Debug output
-
-
-# ------INSERT MANY TO THE DATABASE--------
-    def _insert_many(self, table_name: str, objects: List[Dict[str, any]], column: str, dublicate: bool = False) -> None:
-        if not objects:
-            print("No objects to insert.")  # Debug output
-            return
-
-        print(f"Inserting into {table_name}...")  # Debug output
-        if dublicate:
-            for obj in objects:
-                initial_key_value = obj[column]
-                while True:
-                    query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
-                    self.__execute_command(query_check, (initial_key_value,))
-                    exists = self.cursor.fetchone()[0]
-
-                    if not exists:
-                        break  # Exit loop if the value does not exist
-
-                    # Increment the key value by 1
-                    initial_key_value += 1
-
-                # Update the object with the new key value
-                obj[column] = initial_key_value
-                print(f"Updated object key: {obj[column]}")  # Debug output
-
-            # Batch insert all objects
-        columns = ', '.join(objects[0].keys())
-        values_placeholder = ', '.join(['%s'] * len(objects[0]))
-        query = f"INSERT INTO {table_name} ({columns}) VALUES {', '.join(['(' + values_placeholder + ')' for _ in objects])};"
-        values = tuple(value for obj in objects for value in obj.values())
-
-        try:
-            print(f"Executing batch insert into {table_name} with {len(objects)} records.")  # Debug output
-            self.__execute_command(sql_query=query, params=values)
-            print(f"Successfully inserted {len(objects)} records into {table_name}.")  # Debug output
-        except Exception as e:
-            print(f"Error during batch insert into {table_name}: {e}")
 
 #------FETCH ONE--------
     def __fetch_one(self, query: str, params: Tuple[Any, ...] = ()) -> DictRow | None:
@@ -240,6 +398,7 @@ class DataBaseUtil:
             return None
         return result_fetch_one
 
+
 #------FETCH MANY-------
     def __fetch_all(self, query: str, params: Tuple[Any, ...] = ()) -> List[Dict[str, Any]]:
         self.__execute_command(sql_query=query, params=params)  # Execute the command without fetch_one
@@ -248,142 +407,3 @@ class DataBaseUtil:
 
         columns = [desc[0] for desc in self.cursor.description]  # Get column names
         return [dict(zip(columns, row)) for row in self.cursor.fetchall()]  # Fetch all rows
-
-#------LOAD ONE DATA------
-    def load_data(self, table_name: str, column: str, value:any ) -> DictRow:
-        query = f'SELECT * FROM {table_name} WHERE {column} = %s;'
-        result_load = self.__fetch_one(query, (value,))
-
-        if result_load is None:
-            raise Exception(f"No entry found where {column} = {value}.")
-        else:
-            return result_load
-
-# ------LOAD MANY DATA-------
-    def load_many(self, table_name: str, column: str, values: List[Any]) -> List[Dict[str, Any]]:
-        if not values:
-            print("No values provided for loading.")  # Debug output
-            return []
-
-        placeholders = ', '.join(['%s'] * len(values))
-        query = f"SELECT * FROM {table_name} WHERE {column} IN ({placeholders});"
-
-        print(f"Loading records from {table_name} where {column} matches {len(values)} values.")  # Debug output
-
-        # Use self.__execute_command to handle execution and error management
-        results = self.__execute_command(
-            sql_query=query,
-            params=tuple(values),
-            fetch_one=False,
-            fetch_all=True,
-            log_message=f"Loading records from {table_name}."
-        )
-
-        if results is not None:  # Check if results are not None (indicating no error occurred)
-            print(f"Successfully loaded {len(results)} records from {table_name}.")  # Debug output
-            return results
-        else:
-            print(f"Error during batch load in {table_name}.")  # Handle case if results are None
-            return []
-
-
-
-# ------LOAD/DELETE DATA WITH CONDITIONS------
-    def _build_query(
-            self,
-            table_name: str,
-            conditions: List[Tuple[str, Any]],
-            operator: str,
-            query_type: str = "SELECT"
-    ) -> Tuple[str, List[Any]]:
-
-        if operator not in ("AND", "OR"):
-            raise ValueError("Operator muss 'AND' oder 'OR' sein.")
-
-        if query_type not in ("SELECT", "DELETE"):
-            raise ValueError("Nur 'SELECT' und 'DELETE' werden unterstützt.")
-
-        condition_string = f" {operator} ".join([f"{col} = %s" for col, _ in conditions])
-
-        if query_type == "SELECT":
-            query = f"SELECT * FROM {table_name} WHERE {condition_string};"
-        elif query_type == "DELETE":
-            query = f"DELETE FROM {table_name} WHERE {condition_string};"
-
-        params = [value for _, value in conditions]
-
-        return query, params
-
-
-#-----DELETING DATA---------
-    def delete_data(self, table_name: str, condition: str, value: Any) -> None:
-        query = f'DELETE FROM {table_name} WHERE {condition} = %s;'
-        affected_rows = self.__execute_command(
-            sql_query=query,
-            params=(value,),
-            fetch_one=False,
-            log_message=f"Attempting to delete entry where {condition} = {value}"
-        )
-        if affected_rows == 0:
-            print(f"No entry found where {condition} = {value}.")
-
-        print(f"Successfully deleted entry where {condition} = {value}.")
-
-
-#------DELETE MANY DATA--------
-    def delete_many(self, table_name: str, column: str, values: List[Any]) -> None:
-        if not values:
-            print("No values to delete.")  # Debug output
-            return
-
-        placeholders = ', '.join(['%s'] * len(values))
-        query = f"DELETE FROM {table_name} WHERE {column} IN ({placeholders});"
-
-        print(f"Deleting {len(values)} records from {table_name} where {column} matches.")  # Debug output
-        self.__execute_command(sql_query=query, params=tuple(values))
-        print(f"Successfully deleted {len(values)} records from {table_name}.")  # Debug output
-
-
-#-------UPDATE DATA--------
-    def update_data(self, table_name: str, column: str, updates: List[Dict[str, Any]]) -> None:
-        if not updates:
-            print("No updates provided.")  # Debug output
-            return
-
-        for update in updates:
-            set_clause = ', '.join([f"{key} = %s" for key in update.keys() if key != column])
-            where_clause = f"{column} = %s"
-            query = f"UPDATE {table_name} SET {set_clause} WHERE {where_clause};"
-
-            # Ensure that update has the key for the where clause
-            if column not in update:
-                print(f"Update must include the column used in WHERE clause: {column}.")  # Debug output
-                continue
-
-            values = tuple(update[key] for key in update.keys() if key != column) + (update[column],)
-
-            # Execute the update command
-            if self.__execute_command(sql_query=query, params=values):
-                print(f"Successfully updated in {table_name} where {column} = {update[column]}.")  # Debug output
-            else:
-                print(f"Failed to update in {table_name} where {column} = {update[column]}.")  # Debug output
-
-
-#-----INITIALISE DATABASE--------
-    def _initialise(self, json_file: str) -> None:
-        print("Initializing the database...")
-        # Drop existing tables
-        self._drop_all_the_tables()
-
-        # Create new schema
-        self.__create_schemes(json_file)
-
-        # Optionally, insert initial data or perform any other setup here
-        print("Database initialized successfully.")
-
-#-----CLOSE CONNECTION--------
-    def __del__(self):
-        if self.cursor is not None:
-            self.cursor.close()
-        if self.__connection is not None:
-            self.__connection.close()
