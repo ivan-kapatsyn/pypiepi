@@ -1,7 +1,7 @@
 {
   "tables": [
     {
-      "table_name": "TMuser",
+      "table_name": "users",
       "columns": [
         {"column_name": "user_ID", "data_type": "INTEGER", "constraints": "PRIMARY KEY" },
         {"column_name": "username", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
@@ -14,7 +14,7 @@
       "table_name": "tutor",
       "columns": [
         {"column_name": "tutor_ID", "data_type": "INTEGER", "constraints": "PRIMARY KEY" },
-        {"column_name": "user_ID", "data_type": "INTEGER", "constraints": "FOREIGN KEY REFERENCES TMuser(user_ID)" },
+        {"column_name": "user_ID", "data_type": "INTEGER", "constraints": "FOREIGN KEY REFERENCES users(user_ID)" },
         {"column_name": "first_name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "last_name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "field_of_study", "data_type": "JSONB", "constraints": "NOT NULL" }
@@ -24,7 +24,7 @@
       "table_name": "student",
       "columns": [
         {"column_name": "student_ID", "data_type": "INTEGER", "constraints": "PRIMARY KEY" },
-        {"column_name": "user_ID", "data_type": "INTEGER", "constraints": "FOREIGN KEY REFERENCES TMuser(user_ID)" },
+        {"column_name": "user_ID", "data_type": "INTEGER", "constraints": "FOREIGN KEY REFERENCES users(user_ID)" },
         {"column_name": "first_name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "last_name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "field_of_study", "data_type": "JSONB", "constraints": "NOT NULL" }
