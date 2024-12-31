@@ -1,5 +1,6 @@
 import unittest
 from src.utils.data_base_util import DataBaseUtil
+from src.utils.env_variable_util import EnvVariableUtil
 
 
 class DataBaseUtilTestCase(unittest.TestCase):
@@ -126,6 +127,11 @@ class DataBaseUtilTestCase(unittest.TestCase):
         new_values = {"username": "arthur_updated", "remember_me": False}
 
         self.db_util.update_one(table_name, column, id_value, new_values)
+
+    def test_initialise(self):
+        data_path = EnvVariableUtil.get_env_variable('JSON_FILE_PATH')
+        print(f"JSON_FILE_PATH: {data_path}")  # Debug-Ausgabe
+        self.db_util.initialise(json_file=data_path)
 
 
 if __name__ == '__main__':
