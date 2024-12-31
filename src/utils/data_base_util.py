@@ -124,6 +124,14 @@ class DataBaseUtil:
         return primary_key_column[0]
 
 
+#--------EXIST USER BY ID---------
+    def exists_user_by_id(self, table_name: str, user_id: Any) -> bool:
+        query = f"SELECT EXISTS(SELECT 1 FROM {table_name} WHERE user_id = %s);"
+        result = self.__fetch_one(query, (user_id,))
+        print(f"Checking existence for user_id {user_id}: result = {result}")  # Debug-Ausgabe
+        return result[0] if result else False
+
+
 # -------LOAD ONE------
     def load_one(self, table_name: str, id_value: Any) -> DictRow:
         id_column = self.get_primary_key_column(table_name)
@@ -244,11 +252,9 @@ class DataBaseUtil:
         print("Initializing the database...")
         # Drop existing tables
         self._drop_all_the_tables()
-
         # Create new schema
-        self.__create_schemes(json_file)
-
-        self.__populate_with_values()
+        self.__create_schemes(json_file=EnvVariableUtil.get_env_variable('JSON_FILE_PATH'))
+        #self.__populate_with_values(EnvVariableUtil.get_env_variable('DATA_RELATIVE_PATH'))
 
         # Optionally, insert initial data or perform any other setup here
         print("Database initialized successfully.")
