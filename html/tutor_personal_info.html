@@ -57,7 +57,7 @@
             <li><span class="dropdown-item">Username: {{ username }}</span></li>
             <li>
                 <label class="dropdown-item">
-                    <input type="checkbox" id="rememberCheckbox"  {% if remember_me %}checked{% endif %}> Stay
+                    <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
                     remembered on this device
                 </label>
             </li>
@@ -67,7 +67,116 @@
         </ul>
     </div>
 </header>
+<div>Username: {{ username }}</div>
+<table>
+    <table>
+        <thead>
+        <tr>
+            <th>Time</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+            <th>Sunday</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="time-cell"><span>9 AM</span></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="time-cell"><span>10 AM</span></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="time-cell"><span>11 AM</span></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Retur</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="time-cell"><span>12 PM</span></td>
+            <td></td>
+            <td> </td>
+            <td> </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="time-cell"><span>1 PM</span></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="time-cell"><span>2 PM</span></td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td>Oiu</td>
+        </tr>
+        <tr>
+            <td class="time-cell"><span>3 PM</span></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="time-cell"><span>4 PM</span></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="time-cell"><span>5 PM</span></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
 
+</table>
 
 </body>
 </html>
