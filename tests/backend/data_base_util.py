@@ -1,3 +1,4 @@
+import os
 import unittest
 from src.utils.data_base_util import DataBaseUtil
 from src.utils.env_variable_util import EnvVariableUtil
@@ -9,12 +10,12 @@ class DataBaseUtilTestCase(unittest.TestCase):
         self.db_util = DataBaseUtil()
 
     def test_if_exist(self):
-        table_name = 'tmuser'
+        table_name = 'users'
         self.assertEqual(self.db_util._check_if_table_exists(
                 table_name), True)
 
     def test_load_data(self):
-        table_name = 'tmuser'
+        table_name = 'users'
         id_value = 202345673
 
         expected_result = [202345673, 'arthur_morgan', 'password123', 'student', True]
@@ -22,7 +23,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
 
     def test_delete_data(self):
-        table_name = 'tmuser'
+        table_name = 'users'
         id_value = 202345673
         self.assertEqual(self.db_util.delete_one(table_name, id_value), None)
 
@@ -35,8 +36,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
             "user_typ": "student",
             "remember_me": "TRUE"}
 
-        self.db_util.insert_one("tmuser", obj1, column="user_id", dublicate=True)
-        loaded_data = self.db_util.load_one("tmuser",  202345671)
+        self.db_util.insert_one("users", obj1, column="user_id", dublicate=True)
+        loaded_data = self.db_util.load_one("users",  202345671)
         self.assertEqual(loaded_data['user_id'], 202345671)
         self.assertEqual(loaded_data['username'], "arthur_morgan")
         self.assertEqual(loaded_data['password'], "password123")
@@ -61,10 +62,10 @@ class DataBaseUtilTestCase(unittest.TestCase):
                 "remember_me": True
              }
         ]
-        self.db_util.insert_many("tmuser", objects, column="user_id", dublicate=True)
+        self.db_util.insert_many("users", objects, column="user_id", dublicate=True)
 
         for obj in objects:
-            loaded_data = self.db_util.load_one("tmuser", obj["user_id"])
+            loaded_data = self.db_util.load_one("users", obj["user_id"])
             self.assertEqual(loaded_data['user_id'], obj['user_id'])
             self.assertEqual(loaded_data['username'], obj['username'])
             self.assertEqual(loaded_data['password'], obj['password'])
@@ -78,7 +79,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
         operator = "AND"
         query_type = "SELECT"
 
-        expected_query = "SELECT * FROM tmuser WHERE user_typ = %s AND remember_me = %s;"
+        expected_query = "SELECT * FROM users WHERE user_typ = %s AND remember_me = %s;"
         expected_params = ["admin", "TRUE"]
 
         query, params = self.db_util._build_query(table_name, conditions, operator, query_type)
@@ -89,7 +90,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
     def test_delete_many(self):
         # Test deleting multiple records
-        table_name = 'tmuser'
+        table_name = 'users'
         column = "user_id"
         user_ids = [202345671, 202345672]
 
@@ -113,7 +114,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
         expected_exists = False  # Setzen Sie dies auf True, wenn der Benutzer existieren soll
 
         # Überprüfen Sie, ob der Benutzer existiert
-        exists = self.db_util.exists_user_by_id("tmuser", user_id_to_test)
+        exists = self.db_util.exists_user_by_id("users", user_id_to_test)
         print(f"User {user_id_to_test} exists: {exists}")  # Debug-Ausgabe
 
         # Assert, dass der Benutzer wie erwartet existiert oder nicht existiert
@@ -121,7 +122,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
 
     def test_update_one(self):
-        table_name = 'tmuser'
+        table_name = 'users'
         column = "user_id"
         id_value = 202345676
         new_values = {"username": "arthur_updated", "remember_me": False}
@@ -132,6 +133,52 @@ class DataBaseUtilTestCase(unittest.TestCase):
         data_path = EnvVariableUtil.get_env_variable('JSON_FILE_PATH')
         print(f"JSON_FILE_PATH: {data_path}")  # Debug-Ausgabe
         self.db_util.initialise(json_file=data_path)
+
+
+    def test_insert_with_duplicate_true(self):
+        obj = {
+                "user_id": 202345671,
+                "username": "arthur_morgan",
+                "password": "password123",
+                "user_typ": "student",
+                "remember_me": True
+             }
+        self.db_util.insert_one('users', obj, 'user_id', dublicate=True)
+        # Verify the insertion logic, including checking for incremented keys.
+
+    def test_insert_with_duplicate_false(self):
+        obj = {
+                "user_id": 202345671,
+                "username": "arthur_morgan",
+                "password": "password123",
+                "user_typ": "student",
+                "remember_me": True
+             }
+        self.db_util.insert_one('users', obj, 'user_id', dublicate=False)
+        # Verify that the entry is present.
+
+    def test_save_data_to_csv(self):
+        data = [
+            {"userid": 202345671, "username": "arthur_morgan", "password": "password123", "usertyp": "student",
+             "remember_me": "TRUE"},
+            {"userid": 202345672, "username": "john_doe", "password": "newpassword", "usertyp": "admin",
+             "remember_me": "TRUE"},
+            {"userid": 202345673, "username": "jane_doe", "password": "mypassword", "usertyp": "admin",
+             "remember_me": "FALSE"},
+            {"userid": 202345674, "username": "john_marston", "password": "mypasswordisbetter", "usertyp": "student",
+             "remember_me": "FALSE"},
+            {"userid": 202345675, "username": "mary_stuart", "password": "stupidpassword", "usertyp": "tutor",
+             "remember_me": "TRUE"},
+        ]
+        table_name = "users"
+        csv_directory = EnvVariableUtil.get_env_variable('CSV_FILE_PATH')
+
+        try:
+            file_path = self.db_util.save_data_to_csv(table_name=table_name, data=data, csv_directory=csv_directory)
+            assert os.path.exists(file_path), f"CSV file not created at {file_path}"
+            print("CSV file saved successfully and test passed.")
+        except Exception as e:
+            self.fail(f"Test failed: {e}")
 
 
 if __name__ == '__main__':
