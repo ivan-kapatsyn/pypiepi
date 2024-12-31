@@ -45,34 +45,38 @@ class DataBaseUtil:
     def insert_one(self, table_name: str, obj: Dict[str, any], column: str, dublicate: bool = False) -> None:
         print(f"Inserting in table {table_name}")
 
-
-
-        if dublicate:
-            initial_key_value = obj[column]
-            while True:
-                query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
-                self.__execute_command(query_check, (initial_key_value,))
-                exists = self.cursor.fetchone()[0]
-
-                if not exists:
-                    break
-
-                initial_key_value += 1
-
-            # Update the object with the new key value
-                obj[column] = initial_key_value
-                print(f"Updated object key: {obj[column]}")  # Debug output
-
         # Prepare the insert statement
         columns = ', '.join(obj.keys())
         values_placeholder = ', '.join(['%s'] * len(obj))
         query = f'INSERT INTO {table_name} ({columns}) VALUES ({values_placeholder});'
 
+        if dublicate:
+            initial_key_value = obj[column]
+            while True:
+                # Check if the current key value exists
+                query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
+                self.__execute_command(query_check, (initial_key_value,))
+                exists = self.cursor.fetchone()[0]
+
+                if not exists:
+                    break  # Exit the loop if the key is unique
+
+                # Increment the key value to find a new unique key
+                initial_key_value += 1
+                obj[column] = initial_key_value
+                print(f"Updated object key: {obj[column]}")  # Debug output
+
+        else:
+            # Check for duplicates before inserting if not allowing duplicates
+            query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
+            self.__execute_command(query_check, (obj[column],))
+            exists = self.cursor.fetchone()[0]
+
+            if exists:
+                raise Exception(f"Duplicate entry for {column}: {obj[column]}")
+
         # Execute the insert command
-        self.__execute_command(
-            sql_query=query,
-            params=tuple(obj.values()),
-        )
+        self.__execute_command(sql_query=query, params=tuple(obj.values()))
         print(f"Inserted {obj} into {table_name}")  # Debug output
 
 
