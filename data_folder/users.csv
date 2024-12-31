@@ -1,0 +1,6 @@
+user_id,username,password,user_typ,remember_me
+202345671,arthur_morgan,password123,student,TRUE
+202345672,john_doe,newpassword,admin,TRUE
+202345673,jane_doe,mypassword,admin,FALSE
+202345674,john_marston,mypasswordisbetter,student,FALSE
+202345675,mary_stuart,stupidpassword,tutor,TRUE

@@ -1,6 +1,0 @@
-userid,username,password,usertyp,remember_me
-202345671,arthur.morgan,password123,student,TRUE
-202345672,john.doe,newpassword,admin,TRUE
-202345673,jane.doe,mypassword,admin,FALSE
-202345674,john.marston,mypasswordisbetter,student,FALSE
-202345675,mary.stuart,stupidpassword,tutor,TRUE
