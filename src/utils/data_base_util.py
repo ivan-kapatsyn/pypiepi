@@ -250,17 +250,40 @@ class DataBaseUtil:
             else:
                 print(f"Successfully updated rows in {table_name} with conditions: {condition}.")
 
+# ------SAVE DATA TO CSV FILE-------
+    def save_data_to_csv(self, table_name: str, data: List[Dict[str, Any]], csv_directory: str = None) -> str:
+        csv_directory = csv_directory or EnvVariableUtil.get_env_variable('CSV_FILE_PATH')
+        if not os.path.exists(csv_directory):
+            os.makedirs(csv_directory)
+
+        csv_file = os.path.join(csv_directory, f"{table_name}.csv")
+
+        try:
+            with open(csv_file, 'w', newline='', encoding="utf-8") as csvfile:
+                if data:
+                    # Extract headers from the keys of the first dictionary
+                    fieldnames = list(data[0].keys())
+                    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+                    # Write header and rows
+                    writer.writeheader()
+                    writer.writerows(data)
+                    print(f"Data written successfully to {csv_file}")
+                else:
+                    print("No data provided. CSV file not created.")
+            return csv_file
+        except Exception as error:
+            raise Exception(f"Error while saving data to {csv_file}: {error}")
+
 
 # -----INITIALISE DATABASE--------
     def initialise(self, json_file: str) -> None:
         print("Initializing the database...")
         # Drop existing tables
-        self._drop_all_the_tables()
+        #self._drop_all_the_tables()
         # Create new schema
-        self.__create_schemes(json_file=EnvVariableUtil.get_env_variable('JSON_FILE_PATH'))
-        csv_file = "users.csv"
-        table_name = "users"
-        self.__populate_with_values(table_name=table_name, csv_file=csv_file)
+        #self.__create_schemes(json_file=EnvVariableUtil.get_env_variable('JSON_FILE_PATH'))
+        self.__populate_with_values()
 
         # Optionally, insert initial data or perform any other setup here
         print("Database initialized successfully.")
@@ -442,51 +465,28 @@ class DataBaseUtil:
         return [dict(zip(columns, row)) for row in self.cursor.fetchall()]  # Fetch all rows
 
 
-#------SAVE DATA TO CSV FILE-------
-    def save_data_to_csv(self, table_name: str, data: List[Dict[str, Any]], csv_directory: str = None) -> str:
-        csv_directory = csv_directory or EnvVariableUtil.get_env_variable('CSV_FILE_PATH')
-        if not os.path.exists(csv_directory):
-            os.makedirs(csv_directory)
-
-        csv_file = os.path.join(csv_directory, f"{table_name}.csv")
-
-        try:
-            with open(csv_file, 'w', newline='', encoding="utf-8") as csvfile:
-                if data:
-                    # Extract headers from the keys of the first dictionary
-                    fieldnames = list(data[0].keys())
-                    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-                    # Write header and rows
-                    writer.writeheader()
-                    writer.writerows(data)
-                    print(f"Data written successfully to {csv_file}")
-                else:
-                    print("No data provided. CSV file not created.")
-            return csv_file
-        except Exception as error:
-            raise Exception(f"Error while saving data to {csv_file}: {error}")
-
-
 # -------POPULATE WITH VALUES
-    def __populate_with_values(self, table_name: str, csv_file: str, csv_directory: str = None) -> None:
+    def __populate_with_values(self, csv_directory: str = None) -> None:
         csv_directory = csv_directory or EnvVariableUtil.get_env_variable('CSV_FILE_PATH')
-        file_path = os.path.join(csv_directory, csv_file)
+        print("Populating tables with values from CSV files...")
 
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f"The file '{file_path}' does not exist.")
+        if not os.path.exists(csv_directory):
+            raise FileNotFoundError(f"The directory '{csv_directory}' does not exist.")
 
-        print(f"Populating table '{table_name}' with data from '{csv_file}'...")
+        for file_name in os.listdir(csv_directory):
+            if file_name.endswith('.csv'):
+                table_name = os.path.splitext(file_name)[0]
+                file_path = os.path.join(csv_directory, file_name)
 
-        try:
-            with open(file_path, 'r', encoding='utf-8') as csv_file:
-                reader = csv.DictReader(csv_file)
-                rows = [row for row in reader]
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as csv_file:
+                        reader = csv.DictReader(csv_file)
+                        rows = [row for row in reader]
 
-            if rows:
-                print(f"Inserting data into {table_name} from {csv_file.name}...")
-                self.insert_many(table_name, rows, column='id', dublicate=False)
-            else:
-                print(f"No data found in {csv_file.name}, skipping...")
-        except Exception as e:
-            print(f"Error processing {csv_file.name}: {e}")
+                    if rows:
+                        print(f"Inserting data into {table_name} from {file_name}...")
+                        self.insert_many(table_name, rows, column='id', dublicate=False)
+                    else:
+                        print(f"No data found in {file_name}, skipping...")
+                except Exception as e:
+                    print(f"Error processing {file_name}: {e}")
