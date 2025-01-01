@@ -49,6 +49,12 @@
         {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES course(course_ID)" },
         {"column_name": "student_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES student(student_ID)" }
       ]
+    },
+    {
+      "table_name": "tokens",
+      "columns": [
+        {"column_name": "token", "data_type": "INTEGER", "constraints": "NOT NULL" }
+      ]
     }
   ]
 }
