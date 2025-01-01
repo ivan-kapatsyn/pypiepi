@@ -251,7 +251,7 @@ class DataBaseUtil:
                 print(f"Successfully updated rows in {table_name} with conditions: {condition}.")
 
 # ------SAVE DATA TO CSV FILE-------
-    def save_data_to_csv(self, table_name: str, data: List[Dict[str, Any]], csv_directory: str = None) -> str:
+    def save_data_to_csv(self, table_name: str, data: List[Dict[str, Any]], column_types: Dict[str, str], csv_directory: str = None) -> str:
         csv_directory = csv_directory or EnvVariableUtil.get_env_variable('CSV_FILE_PATH')
         if not os.path.exists(csv_directory):
             os.makedirs(csv_directory)
@@ -261,13 +261,20 @@ class DataBaseUtil:
         try:
             with open(csv_file, 'w', newline='', encoding="utf-8") as csvfile:
                 if data:
-                    # Extract headers from the keys of the first dictionary
+                    # Extrahiere Header aus den Schlüsseln des ersten Datensatzes
                     fieldnames = list(data[0].keys())
                     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-                    # Write header and rows
+                    # Schreibe Header
                     writer.writeheader()
-                    writer.writerows(data)
+
+                    # Schreibe Zeilen mit JSONB-Konvertierung
+                    for row in data:
+                        for col, col_type in column_types.items():
+                            if col_type.lower() == 'jsonb' and col in row:
+                                # Konvertiere den Wert in ein JSON-kompatibles Array
+                                row[col] = json.dumps(row[col]) if isinstance(row[col], (list, dict)) else json.dumps([row[col]])
+                        writer.writerow(row)
                     print(f"Data written successfully to {csv_file}")
                 else:
                     print("No data provided. CSV file not created.")
@@ -280,9 +287,9 @@ class DataBaseUtil:
     def initialise(self, json_file: str) -> None:
         print("Initializing the database...")
         # Drop existing tables
-        #self._drop_all_the_tables()
+        self._drop_all_the_tables()
         # Create new schema
-        #self.__create_schemes(json_file=EnvVariableUtil.get_env_variable('JSON_FILE_PATH'))
+        self.__create_schemes(json_file=EnvVariableUtil.get_env_variable('JSON_FILE_PATH'))
         self.__populate_with_values()
 
         # Optionally, insert initial data or perform any other setup here
@@ -473,10 +480,17 @@ class DataBaseUtil:
         if not os.path.exists(csv_directory):
             raise FileNotFoundError(f"The directory '{csv_directory}' does not exist.")
 
-        for file_name in os.listdir(csv_directory):
-            if file_name.endswith('.csv'):
-                table_name = os.path.splitext(file_name)[0]
-                file_path = os.path.join(csv_directory, file_name)
+        table_order = ["users", "student", "tutor", "lessons", "studentinlesson"]
+
+        file_to_table_map = {
+            os.path.splitext(file_name)[0]: os.path.join(csv_directory, file_name)
+            for file_name in os.listdir(csv_directory)
+            if file_name.endswith('.csv')
+        }
+
+        for table_name in table_order:
+            if table_name in file_to_table_map:
+                file_path = file_to_table_map[table_name]
 
                 try:
                     with open(file_path, 'r', encoding='utf-8') as csv_file:
@@ -484,9 +498,11 @@ class DataBaseUtil:
                         rows = [row for row in reader]
 
                     if rows:
-                        print(f"Inserting data into {table_name} from {file_name}...")
+                        print(f"Inserting data into {table_name} from {os.path.basename(file_path)}...")
                         self.insert_many(table_name, rows, column='id', dublicate=False)
                     else:
-                        print(f"No data found in {file_name}, skipping...")
+                        print(f"No data found in {os.path.basename(file_path)}, skipping...")
                 except Exception as e:
-                    print(f"Error processing {file_name}: {e}")
+                    print(f"Error processing {os.path.basename(file_path)}: {e}")
+            else:
+                print(f"No data file found for table '{table_name}', skipping...")
