@@ -131,7 +131,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
     def test_initialise(self):
         data_path = EnvVariableUtil.get_env_variable('JSON_FILE_PATH')
-        print(f"JSON_FILE_PATH: {data_path}")  # Debug-Ausgabe
+        #print(f"JSON_FILE_PATH: {data_path}")  # Debug-Ausgabe
         self.db_util.initialise(json_file=data_path)
 
 
@@ -158,23 +158,26 @@ class DataBaseUtilTestCase(unittest.TestCase):
         # Verify that the entry is present.
 
     def test_save_data_to_csv(self):
-        data = [
-            {"userid": 202345671, "username": "arthur_morgan", "password": "password123", "usertyp": "student",
+        data_users = [
+            {"username": "arthur.morgan", "password": "password123", "first_name": "arthur", "last_name": "morgan",
+             "bio": "", "remember_me": "TRUE"},
+            {"username": "john.doe", "password": "newpassword", "first_name": "john", "last_name": "doe", "bio": "Shrek is love. Shrek is live",
              "remember_me": "TRUE"},
-            {"userid": 202345672, "username": "john_doe", "password": "newpassword", "usertyp": "admin",
-             "remember_me": "TRUE"},
-            {"userid": 202345673, "username": "jane_doe", "password": "mypassword", "usertyp": "admin",
+            {"username": "jane.doe", "password": "mypassword", "first_name": "jane", "last_name": "doe", "bio": "Professional construction enthusiast",
              "remember_me": "FALSE"},
-            {"userid": 202345674, "username": "john_marston", "password": "mypasswordisbetter", "usertyp": "student",
-             "remember_me": "FALSE"},
-            {"userid": 202345675, "username": "mary_stuart", "password": "stupidpassword", "usertyp": "tutor",
+            {"username": "john.marston", "password": "mypasswordisbetter", "first_name": "john", "last_name": "marston",
+             "bio": "","remember_me": "FALSE"},
+            {"username": "mary.stuart", "password": "stupidpassword", "first_name": "mary", "last_name": "stuart", "bio": "Am I a pretty girl?",
              "remember_me": "TRUE"},
         ]
+        for entry in data_users:
+            entry["user_id"] = self.db_util.generate_unique_id()
         table_name = "users"
         csv_directory = EnvVariableUtil.get_env_variable('CSV_FILE_PATH')
 
         try:
-            file_path = self.db_util.save_data_to_csv(table_name=table_name, data=data, csv_directory=csv_directory)
+            column_types = self.db_util._get_column_types(table_name)
+            file_path = self.db_util.save_data_to_csv(table_name=table_name, data=data_users, csv_directory=csv_directory, column_types=column_types)
             assert os.path.exists(file_path), f"CSV file not created at {file_path}"
             print("CSV file saved successfully and test passed.")
         except Exception as e:

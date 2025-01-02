@@ -72,7 +72,7 @@ class DataBaseUtil:
                     break  # Exit the loop if the key is unique
 
                 # Increment the key value to find a new unique key
-                initial_key_value += 1
+                initial_key_value = self.generate_unique_id()
                 obj[column] = initial_key_value
                 print(f"Updated object key: {obj[column]}")  # Debug output
 
@@ -113,7 +113,7 @@ class DataBaseUtil:
                 if not isinstance(obj, dict):
                     raise TypeError(f"Expected dict, got {type(obj)}")
                 while obj.get(column) in existing_keys:
-                    obj[column] += 1
+                    obj[column] = self.generate_unique_id()
                 existing_keys.add(obj[column])
 
                 # Prepare and execute batch insert
@@ -308,7 +308,7 @@ class DataBaseUtil:
         self._drop_all_the_tables()
         # Create new schema
         self.__create_schemes(json_file=EnvVariableUtil.get_env_variable('JSON_FILE_PATH'))
-        #self.__populate_with_values()
+        self.__populate_with_values()
 
         # Optionally, insert initial data or perform any other setup here
         print("Database initialized successfully.")
@@ -368,6 +368,28 @@ class DataBaseUtil:
         params = [value for _, value in conditions]
 
         return query, params
+
+
+#-----GET COLUMN TYPES--------
+    def _get_column_types(self, table_name: str) -> Dict[str, str]:
+        query = f"""
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = %s;
+        """
+        result = self.__execute_command(
+            sql_query=query,
+            params=(table_name,),
+            fetch_one=False,
+            fetch_all=True,
+            log_message=f"Fetching column types for table {table_name}."
+        )
+
+        if not result:
+            raise Exception(f"No columns found for table {table_name}")
+
+        column_types = {row['column_name']: row['data_type'] for row in result}
+        return column_types
 
 
 #---EXECUTE COMMAND----
