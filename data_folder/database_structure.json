@@ -5,10 +5,10 @@
       "columns": [
         {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
         {"column_name": "username", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
+        {"column_name": "password", "data_type": "VARCHAR(80)", "constraints": "NOT NULL" },
         {"column_name": "first_name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "last_name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "bio", "data_type": "VARCHAR(200)" },
-        {"column_name": "password", "data_type": "VARCHAR(80)", "constraints": "NOT NULL" },
         {"column_name": "remember_me", "data_type": "BOOLEAN", "constraints": "NOT NULL" }
       ]
     },
