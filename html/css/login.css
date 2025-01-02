@@ -13,3 +13,18 @@ form div {
 h1 {
     color: #333;
 }
+
+/* Zentriere nur den Login-Container */
+.login-container {
+    display: flex;
+    flex-direction: column; /* Stapelt Inhalte vertikal */
+    justify-content: center; /* Zentriert Inhalte vertikal */
+    align-items: center; /* Zentriert Inhalte horizontal */
+    height: 100vh; /* Nimmt die gesamte Höhe des Viewports */
+    margin: 0 auto; /* Zentriert horizontal */
+    padding: 20px;
+    max-width: 400px; /* Begrenzt die Breite */
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

@@ -68,27 +68,29 @@
     </script>
 </head>
 <body>
-
     <h1>Login</h1>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.username.label }}<br>
-             {{ form.username(size=20, id="username-field") }}
-            <div id="suggestions"></div>
-        </div>
-        <div>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
-        </div>
-        <div>
-            {{ form.submit() }}
-        </div>
-    </form>
-    <form method="POST">
-        <div>
-            {{ form.register_new_user() }}
-        </div>
-    </form>
+    <!-- Neuer Container für das Login-Formular -->
+    <div class="login-container">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.username.label }}<br>
+                {{ form.username(size=20, id="username-field") }}
+                <div id="suggestions"></div>
+            </div>
+            <div>
+                {{ form.password.label }}<br>
+                {{ form.password(size=32) }}
+            </div>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
+        <form method="POST">
+            <div>
+                {{ form.register_new_user() }}
+            </div>
+        </form>
+    </div>
 </body>
 </html>
