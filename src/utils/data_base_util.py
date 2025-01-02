@@ -1,10 +1,11 @@
 import secrets
+import uuid
 
+from src.utils.password_utils import PasswordUtils
 import psycopg2
 import psycopg2.extras
 import json
 from pathlib import Path
-
 from pandas.core.interchange import column
 from psycopg2._psycopg import cursor
 from typing import Any, Dict, List, Tuple, Callable
@@ -47,7 +48,6 @@ class DataBaseUtil:
 
 #--------GENERATE UNIQUE ID-------
     def generate_unique_id(self) -> str:
-        """Generate a 16-character unique hexadecimal ID."""
         return secrets.token_hex(8)
 
 
@@ -290,6 +290,8 @@ class DataBaseUtil:
                             if col_type.lower() == 'jsonb' and col in row:
                                 # Konvertiere den Wert in ein JSON-kompatibles Array
                                 row[col] = json.dumps(row[col]) if isinstance(row[col], (list, dict)) else json.dumps([row[col]])
+                            if col.lower() == "password":
+                                row[col] = PasswordUtils.hash_password(row[col])
                         writer.writerow(row)
                     print(f"Data written successfully to {csv_file}")
                 else:
@@ -496,7 +498,7 @@ class DataBaseUtil:
         if not os.path.exists(csv_directory):
             raise FileNotFoundError(f"The directory '{csv_directory}' does not exist.")
 
-        table_order = ["users", "student", "tutor", "lessons", "studentinlesson"]
+        table_order = ["tokens", "users", "student", "tutor", "course", "studentincourse"]
 
         file_to_table_map = {
             os.path.splitext(file_name)[0]: os.path.join(csv_directory, file_name)
