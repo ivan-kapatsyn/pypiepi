@@ -1,7 +1,11 @@
+import secrets
+
 import psycopg2
 import psycopg2.extras
 import json
 from pathlib import Path
+
+from pandas.core.interchange import column
 from psycopg2._psycopg import cursor
 from typing import Any, Dict, List, Tuple, Callable
 from psycopg2.extras import DictRow
@@ -39,6 +43,12 @@ class DataBaseUtil:
             self.cursor.close()
         if self.__connection is not None:
             self.__connection.close()
+
+
+#--------GENERATE UNIQUE ID-------
+    def generate_unique_id(self) -> str:
+        """Generate a 16-character unique hexadecimal ID."""
+        return secrets.token_hex(8)
 
 
 # ------INSERT ONE TO THE DATABASE--------
@@ -137,27 +147,33 @@ class DataBaseUtil:
 
 
 # -------LOAD ONE------
-    def load_one(self, table_name: str, id_value: Any) -> DictRow:
-        id_column = self.get_primary_key_column(table_name)
-        query = f"SELECT * FROM {table_name} WHERE {id_column} = %s;"
-        result_load = self.__fetch_one(query, (id_value, ))
+    def load_data(self, table_name: str, column: str, value:any ) -> DictRow:
+        if not column.isidentifier():
+            raise ValueError(f"Invalid column name: {column}")
+
+        query = f'SELECT * FROM {table_name} WHERE {column} = %s;'
+        result_load = self.__fetch_one(query, (value,))
+
         if result_load is None:
-            raise Exception(f"No entry found where {id_column} = {id_value}.")
-        return result_load
+            raise Exception(f"No entry found where {column} = {value}.")
+        else:
+            return result_load
 
 
 # ------LOAD MANY DATA-------
-    def load_many(self, table_name: str, filter_function: str, values: List[Any]) -> List[Dict[str, Any]]:
-        if not values:
-            print("No values provided for loading.")  # Debug output
-            return []
+    def load_many(self, table_name: str, filter_function: str = None, values: List[Any] = None) -> List[Dict[str, Any]]:
+        if values:
+            placeholders = ', '.join(['%s'] * len(values))
+            query = f'SELECT * FROM {table_name} WHERE {filter_function.replace('%s', placeholders)};'
+            params = tuple(values)
+        elif filter_function:
+            query = f'SELECT * FROM {table_name} WHERE {filter_function};'
+            params = ()
+        else:
+            query = f'SELECT * FROM {table_name};'
+            params = ()
 
-        placeholders = ', '.join(['%s'] * len(values)) if "%s" in filter_function else None
-        query = f"SELECT * FROM {table_name} WHERE {filter_function}"
-        if placeholders:
-            query = query.replace("%s", placeholders)
-
-        print(f"Executing query: {query} with values: {values}")  # Debug output
+        print(f"Executing query: {query} with values: {values}")
 
         # Use self.__execute_command to handle execution and error management
         results = self.__execute_command(
@@ -172,7 +188,7 @@ class DataBaseUtil:
             print(f"Successfully loaded {len(results)} records from {table_name}.")  # Debug output
             return results
         else:
-            print(f"Error during batch load in {table_name}.")  # Handle case if results are None
+            print(f"Error during batch load in {table_name}.")
             return []
 
 
@@ -290,7 +306,7 @@ class DataBaseUtil:
         self._drop_all_the_tables()
         # Create new schema
         self.__create_schemes(json_file=EnvVariableUtil.get_env_variable('JSON_FILE_PATH'))
-        self.__populate_with_values()
+        #self.__populate_with_values()
 
         # Optionally, insert initial data or perform any other setup here
         print("Database initialized successfully.")
