@@ -178,7 +178,7 @@ class DataBaseUtil:
         # Use self.__execute_command to handle execution and error management
         results = self.__execute_command(
             sql_query=query,
-            params=tuple(values),
+            params=params,
             fetch_one=False,
             fetch_all=True,
             log_message=f"Loading records from {table_name} with filter {filter_function}."
