@@ -81,12 +81,15 @@
                 {{ form.password(size=32) }}
             </div>
             <div>
-                {{ form.submit() }}
+                <!-- Hinzufügen der Klasse 'login-button' für den Login-Button -->
+                {{ form.submit(class="login-button") }}
             </div>
         </form>
+
         <form method="POST">
             <div>
-                {{ form.register_new_user() }}
+                <!-- Hinzufügen der Klasse 'register-button' für den Registrierungs-Button -->
+                {{ form.register_new_user(class="register-button") }}
             </div>
         </form>
     </div>
