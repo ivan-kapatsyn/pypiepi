@@ -41,8 +41,7 @@
                 }
             });
         });
-    </script>
-    <script>
+
         $(document).on('click', '.suggestion-item', function () {
             let username = $(this).data('username');
             let userId = $(this).data('user-id');
@@ -68,9 +67,8 @@
     </script>
 </head>
 <body>
-    <!-- Login-Container umfasst jetzt auch das "Login"-Logo -->
     <div class="login-container">
-        <h1>Login</h1> <!-- Das Logo wird hier mit in den Container aufgenommen -->
+        <h1>Login</h1>
         <form method="POST">
             {{ form.hidden_tag() }}
             <div>
