@@ -199,7 +199,6 @@ class DataBaseUtil:
         self.__execute_command(query, (id_value, ))
         print(f"Deleted record from {table_name} where {id_column} = {id_value}.")
 
-
 # ------DELETE MANY DATA--------
     def delete_many(self, table_name: str, column: str, values: List[Any]) -> None:
         if not values:
