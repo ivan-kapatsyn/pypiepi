@@ -28,7 +28,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
         self.assertEqual(self.db_util.delete_one(table_name, id_value), None)
 
 
-    def test_insert_data(self):
+    def test_insert_one(self):
         obj1 = {
             "user_id": 202345671,
             "username": "arthur_morgan",
@@ -86,6 +86,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
         self.assertEqual(query, expected_query)
         self.assertEqual(params, expected_params)
+
 
 
     def test_delete_many(self):
