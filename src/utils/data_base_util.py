@@ -203,7 +203,7 @@ class DataBaseUtil:
 # ------DELETE MANY DATA--------
     def delete_many(self, table_name: str, column: str, values: List[Any]) -> None:
         if not values:
-            print("No values to delete.")  # Debug output
+            print("No values to delete.")
             return
 
         placeholders = ', '.join(['%s'] * len(values))
@@ -277,18 +277,14 @@ class DataBaseUtil:
         try:
             with open(csv_file, 'w', newline='', encoding="utf-8") as csvfile:
                 if data:
-                    # Extrahiere Header aus den Schlüsseln des ersten Datensatzes
                     fieldnames = list(data[0].keys())
                     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-                    # Schreibe Header
                     writer.writeheader()
 
-                    # Schreibe Zeilen mit JSONB-Konvertierung
                     for row in data:
                         for col, col_type in column_types.items():
                             if col_type.lower() == 'jsonb' and col in row:
-                                # Konvertiere den Wert in ein JSON-kompatibles Array
                                 row[col] = json.dumps(row[col]) if isinstance(row[col], (list, dict)) else json.dumps([row[col]])
                             if col.lower() == "password":
                                 row[col] = PasswordUtils.hash_password(row[col])
