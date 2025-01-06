@@ -3,12 +3,11 @@ from src.utils.data_base_util import DataBaseUtil
 import psycopg2
 
 data = [
-    ["lessonid", "studentid"],
-    [5432,202345671],
-    [5432,202345672],
+    ["lessonid", "tutorid","date","time","roomnr","title", "description", "maxnumberofstudents"],
+    [5432, 202345675, "mary", "stuart", "physics"]
 ]
 
-csv_file = "../../../data_folder/studentinlesson_table_data.csv"
+csv_file = "../../../../data_folder/course.csv"
 
 try:
     with open(csv_file, 'w', newline='', encoding="utf-8") as csvfile:
@@ -31,7 +30,7 @@ class AddToUser(DataBaseUtil):
 
                 for row in reader:
                     print(f"Row: {row}")
-                    insert_query = f"INSERT INTO studentinlesson (lessonid, studentid) VALUES ({row[0]}, '{row[1]}');"
+                    insert_query = f"INSERT INTO lessons (lessonid,tutorid,date,time,roomnr,title,description,maxnumbersstudents) VALUES ({row[0]}, '{row[1]}', '{row[2]}', '{row[3]}', '{row[4]}','{row[5]}','{row[6]}');"
                     self.cursor.execute(insert_query)
 
             self.connection.commit()
@@ -45,6 +44,6 @@ class AddToUser(DataBaseUtil):
 if __name__ == "__main__":
     try:
         add_to_user = AddToUser()
-        add_to_user.import_csv("../../../data_folder/studentinlesson_table_data.csv")
+        add_to_user.import_csv("../../../data_folder/course.csv")
     except Exception as error:
         print(f"Error: {error}")

@@ -9,7 +9,7 @@ class InsertData(DataBaseUtil):
     def __init__(self):
         super().__init__()
 
-    def insert_one(self, table_name: str,  obj: Dict[str, any], condition: str, dublicate: bool = False) -> None:
+    def insert_one(self, table_name: str, obj: Dict[str, any], condition: str, dublicate: bool = False) -> None:
         try:
             query = f"SELECT 1 FROM {table_name} WHERE {condition} = %s;"
             self.cursor.execute(query, (obj[condition],))
@@ -33,7 +33,7 @@ class InsertData(DataBaseUtil):
             self.connection.rollback()
             raise Exception(f"Error inserting {table_name}: {e}")
 
-    def insert_many(self, table_name: str, objects: List[Dict[str, any]], condition: str, dublicate: bool = False) -> None:
+    def _insert_many(self, table_name: str, objects: List[Dict[str, any]], condition: str, dublicate: bool = False) -> None:
         errors = []
         for obj in objects:
             try:

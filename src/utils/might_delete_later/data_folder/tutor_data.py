@@ -8,7 +8,7 @@ data = [
 ]
 
 
-csv_file = "../../../data_folder/tutor_table_data.csv"
+csv_file = "../../../../data_folder/tutor.csv"
 
 try:
     with open(csv_file, 'w', newline='', encoding="utf-8") as csvfile:
@@ -45,6 +45,6 @@ class AddToUser(DataBaseUtil):
 if __name__ == "__main__":
     try:
         add_to_user = AddToUser()
-        add_to_user.import_csv("../../../data_folder/tutor_table_data.csv")
+        add_to_user.import_csv("../../../data_folder/tutor.csv")
     except Exception as error:
         print(f"Error: {error}")
