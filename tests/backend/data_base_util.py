@@ -108,7 +108,6 @@ class DataBaseUtilTestCase(unittest.TestCase):
             print(f"User {user_id} exists after deletion: {exists_after}")  # Debugging-Ausgabe
             self.assertFalse(exists_after, f"User {user_id} should have been deleted")
 
-
     def test_exist_user_id(self):
         user_id_to_test = 202345671
         expected_exists = False  # Setzen Sie dies auf True, wenn der Benutzer existieren soll
