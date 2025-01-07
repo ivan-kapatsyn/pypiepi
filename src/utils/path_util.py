@@ -27,3 +27,4 @@ class PathUtil:
         project_path = PathUtil.get_project_path()
         static_path = EnvVariableUtil.get_env_variable('DATA_RELATIVE_PATH')
         return Path(project_path, static_path)
+

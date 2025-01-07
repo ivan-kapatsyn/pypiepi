@@ -1,7 +1,12 @@
+import secrets
+import uuid
+
+from src.utils.password_utils import PasswordUtils
 import psycopg2
 import psycopg2.extras
 import json
 from pathlib import Path
+from pandas.core.interchange import column
 from psycopg2._psycopg import cursor
 from typing import Any, Dict, List, Tuple, Callable
 from psycopg2.extras import DictRow
@@ -41,6 +46,11 @@ class DataBaseUtil:
             self.__connection.close()
 
 
+#--------GENERATE UNIQUE ID-------
+    def generate_unique_id(self) -> str:
+        return secrets.token_hex(8)
+
+
 # ------INSERT ONE TO THE DATABASE--------
     def insert_one(self, table_name: str, obj: Dict[str, any], column: str, dublicate: bool = False) -> None:
         print(f"Inserting in table {table_name}")
@@ -62,7 +72,7 @@ class DataBaseUtil:
                     break  # Exit the loop if the key is unique
 
                 # Increment the key value to find a new unique key
-                initial_key_value += 1
+                initial_key_value = self.generate_unique_id()
                 obj[column] = initial_key_value
                 print(f"Updated object key: {obj[column]}")  # Debug output
 
@@ -103,7 +113,7 @@ class DataBaseUtil:
                 if not isinstance(obj, dict):
                     raise TypeError(f"Expected dict, got {type(obj)}")
                 while obj.get(column) in existing_keys:
-                    obj[column] += 1
+                    obj[column] = self.generate_unique_id()
                 existing_keys.add(obj[column])
 
                 # Prepare and execute batch insert
@@ -137,32 +147,38 @@ class DataBaseUtil:
 
 
 # -------LOAD ONE------
-    def load_one(self, table_name: str, id_value: Any) -> DictRow:
-        id_column = self.get_primary_key_column(table_name)
-        query = f"SELECT * FROM {table_name} WHERE {id_column} = %s;"
-        result_load = self.__fetch_one(query, (id_value, ))
+    def load_data(self, table_name: str, column: str, value:any ) -> DictRow:
+        if not column.isidentifier():
+            raise ValueError(f"Invalid column name: {column}")
+
+        query = f'SELECT * FROM {table_name} WHERE {column} = %s;'
+        result_load = self.__fetch_one(query, (value,))
+
         if result_load is None:
-            raise Exception(f"No entry found where {id_column} = {id_value}.")
-        return result_load
+            raise Exception(f"No entry found where {column} = {value}.")
+        else:
+            return result_load
 
 
 # ------LOAD MANY DATA-------
-    def load_many(self, table_name: str, filter_function: str, values: List[Any]) -> List[Dict[str, Any]]:
-        if not values:
-            print("No values provided for loading.")  # Debug output
-            return []
+    def load_many(self, table_name: str, filter_function: str = None, values: List[Any] = None) -> List[Dict[str, Any]]:
+        if values:
+            placeholders = ', '.join(['%s'] * len(values))
+            query = f'SELECT * FROM {table_name} WHERE {filter_function.replace('%s', placeholders)};'
+            params = tuple(values)
+        elif filter_function:
+            query = f'SELECT * FROM {table_name} WHERE {filter_function};'
+            params = ()
+        else:
+            query = f'SELECT * FROM {table_name};'
+            params = ()
 
-        placeholders = ', '.join(['%s'] * len(values)) if "%s" in filter_function else None
-        query = f"SELECT * FROM {table_name} WHERE {filter_function}"
-        if placeholders:
-            query = query.replace("%s", placeholders)
-
-        print(f"Executing query: {query} with values: {values}")  # Debug output
+        print(f"Executing query: {query} with values: {values}")
 
         # Use self.__execute_command to handle execution and error management
         results = self.__execute_command(
             sql_query=query,
-            params=tuple(values),
+            params=params,
             fetch_one=False,
             fetch_all=True,
             log_message=f"Loading records from {table_name} with filter {filter_function}."
@@ -172,7 +188,7 @@ class DataBaseUtil:
             print(f"Successfully loaded {len(results)} records from {table_name}.")  # Debug output
             return results
         else:
-            print(f"Error during batch load in {table_name}.")  # Handle case if results are None
+            print(f"Error during batch load in {table_name}.")
             return []
 
 
@@ -183,11 +199,10 @@ class DataBaseUtil:
         self.__execute_command(query, (id_value, ))
         print(f"Deleted record from {table_name} where {id_column} = {id_value}.")
 
-
 # ------DELETE MANY DATA--------
     def delete_many(self, table_name: str, column: str, values: List[Any]) -> None:
         if not values:
-            print("No values to delete.")  # Debug output
+            print("No values to delete.")
             return
 
         placeholders = ', '.join(['%s'] * len(values))
@@ -261,19 +276,17 @@ class DataBaseUtil:
         try:
             with open(csv_file, 'w', newline='', encoding="utf-8") as csvfile:
                 if data:
-                    # Extrahiere Header aus den Schlüsseln des ersten Datensatzes
                     fieldnames = list(data[0].keys())
                     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-                    # Schreibe Header
                     writer.writeheader()
 
-                    # Schreibe Zeilen mit JSONB-Konvertierung
                     for row in data:
                         for col, col_type in column_types.items():
                             if col_type.lower() == 'jsonb' and col in row:
-                                # Konvertiere den Wert in ein JSON-kompatibles Array
                                 row[col] = json.dumps(row[col]) if isinstance(row[col], (list, dict)) else json.dumps([row[col]])
+                            if col.lower() == "password":
+                                row[col] = PasswordUtils.hash_password(row[col])
                         writer.writerow(row)
                     print(f"Data written successfully to {csv_file}")
                 else:
@@ -350,6 +363,28 @@ class DataBaseUtil:
         params = [value for _, value in conditions]
 
         return query, params
+
+
+#-----GET COLUMN TYPES--------
+    def _get_column_types(self, table_name: str) -> Dict[str, str]:
+        query = f"""
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = %s;
+        """
+        result = self.__execute_command(
+            sql_query=query,
+            params=(table_name,),
+            fetch_one=False,
+            fetch_all=True,
+            log_message=f"Fetching column types for table {table_name}."
+        )
+
+        if not result:
+            raise Exception(f"No columns found for table {table_name}")
+
+        column_types = {row['column_name']: row['data_type'] for row in result}
+        return column_types
 
 
 #---EXECUTE COMMAND----
@@ -480,7 +515,7 @@ class DataBaseUtil:
         if not os.path.exists(csv_directory):
             raise FileNotFoundError(f"The directory '{csv_directory}' does not exist.")
 
-        table_order = ["users", "student", "tutor", "lessons", "studentinlesson"]
+        table_order = ["tokens", "users", "student", "tutor", "course", "studentincourse"]
 
         file_to_table_map = {
             os.path.splitext(file_name)[0]: os.path.join(csv_directory, file_name)

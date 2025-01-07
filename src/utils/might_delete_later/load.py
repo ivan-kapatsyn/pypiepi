@@ -10,7 +10,7 @@ class DataLoader(DataBaseUtil):
     def __init__(self):
         super().__init__()
 
-    def fetch_one(self, query: str, params: Tuple[Any, ...] = ()) -> Dict[str, Any]:
+    def __fetch_one(self, query: str, params: Tuple[Any, ...] = ()) -> Dict[str, Any]:
         try:
             self.cursor.execute(query, params)
             result = self.cursor.fetchone()
@@ -22,7 +22,7 @@ class DataLoader(DataBaseUtil):
             raise Exception(f"Fehler beim Ausführen von fetch_one: {error}")
 
 
-    def fetch_all(self, query: str, params: Tuple[Any, ...] = ()) -> List[Dict[str, Any]]:
+    def __fetch_all(self, query: str, params: Tuple[Any, ...] = ()) -> List[Dict[str, Any]]:
         try:
             self.cursor.execute(query, params)
             results = self.cursor.fetchall()
@@ -33,9 +33,9 @@ class DataLoader(DataBaseUtil):
         except Exception as error:
             raise Exception(f"Fehler beim Ausführen von fetch_all: {error}")
 
-    def load_data(self, table_name: str, condition: str, value:any ) -> Dict[str, Any]:
+    def load_one(self, table_name: str, condition: str, value:any) -> Dict[str, Any]:
         query = f'SELECT * FROM {table_name} WHERE {condition} = %s;'
-        result = self.fetch_one(query, (value,))
+        result = self.__fetch_one(query, (value,))
 
         if not result:
             raise LoadError(f"No entry found where {condition} = {value}.")
@@ -44,7 +44,7 @@ class DataLoader(DataBaseUtil):
     def load_many(self, table_name: str, filter_function: Callable[[Dict[str,Any]], bool]) -> List[Dict[str, Any]]:
 
         query = f'SELECT * FROM {table_name};'
-        results = self.fetch_all(query)
+        results = self.__fetch_all(query)
         return [result for result in results if filter_function(result)]
 
     #def filter_function(obj):
@@ -53,7 +53,7 @@ class DataLoader(DataBaseUtil):
 
 loader = DataLoader()
 try:
-    user = loader.load_data('tmuser', 'userid', 202345671)
+    user = loader.load_one('tmuser', 'userid', 202345671)
     print(user)
 except LoadError as e:
     print(e)
