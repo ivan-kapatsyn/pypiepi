@@ -68,9 +68,8 @@
     </div>
 </header>
 <div>Username: {{ username }}</div>
-<table>
-    <table>
-        <thead>
+<table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
+    <thead>
         <tr>
             <th>Time</th>
             <th>Monday</th>
@@ -78,105 +77,28 @@
             <th>Wednesday</th>
             <th>Thursday</th>
             <th>Friday</th>
-            <th>Saturday</th>
-            <th>Sunday</th>
         </tr>
-        </thead>
-        <tbody>
+    </thead>
+    <tbody>
+        {% for time in times %}
         <tr>
-            <td class="time-cell"><span>9 AM</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{ time }}</td>
+            {% for day in days %}
+            <td>
+                {% for event in events %}
+                {% if event.day == day and event.time == time %}
+                <div onclick="window.location.href='{{ event.url }}'">
+                    {{ event.name }}
+                </div>
+                {% endif %}
+                {% endfor %}
+            </td>
+            {% endfor %}
         </tr>
-        <tr>
-            <td class="time-cell"><span>10 AM</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="time-cell"><span>11 AM</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Retur</td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="time-cell"><span>12 PM</span></td>
-            <td></td>
-            <td> </td>
-            <td> </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="time-cell"><span>1 PM</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="time-cell"><span>2 PM</span></td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-            <td>Oiu</td>
-        </tr>
-        <tr>
-            <td class="time-cell"><span>3 PM</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="time-cell"><span>4 PM</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="time-cell"><span>5 PM</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        </tbody>
-    </table>
-
+        {% endfor %}
+    </tbody>
 </table>
+
 
 </body>
 </html>
