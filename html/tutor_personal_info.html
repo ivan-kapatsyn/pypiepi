@@ -16,7 +16,7 @@
 
                 // AJAX request
                 $.ajax({
-                    url: `http://127.0.0.1:5000/tutor/${userId}/toggle_remember_me`,
+                    url: `/user/${userId}/toggle_remember_me`,
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({remember_me: isChecked}),
@@ -61,7 +61,7 @@
                 </label>
             </li>
             <li>
-                <a class="dropdown-item" href="http://127.0.0.1:5000/login/index">Logout</a>
+                <a class="dropdown-item" href="/login/index">Logout</a>
             </li>
         </ul>
     </div>
