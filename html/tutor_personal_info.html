@@ -16,7 +16,7 @@
 
                 // AJAX request
                 $.ajax({
-                    url: `http://127.0.0.1:5000/tutor/${userId}/toggle_remeber_me`,
+                    url: `http://127.0.0.1:5000/tutor/${userId}/toggle_remember_me`,
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({remember_me: isChecked}),
@@ -30,7 +30,6 @@
             });
         });
     </script>
-
     <script>
         const logoutButton = document.querySelector('.logout');
 
@@ -67,7 +66,76 @@
         </ul>
     </div>
 </header>
-<div>Username: {{ username }}</div>
+<div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
+    {% for item in data %}
+    <span>{{ item.name }}</span>
+    <span id="data-{{ item.name }}">{{ item.value }}</span>
+    <button id="edit-button" onclick="enableEdit('{{ item.name }}')">Edit</button>
+    {% endfor %}
+</div>
+
+<script>
+    function enableEdit(name) {
+        const container = document.getElementById('data-container');
+        const nameSpan = document.getElementById('data-'+name);
+        const editButton = document.getElementById('edit-button');
+
+        // Replace name with an input field
+        const currentValue = nameSpan.innerText;
+        nameSpan.innerHTML = `<input id="edit-input" value="${currentValue}" style="width: 70%;">`;
+
+        // Replace "Edit" button with "Ok" and "Cancel"
+        editButton.outerHTML = `
+            <button id="ok-button" onclick="saveData('${name}')">Ok</button>
+            <button id="cancel-button" onclick="cancelEdit('${currentValue}', '${name}')">Cancel</button>
+        `;
+    }
+
+    function saveData(name) {
+        const newValue = document.getElementById('edit-input').value;
+
+        // Call the Flask endpoint with the new data
+        fetch('/{{ user_id }}/update-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: newValue }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the UI
+                document.getElementById('data-'+name).innerText = newValue;
+                resetButtons();
+            } else {
+                alert('Failed to update data!');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to update data!');
+        });
+    }
+
+    function cancelEdit(originalValue, name) {
+        // Restore the original value and reset the UI
+        document.getElementById('data-'+name).innerText = originalValue;
+        resetButtons(name);
+    }
+
+    function resetButtons(name) {
+        // Replace "Ok" and "Cancel" with the "Edit" button
+        const container = document.getElementById('data-container');
+        const editButtonHtml = `<button id="edit-button" onclick="enableEdit('${name}')">Edit</button>`;
+        container.querySelector('#ok-button').outerHTML = editButtonHtml;
+        if (document.getElementById('cancel-button')) {
+            document.getElementById('cancel-button').remove();
+        }
+    }
+</script>
+
+
 <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
     <thead>
         <tr>
