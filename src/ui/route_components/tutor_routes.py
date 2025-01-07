@@ -23,7 +23,9 @@ class TutorRoutes:
         ]
         # Todo get data from dict(tutor)
         data = [
-            {"name": "Name", "value": tutor.username}
+            {"name": "Name", "value": tutor.username},
+            {"name": "First Name", "value": tutor.first_name},
+
         ]
 
         personal_bio_page = r'tutor_personal_info.html'

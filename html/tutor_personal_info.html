@@ -68,9 +68,11 @@
 </header>
 <div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
     {% for item in data %}
-    <span>{{ item.name }}</span>
-    <span id="data-{{ item.name }}">{{ item.value }}</span>
-    <button id="edit-button" onclick="enableEdit('{{ item.name }}')">Edit</button>
+    <div>
+        <span style="font-weight: bold;">{{ item.name }}:</span>
+        <span id="data-{{ item.name }}">{{ item.value }}</span>
+        <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
+    </div>
     {% endfor %}
 </div>
 
@@ -78,7 +80,7 @@
     function enableEdit(name) {
         const container = document.getElementById('data-container');
         const nameSpan = document.getElementById('data-'+name);
-        const editButton = document.getElementById('edit-button');
+        const editButton = document.getElementById('edit-button-'+name);
 
         // Replace name with an input field
         const currentValue = nameSpan.innerText;
@@ -127,7 +129,7 @@
     function resetButtons(name) {
         // Replace "Ok" and "Cancel" with the "Edit" button
         const container = document.getElementById('data-container');
-        const editButtonHtml = `<button id="edit-button" onclick="enableEdit('${name}')">Edit</button>`;
+        const editButtonHtml = `<button id="edit-button-${name}" onclick="enableEdit('${name}')">Edit</button>`;
         container.querySelector('#ok-button').outerHTML = editButtonHtml;
         if (document.getElementById('cancel-button')) {
             document.getElementById('cancel-button').remove();
