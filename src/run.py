@@ -3,6 +3,7 @@ import webbrowser
 
 from flask import Flask
 
+from src.ui.route_components.courses import CoursesRoutes
 from src.ui.route_components.login_routes import LoginRoutes
 from src.ui.route_components.register_routes import RegisterRoutes
 from src.ui.route_components.tutor_routes import TutorRoutes
@@ -16,7 +17,7 @@ def create_app():
                 static_folder=PathUtil.get_static_path())
     app.config.from_object('src.ui.configs.configs.Config')
 
-    routes = [LoginRoutes,RegisterRoutes,TutorRoutes,UserRoutes]
+    routes = [LoginRoutes,RegisterRoutes,TutorRoutes,UserRoutes,CoursesRoutes]
     for route in routes:
         app.register_blueprint(route.main_bp)
 

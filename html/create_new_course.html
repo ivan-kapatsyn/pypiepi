@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>New Course</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#username-field').on('input', function () {
+                let query = $(this).val();
+                if (query.length > 0) {
+                    $.ajax({
+                        url: '/login/get_suggestions',
+                        method: 'GET',
+                        data: { query: query },
+                        success: function (data) {
+                            let suggestionsBox = $('#suggestions');
+                            suggestionsBox.empty();
+                            data.forEach(function (suggestion) {
+                                suggestionsBox.append(
+                                    `<div class="suggestion-item" data-username="${suggestion.username}" data-user-id="${suggestion.user_id}">${suggestion.username}</div>`
+                                );
+                            });
+                            suggestionsBox.show();
+                        }
+                    });
+                } else {
+                    $('#suggestions').empty().hide();
+                }
+            });
+
+            $(document).on('click', '#suggestions div', function () {
+                $('#username-field').val($(this).text());
+                $('#suggestions').empty().hide();
+            });
+
+            $(document).click(function (event) {
+                if (!$(event.target).closest('#username-field, #suggestions').length) {
+                    $('#suggestions').empty().hide();
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).on('click', '.suggestion-item', function () {
+            let username = $(this).data('username');
+            let userId = $(this).data('user-id');
+            $('#username-field').val(username);
+            $('#suggestions').empty().hide();
+
+            // Send suggestion to the backend
+            $.ajax({
+                url: '/login/process_suggestion',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ username: username, user_id: userId }),
+                success: function (response) {
+                    if (response.redirect) {
+                        window.location.href = response.redirect; // Perform the redirect
+                    }
+                },
+                error: function (error) {
+                    console.error('Error processing suggestion:', error);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <h1>Create New Course</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.course_name.label }}<br>
+             {{ form.course_name(size=20) }}
+        </div>
+        <div>
+            {{ form.qualification.label }}<br>
+            {{ form.qualification(size=32) }}
+        </div>
+        <div>
+            {{ form.room.label }}<br>
+            {{ form.room(size=32) }}
+        </div>
+        <div>
+            {{ form.schedule.label }}<br>
+            {{ form.schedule(size=32) }}
+        </div>
+        <div>
+            {{ form.max_participants.label }}<br>
+            {{ form.max_participants(size=32) }}
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+</body>
+</html>
