@@ -39,44 +39,7 @@
             window.location.href = 'login.html';
         });
     </script>
-</head>
-<body>
-<header class="d-flex justify-content-center align-items-center p-3 bg-light border-bottom">
-    <!-- Logo -->
-    <div class="header-logo">
-        <img src="{{ url_for('static', filename='banner.png') }}" alt="Logo" style="height: 50px;">
-    </div>
-    <!-- Login Info Dropdown -->
-    <div class="dropdown ms-auto">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-bs-toggle="dropdown" aria-expanded="false">
-            Login Info
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><span class="dropdown-item">Username: {{ username }}</span></li>
-            <li>
-                <label class="dropdown-item">
-                    <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
-                    remembered on this device
-                </label>
-            </li>
-            <li>
-                <a class="dropdown-item" href="/login/index">Logout</a>
-            </li>
-        </ul>
-    </div>
-</header>
-<div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
-    {% for item in data %}
-    <div>
-        <span style="font-weight: bold;">{{ item.name }}:</span>
-        <span id="data-{{ item.name }}">{{ item.value }}</span>
-        <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
-    </div>
-    {% endfor %}
-</div>
-
-<script>
+    <script>
     function enableEdit(name) {
         const container = document.getElementById('data-container');
         const nameSpan = document.getElementById('data-' + name);
@@ -145,8 +108,42 @@
         }
     }
 </script>
-
-
+</head>
+<body>
+<header class="d-flex justify-content-center align-items-center p-3 bg-light border-bottom">
+    <!-- Logo -->
+    <div class="header-logo">
+        <img src="{{ url_for('static', filename='banner.png') }}" alt="Logo" style="height: 50px;">
+    </div>
+    <!-- Login Info Dropdown -->
+    <div class="dropdown ms-auto">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-bs-toggle="dropdown" aria-expanded="false">
+            Login Info
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><span class="dropdown-item">Username: {{ username }}</span></li>
+            <li>
+                <label class="dropdown-item">
+                    <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
+                    remembered on this device
+                </label>
+            </li>
+            <li>
+                <a class="dropdown-item" href="/login/index">Logout</a>
+            </li>
+        </ul>
+    </div>
+</header>
+<div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
+    {% for item in data %}
+    <div>
+        <span style="font-weight: bold;">{{ item.name }}:</span>
+        <span id="data-{{ item.name }}">{{ item.value }}</span>
+        <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
+    </div>
+    {% endfor %}
+</div>
 <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
     <thead>
     <tr>

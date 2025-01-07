@@ -34,7 +34,7 @@ class TutorRoutes:
                                user_id=user_id, remember_me = tutor.remember_me,
                                data=data,
                                events=courses,
-                               days=TutorRoutes.TIMETABLE_DAYS, time=TutorRoutes.TIMETABLE_TIME)
+                               days=TutorRoutes.TIMETABLE_DAYS, times=TutorRoutes.TIMETABLE_TIME)
 
     @staticmethod
     @main_bp.route('/<user_id>/update-data', methods=['GET', 'POST'])
