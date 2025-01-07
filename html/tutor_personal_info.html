@@ -79,8 +79,8 @@
 <script>
     function enableEdit(name) {
         const container = document.getElementById('data-container');
-        const nameSpan = document.getElementById('data-'+name);
-        const editButton = document.getElementById('edit-button-'+name);
+        const nameSpan = document.getElementById('data-' + name);
+        const editButton = document.getElementById('edit-button-' + name);
 
         // Replace name with an input field
         const currentValue = nameSpan.innerText;
@@ -95,34 +95,43 @@
 
     function saveData(name) {
         const newValue = document.getElementById('edit-input').value;
-
         // Call the Flask endpoint with the new data
-        fetch('/{{ user_id }}/update-data', {
+        fetch('/tutor/{{ user_id }}/update-data', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name: newValue }),
+            body: JSON.stringify({info_to_update: {[name]: newValue}}),
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update the UI
-                document.getElementById('data-'+name).innerText = newValue;
-                resetButtons();
-            } else {
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                if (response.status === 204) {
+                    return {'success':true}; // Handle empty responses
+                }
+
+                return response.json(); // Otherwise, parse JSON
+            })
+            .then(data => {
+                if (data.success) {
+                    // Update the UI
+                    document.getElementById('data-' + name).innerText = newValue;
+                    resetButtons();
+                } else {
+                    alert('Failed to update data!');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
                 alert('Failed to update data!');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Failed to update data!');
-        });
+            });
     }
 
     function cancelEdit(originalValue, name) {
         // Restore the original value and reset the UI
-        document.getElementById('data-'+name).innerText = originalValue;
+        document.getElementById('data-' + name).innerText = originalValue;
         resetButtons(name);
     }
 
@@ -140,32 +149,32 @@
 
 <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
     <thead>
-        <tr>
-            <th>Time</th>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-        </tr>
+    <tr>
+        <th>Time</th>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+    </tr>
     </thead>
     <tbody>
-        {% for time in times %}
-        <tr>
-            <td>{{ time }}</td>
-            {% for day in days %}
-            <td>
-                {% for event in events %}
-                {% if event.day == day and event.time == time %}
-                <div onclick="window.location.href='{{ event.url }}'">
-                    {{ event.name }}
-                </div>
-                {% endif %}
-                {% endfor %}
-            </td>
+    {% for time in times %}
+    <tr>
+        <td>{{ time }}</td>
+        {% for day in days %}
+        <td>
+            {% for event in events %}
+            {% if event.day == day and event.time == time %}
+            <div onclick="window.location.href='{{ event.url }}'">
+                {{ event.name }}
+            </div>
+            {% endif %}
             {% endfor %}
-        </tr>
+        </td>
         {% endfor %}
+    </tr>
+    {% endfor %}
     </tbody>
 </table>
 

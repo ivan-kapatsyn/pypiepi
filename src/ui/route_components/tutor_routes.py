@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, Response
+from flask import Blueprint, render_template, Response, request, jsonify
 
 from src.backend.user import Tutor, User
 
@@ -41,3 +41,21 @@ class TutorRoutes:
         user = User.get_user_by_id(user_id)
         user.toggle_saved_button()
         return Response(status=204)
+
+    @staticmethod
+    @main_bp.route('/<user_id>/update-data', methods=['GET', 'POST'])
+    def update_data(user_id: str):
+        try:
+            success = True
+            tutor = Tutor.get_user_by_id(user_id)
+            # Todo enable updating the user
+            suggestion = request.json
+            info_to_update = suggestion["info_to_update"]
+            print(info_to_update)
+
+        except Exception as e:
+            success = False
+            raise e
+        finally:
+            status = 204 if success else 500
+            return jsonify(success=success), status
