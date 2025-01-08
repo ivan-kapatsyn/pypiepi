@@ -131,20 +131,18 @@ class User:
         Toggle the 'remember_me' status for the current user.
         """
         self.remember_me = not self.remember_me
-        self.update_user_values(self.user_id, {"remember_me": self.remember_me})
+        self.update_user_values({"remember_me": self.remember_me})
         logger.info(f"User '{self.username}' updated 'remember_me' to {self.remember_me}.")
 
-    @staticmethod
-    def update_user_values(user_id: str, updates: Dict[str, Any]) -> None:
+    def update_user_values(self, updates: Dict[str, Any]) -> None:
         """
         Updates fields for a user in the database.
 
         Args:
-            user_id (str): The ID of the user to update.
             updates (Dict[str, Any]): Dictionary of fields and values to update.
         """
         db = DataBaseUtil()
-        db.update_one("users", "user_ID", user_id, updates)
+        db.update_one("users", "user_ID", self.user_id, updates)
         logger.info(f"Updated user data: {updates}")
         db.__del__()
 
