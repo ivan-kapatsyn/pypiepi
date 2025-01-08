@@ -198,6 +198,7 @@ class DataBaseUtil:
         self.__execute_command(query, (id_value, ))
         print(f"Deleted record from {table_name} where {id_column} = {id_value}.")
 
+
 # ------DELETE MANY DATA--------
     def delete_many(self, table_name: str, column: str, values: List[Any]) -> None:
         if not values:
@@ -264,31 +265,28 @@ class DataBaseUtil:
             else:
                 print(f"Successfully updated rows in {table_name} with conditions: {condition}.")
 
+
 # ------SAVE DATA TO CSV FILE-------
     def save_data_to_csv(self, table_name: str, data: List[Dict[str, Any]], column_types: Dict[str, str], csv_directory: str = None) -> str:
         csv_directory = csv_directory or EnvVariableUtil.get_env_variable('CSV_FILE_PATH')
         if not os.path.exists(csv_directory):
             os.makedirs(csv_directory)
-
         csv_file = os.path.join(csv_directory, f"{table_name}.csv")
 
         try:
-            with open(csv_file, 'w', newline='', encoding="utf-8") as csvfile:
-                if data:
-                    fieldnames = list(data[0].keys())
-                    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-                    writer.writeheader()
+            if data:
+                df = pd.DataFrame(data)
+                for col, col_type in column_types.items():
+                    if col in df.columns:
+                        if col_type.lower() == 'jsonb':
+                            df[col] = df[col].apply(lambda x: json.dumps(x) if isinstance(x, (list, dict)) else json.dumps([x]))
+                        elif col.lower() == "password":
+                            df[col] = df[col].apply(PasswordUtils.hash_password)
 
-                    for row in data:
-                        for col, col_type in column_types.items():
-                            if col_type.lower() == 'jsonb' and col in row:
-                                row[col] = json.dumps(row[col]) if isinstance(row[col], (list, dict)) else json.dumps([row[col]])
-                            if col.lower() == "password":
-                                row[col] = PasswordUtils.hash_password(row[col])
-                        writer.writerow(row)
-                    print(f"Data written successfully to {csv_file}")
-                else:
-                    print("No data provided. CSV file not created.")
+                df.to_csv(csv_file, index=False, encoding="utf-8")
+                print(f"Data written successfully to {csv_file}")
+            else:
+                print("No data provided. CSV file not created.")
             return csv_file
         except Exception as error:
             raise Exception(f"Error while saving data to {csv_file}: {error}")
@@ -297,13 +295,10 @@ class DataBaseUtil:
 # -----INITIALISE DATABASE--------
     def initialise(self, json_file: str) -> None:
         print("Initializing the database...")
-        # Drop existing tables
         self._drop_all_the_tables()
-        # Create new schema
         self.__create_schemes(json_file=EnvVariableUtil.get_env_variable('JSON_FILE_PATH'))
         self.__populate_with_values()
 
-        # Optionally, insert initial data or perform any other setup here
         print("Database initialized successfully.")
 
 # ------CHECK IF TABLE EXIST---------
@@ -346,10 +341,10 @@ class DataBaseUtil:
     ) -> Tuple[str, List[Any]]:
 
         if operator not in ("AND", "OR"):
-            raise ValueError("Operator muss 'AND' oder 'OR' sein.")
+            raise ValueError("Operator must be 'AND' oder 'OR'.")
 
         if query_type not in ("SELECT", "DELETE"):
-            raise ValueError("Nur 'SELECT' und 'DELETE' werden unterstützt.")
+            raise ValueError("Just 'SELECT' und 'DELETE' are being used.")
 
         condition_string = f" {operator} ".join([f"{col} = %s" for col, _ in conditions])
 
@@ -537,3 +532,10 @@ class DataBaseUtil:
                     print(f"Error processing {os.path.basename(file_path)}: {e}")
             else:
                 print(f"No data file found for table '{table_name}', skipping...")
+
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self):
+        self.connection.close()
