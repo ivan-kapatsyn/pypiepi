@@ -45,7 +45,12 @@ class CoursesRoutes:
             qualification=Qualification("Math"),
             max_participants=30,
             tutor=user,  # We assume that we will log in from the tutors perspective
-            students=["Lorenz", "Sofia", "Markus", "Lilit"],
+            students=[
+                ("Lorenz", 'Applied Data Science'),
+                ("Sofia", 'Applied Informatics'),
+                ("Markus", 'Applied Data Science'),
+                ("Lilit", 'Applied Informatics')
+            ],
             schedule=[TimeWindow(day='Mon', start_time='9AM', end_time='10AM'),
                       TimeWindow(day='Thu', start_time='9AM', end_time='10AM')],
             location=Room('Prov.103'),
@@ -58,7 +63,8 @@ class CoursesRoutes:
             page = 'course_info_tutor.html'
             return render_template(page, user_id=user_id, username=user.username,
                                    remember_me=user.remember_me,
-                                   course_data=CoursesRoutes.__cunstruct_course_data(course))
+                                   course_data=CoursesRoutes.__construct_course_data(course),
+                                   students_list=CoursesRoutes.__construct_student_data(course.students))
         elif user_type == 'Student':
             # Todo implemant later
             pass
@@ -67,7 +73,7 @@ class CoursesRoutes:
             pass
 
     @staticmethod
-    def __cunstruct_course_data(course: Course):
+    def __construct_course_data(course: Course):
         course_data = {
             'Course name': course.name,
             'Qualification': course.qualification.name,
@@ -81,3 +87,16 @@ class CoursesRoutes:
             'value': val
         } for key, val in course_data.items()]
         return course_data
+
+    @staticmethod
+    def __construct_student_data(students):
+        # Todo replace it when Student is implemented
+        result = []
+        for i, student in enumerate(students):
+            result.append({
+                'i': i+1,
+                'first_name': student[0],
+                'last_name': 'Surname',
+                'study_program': student[1]
+            })
+        return result

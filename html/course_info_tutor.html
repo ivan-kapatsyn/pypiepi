@@ -146,5 +146,14 @@
     </div>
     {% endfor %}
 </div>
+<h2>Listeners</h2>
+<div id="students_container">
+    {% for student in students_list %}
+    <div>
+        <span>{{ student.i }})  {{ student.first_name }} {{ student.last_name }}: </span>
+        <span style="font-style: italic">{{ student.study_program }}</span>
+    </div>
+    {% endfor %}
+</div>
 </body>
 </html>
