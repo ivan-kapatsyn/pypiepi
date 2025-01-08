@@ -109,6 +109,21 @@
             }
         }
     </script>
+    <script>
+        function applyRatingColors() {
+            document.querySelectorAll('.rating').forEach(span => {
+                const rating = parseFloat(span.dataset.rating);
+                const normalized = rating / 10;
+                const red = Math.round((1 - normalized) * 255);
+                const green = Math.round(normalized * 255);
+                const color = `rgb(${red}, ${green}, 0)`;
+                span.style.color = color;
+                span.style.border = `2px solid ${color}`;
+            });
+        }
+        // Ensure DOM is loaded before calling the function
+        document.addEventListener('DOMContentLoaded', applyRatingColors);
+    </script>
 </head>
 <body>
 <header class="d-flex justify-content-center align-items-center p-3 bg-light border-bottom">
@@ -154,6 +169,11 @@
         <span style="font-style: italic">{{ student.study_program }}</span>
     </div>
     {% endfor %}
+</div>
+<h2>Rating</h2>
+<div>
+    <span>Average rating:</span>
+    <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
 </div>
 </body>
 </html>

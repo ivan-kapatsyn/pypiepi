@@ -54,7 +54,7 @@ class CoursesRoutes:
             schedule=[TimeWindow(day='Mon', start_time='9AM', end_time='10AM'),
                       TimeWindow(day='Thu', start_time='9AM', end_time='10AM')],
             location=Room('Prov.103'),
-            evaluation=Evaluation([(8.9, 'it was nice')]),  # Todo specify the structure of Evaluation
+            evaluation=Evaluation([(1.9, 'it was nice')]),  # Todo specify the structure of Evaluation
             announcements=['Today the class is off']  # Todo add date to the announcement
         )
         # Todo add user_type to the User
@@ -64,7 +64,8 @@ class CoursesRoutes:
             return render_template(page, user_id=user_id, username=user.username,
                                    remember_me=user.remember_me,
                                    course_data=CoursesRoutes.__construct_course_data(course),
-                                   students_list=CoursesRoutes.__construct_student_data(course.students))
+                                   students_list=CoursesRoutes.__construct_student_data(course.students),
+                                   average_rating = CoursesRoutes.__get_average_evaluation(course.evaluation.ratings),)
         elif user_type == 'Student':
             # Todo implemant later
             pass
@@ -100,3 +101,7 @@ class CoursesRoutes:
                 'study_program': student[1]
             })
         return result
+
+    @staticmethod
+    def __get_average_evaluation(evaluation):
+        return sum([x[0] for x in evaluation]) / len(evaluation)
