@@ -2,73 +2,71 @@
 <html lang="en">
 <head>
     <title>New Course</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='create_new_course.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" defer></script>
     <script>
         $(document).ready(function () {
-            $('#username-field').on('input', function () {
-                let query = $(this).val();
-                if (query.length > 0) {
-                    $.ajax({
-                        url: '/login/get_suggestions',
-                        method: 'GET',
-                        data: {query: query},
-                        success: function (data) {
-                            let suggestionsBox = $('#suggestions');
-                            suggestionsBox.empty();
-                            data.forEach(function (suggestion) {
-                                suggestionsBox.append(
-                                    `<div class="suggestion-item" data-username="${suggestion.username}" data-user-id="${suggestion.user_id}">${suggestion.username}</div>`
-                                );
-                            });
-                            suggestionsBox.show();
-                        }
-                    });
-                } else {
-                    $('#suggestions').empty().hide();
-                }
-            });
+            // Attach click event to rememberCheckbox
+            $('#rememberCheckbox').on('change', function () {
+                const isChecked = $(this).is(':checked'); // Check if the checkbox is checked
+                const userId = '{{ user_id }}'; // Replace with dynamic user ID if available
 
-            $(document).on('click', '#suggestions div', function () {
-                $('#username-field').val($(this).text());
-                $('#suggestions').empty().hide();
-            });
-
-            $(document).click(function (event) {
-                if (!$(event.target).closest('#username-field, #suggestions').length) {
-                    $('#suggestions').empty().hide();
-                }
+                // AJAX request
+                $.ajax({
+                    url: `/user/${userId}/toggle_remember_me`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({remember_me: isChecked}),
+                    success: function (response) {
+                        console.log('Remember me toggled:', response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error toggling remember me:', status, error);
+                    }
+                });
             });
         });
     </script>
     <script>
-        $(document).on('click', '.suggestion-item', function () {
-            let username = $(this).data('username');
-            let userId = $(this).data('user-id');
-            $('#username-field').val(username);
-            $('#suggestions').empty().hide();
+        const logoutButton = document.querySelector('.logout');
 
-            // Send suggestion to the backend
-            $.ajax({
-                url: '/login/process_suggestion',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({username: username, user_id: userId}),
-                success: function (response) {
-                    if (response.redirect) {
-                        window.location.href = response.redirect; // Perform the redirect
-                    }
-                },
-                error: function (error) {
-                    console.error('Error processing suggestion:', error);
-                }
-            });
+        logoutButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            alert('Redirecting to login page...');
+            window.location.href = 'login.html';
         });
     </script>
 </head>
 <body>
-<h1>Create New Course</h1>
+<header class="d-flex justify-content-center align-items-center p-3 bg-light border-bottom">
+    <!-- Logo -->
+    <div class="header-logo">
+        <img src="{{ url_for('static', filename='banner.png') }}" alt="Logo" style="height: 50px;">
+    </div>
+    <!-- Login Info Dropdown -->
+    <div class="dropdown ms-auto">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-bs-toggle="dropdown" aria-expanded="false">
+            Login Info
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><span class="dropdown-item">Username: {{ username }}</span></li>
+            <li>
+                <label class="dropdown-item">
+                    <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
+                    remembered on this device
+                </label>
+            </li>
+            <li>
+                <a class="dropdown-item" href="/login/index">Logout</a>
+            </li>
+        </ul>
+    </div>
+</header>
+<h2>Create New Course</h2>
 <form method="POST">
     {{ form.hidden_tag() }}
     <div>

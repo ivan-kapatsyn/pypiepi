@@ -12,7 +12,7 @@ class CoursesRoutes:
     def create_new_course(user_id: str):
         tutor = Tutor.get_user_by_id(user_id)
         form = CourseCreationForm()
-        form.qualification.choices = [(value,value) for value in tutor.qualifications]
+        form.qualification.choices = [(value, value) for value in tutor.qualifications]
         if request.method == 'POST':
             if form.submit.data and form.validate_on_submit():
                 course_name = form.course_name.data
@@ -26,4 +26,5 @@ class CoursesRoutes:
 
         login_page = r'create_new_course.html'
         return render_template(login_page, form=form, tutor_name=tutor.first_name,
-                               tutor_surname=tutor.last_name)
+                               tutor_surname=tutor.last_name, username=tutor.username,
+                               user_id=user_id, remember_me=tutor.remember_me)
