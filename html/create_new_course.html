@@ -13,7 +13,7 @@
                     $.ajax({
                         url: '/login/get_suggestions',
                         method: 'GET',
-                        data: { query: query },
+                        data: {query: query},
                         success: function (data) {
                             let suggestionsBox = $('#suggestions');
                             suggestionsBox.empty();
@@ -54,7 +54,7 @@
                 url: '/login/process_suggestion',
                 method: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({ username: username, user_id: userId }),
+                data: JSON.stringify({username: username, user_id: userId}),
                 success: function (response) {
                     if (response.redirect) {
                         window.location.href = response.redirect; // Perform the redirect
@@ -68,33 +68,32 @@
     </script>
 </head>
 <body>
-
-    <h1>Create New Course</h1>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.course_name.label }}<br>
-             {{ form.course_name(size=20) }}
-        </div>
-        <div>
-            {{ form.qualification.label }}<br>
-            {{ form.qualification(size=32) }}
-        </div>
-        <div>
-            {{ form.room.label }}<br>
-            {{ form.room(size=32) }}
-        </div>
-        <div>
-            {{ form.schedule.label }}<br>
-            {{ form.schedule(size=32) }}
-        </div>
-        <div>
-            {{ form.max_participants.label }}<br>
-            {{ form.max_participants(size=32) }}
-        </div>
-        <div>
-            {{ form.submit() }}
-        </div>
-    </form>
+<h1>Create New Course</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.course_name.label }}<br>
+        {{ form.course_name(size=20) }}
+    </div>
+    <div>
+        {{ form.qualification.label }}<br>
+        {{ form.qualification(size=32) }}
+    </div>
+    <div>
+        {{ form.room.label }}<br>
+        {{ form.room(size=32) }}
+    </div>
+    <div>
+        {{ form.schedule.label }}<br>
+        {{ form.schedule(size=32) }}
+    </div>
+    <div>
+        {{ form.max_participants.label }}<br>
+        {{ form.max_participants(size=32) }}
+    </div>
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
 </body>
 </html>
