@@ -53,7 +53,7 @@
     {
       "table_name": "tokens",
       "columns": [
-        {"column_name": "token", "data_type": "INTEGER", "constraints": "NOT NULL" }
+        {"column_name": "token", "data_type": "INTEGER", "constraints": "PRIMARY KEY" }
       ]
     }
   ]
