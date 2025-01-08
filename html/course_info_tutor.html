@@ -175,5 +175,11 @@
     <span>Average rating:</span>
     <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
 </div>
+<div>
+    <span>Comments:</span><br>
+    {% for feedback in feedback_list %}
+    <span>{{ feedback.i }}) {{ feedback.name }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
+    {% endfor %}
+</div>
 </body>
 </html>

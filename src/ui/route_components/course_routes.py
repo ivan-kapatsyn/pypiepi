@@ -54,18 +54,21 @@ class CoursesRoutes:
             schedule=[TimeWindow(day='Mon', start_time='9AM', end_time='10AM'),
                       TimeWindow(day='Thu', start_time='9AM', end_time='10AM')],
             location=Room('Prov.103'),
-            evaluation=Evaluation([(1.9, 'it was nice')]),  # Todo specify the structure of Evaluation
+            evaluation=Evaluation([(8.9, 'it was nice')]),  # Todo specify the structure of Evaluation
             announcements=['Today the class is off']  # Todo add date to the announcement
         )
         # Todo add user_type to the User
         user_type = 'Tutor'
         if user_type == 'Tutor':
             page = 'course_info_tutor.html'
-            return render_template(page, user_id=user_id, username=user.username,
+            return render_template(page, user_id=user_id,
+                                   username=user.username,
                                    remember_me=user.remember_me,
                                    course_data=CoursesRoutes.__construct_course_data(course),
                                    students_list=CoursesRoutes.__construct_student_data(course.students),
-                                   average_rating = CoursesRoutes.__get_average_evaluation(course.evaluation.ratings),)
+                                   average_rating=CoursesRoutes.__get_average_evaluation(course.evaluation.ratings),
+                                   feedback_list=CoursesRoutes.__construct_feedback_data(course.evaluation.ratings)
+                                   )
         elif user_type == 'Student':
             # Todo implemant later
             pass
@@ -95,7 +98,7 @@ class CoursesRoutes:
         result = []
         for i, student in enumerate(students):
             result.append({
-                'i': i+1,
+                'i': i + 1,
                 'first_name': student[0],
                 'last_name': 'Surname',
                 'study_program': student[1]
@@ -105,3 +108,16 @@ class CoursesRoutes:
     @staticmethod
     def __get_average_evaluation(evaluation):
         return sum([x[0] for x in evaluation]) / len(evaluation)
+
+    @staticmethod
+    def __construct_feedback_data(feedbacks):
+        # Todo replace it when Student is implemented
+        result = []
+        for i, feedback in enumerate(feedbacks):
+            result.append({
+                'i': i + 1,
+                'rating': feedback[0],
+                'name': 'Anonymous',
+                'comment': feedback[1]
+            })
+        return result
