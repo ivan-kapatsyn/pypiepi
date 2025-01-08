@@ -124,6 +124,21 @@
         // Ensure DOM is loaded before calling the function
         document.addEventListener('DOMContentLoaded', applyRatingColors);
     </script>
+    <script>
+        function deleteCourse() {
+            // Call the Flask endpoint with the new data
+            fetch("/course/delete_course/{{ course_id }}/{{ user_id }}", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = "/tutor/{{ user_id }}/personal_bio"
+                }
+            });
+        }
+    </script>
 </head>
 <body>
 <header class="d-flex justify-content-center align-items-center p-3 bg-light border-bottom">
@@ -181,5 +196,13 @@
     <span>{{ feedback.i }}) {{ feedback.name }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
     {% endfor %}
 </div>
+<h2>Announcements</h2>
+<div id="announcements_container">
+    {% for announcement in announcements %}
+    <span>- {{ announcement }}</span><br>
+    {% endfor %}
+
+</div>
+<button onclick="deleteCourse()">Delete the course</button>
 </body>
 </html>

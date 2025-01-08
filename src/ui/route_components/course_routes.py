@@ -62,12 +62,14 @@ class CoursesRoutes:
         if user_type == 'Tutor':
             page = 'course_info_tutor.html'
             return render_template(page, user_id=user_id,
+                                   course_id=course_id,
                                    username=user.username,
                                    remember_me=user.remember_me,
                                    course_data=CoursesRoutes.__construct_course_data(course),
                                    students_list=CoursesRoutes.__construct_student_data(course.students),
                                    average_rating=CoursesRoutes.__get_average_evaluation(course.evaluation.ratings),
-                                   feedback_list=CoursesRoutes.__construct_feedback_data(course.evaluation.ratings)
+                                   feedback_list=CoursesRoutes.__construct_feedback_data(course.evaluation.ratings),
+                                   announcements=course.announcements
                                    )
         elif user_type == 'Student':
             # Todo implemant later
@@ -75,6 +77,12 @@ class CoursesRoutes:
         else:
             # Todo implement later
             pass
+
+    @staticmethod
+    @main_bp.route('/delete_course/<course_id>/<user_id>')
+    def delete_course(course_id: str, user_id: str):
+        # Todo delete course in db
+        return redirect(url_for('tutor.personal_bio', user_id=user_id))
 
     @staticmethod
     def __construct_course_data(course: Course):
