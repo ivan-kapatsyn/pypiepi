@@ -9,78 +9,107 @@ class DataBaseUtilTestCase(unittest.TestCase):
     def setUp(self):
         self.db_util = DataBaseUtil()
 
+#WORKS
     def test_if_exist(self):
         table_name = 'users'
         self.assertEqual(self.db_util._check_if_table_exists(
                 table_name), True)
 
+#WORK
     def test_load_data(self):
         table_name = 'users'
-        id_value = 202345673
+        column = "user_id"
+        id_value = "9e6fde3566ae0547"
 
-        expected_result = [202345673, 'arthur_morgan', 'password123', 'student', True]
-        self.assertEqual(self.db_util.load_one(table_name, id_value), expected_result)
+        expected_result = ["9e6fde3566ae0547", "arthur.morgan",
+                           "JDJiJDEyJGxyUzIvQTROb2JCeDVpWUJzeVVDTWVPMzlDZklqZmJwZDB6d3NsLkJvLm5WaTJYUWY3N1FL",
+                           "arthur", "morgan", "NaN",True]
+        self.assertEqual(self.db_util.load_one(table_name, column,id_value), expected_result)
 
-
+#WORK
     def test_delete_data(self):
         table_name = 'users'
-        id_value = 202345673
+        id_value = "2efafa285df19ac9"
         self.assertEqual(self.db_util.delete_one(table_name, id_value), None)
 
-
+#WORK
     def test_insert_one(self):
         obj1 = {
-            "user_id": 202345671,
-            "username": "arthur_morgan",
-            "password": "password123",
-            "user_typ": "student",
-            "remember_me": "TRUE"}
+            "user_id": "9e6fde3566ae0547",
+            "student_id": "c6ffacc8367b6336",
+            "qualification": ["economics"]
+        }
 
-        self.db_util.insert_one("users", obj1, column="user_id", dublicate=True)
-        loaded_data = self.db_util.load_one("users",  202345671)
-        self.assertEqual(loaded_data['user_id'], 202345671)
-        self.assertEqual(loaded_data['username'], "arthur_morgan")
-        self.assertEqual(loaded_data['password'], "password123")
-        self.assertEqual(loaded_data['user_typ'], "student")
+        self.db_util.insert_one("student", obj1, column="student_id", dublicate=True)
+
+        loaded_data = self.db_util.load_one("student",  "student_id", value="c6ffacc8367b6336")
+
+        self.assertEqual(loaded_data['user_id'], "9e6fde3566ae0547")
+        self.assertEqual(loaded_data['student_id'], "c6ffacc8367b6336")
+        self.assertEqual(loaded_data['qualification'], ["economics"])
+
+#WORK
+    def test_insert_user(self):
+        new_user_id = self.db_util.generate_unique_id()
+        obj_user = {
+            "user_id": new_user_id,
+            "username": "eren.jaeger",
+            "password": "thisismypassword",
+            "first_name": "eren",
+            "last_name": "jaeger",
+            "bio": "tatakai! tatakai!",
+            "remember_me": True
+        }
+
+        self.db_util.insert_one("users", obj_user, column="user_id", dublicate=True)
+        loaded_data = self.db_util.load_one("users",  "user_id", new_user_id)
+        self.assertEqual(loaded_data['user_id'], new_user_id)
+        self.assertEqual(loaded_data['username'], "eren.jaeger")
+        self.assertEqual(loaded_data['first_name'], "eren")
+        self.assertEqual(loaded_data['last_name'], "jaeger")
+        self.assertEqual(loaded_data['bio'], "tatakai! tatakai!")
         self.assertEqual(loaded_data['remember_me'], True)
 
-
+#WORK
     def test_insert_many_data(self):
+        new_user_id = self.db_util.generate_unique_id()
         objects = [
             {
-                "user_id": 202345672,
-                "username": "john_doe",
-                "password": "newpassword",
-                "user_typ": "admin",
+                "user_id": new_user_id,
+                "username": "eren.jaeger",
+                "password": "thisismypassword",
+                "first_name": "eren",
+                "last_name": "jaeger",
+                "bio": "tatakai! tatakai!",
                 "remember_me": True
             },
             {
-                "user_id": 202345671,
-                "username": "arthur_morgan",
-                "password": "password123",
-                "user_typ": "student",
-                "remember_me": True
-             }
+                "user_id": new_user_id,
+                "username": "bird.eren",
+                "password": "thisismypassword",
+                "first_name": "eren",
+                "last_name": "jaeger",
+                "bio": "krah! krah!",
+                "remember_me": False
+            }
         ]
         self.db_util.insert_many("users", objects, column="user_id", dublicate=True)
 
         for obj in objects:
-            loaded_data = self.db_util.load_one("users", obj["user_id"])
+            loaded_data = self.db_util.load_one("users", "user_id", obj["user_id"])
             self.assertEqual(loaded_data['user_id'], obj['user_id'])
             self.assertEqual(loaded_data['username'], obj['username'])
-            self.assertEqual(loaded_data['password'], obj['password'])
-            self.assertEqual(loaded_data['user_typ'], obj['user_typ'])
             self.assertEqual(loaded_data['remember_me'], obj['remember_me'])
 
-
+#WORK
     def test_build_query_select(self):
-        table_name = "tmuser"
-        conditions = [("user_typ", "admin"), ("remember_me", "TRUE")]
+        table_name = "users"
+        conditions = [("first_name", "john"), ("remember_me", "TRUE")]
         operator = "AND"
         query_type = "SELECT"
 
-        expected_query = "SELECT * FROM users WHERE user_typ = %s AND remember_me = %s;"
-        expected_params = ["admin", "TRUE"]
+        expected_query = "SELECT * FROM users WHERE first_name = %s AND remember_me = %s;"
+        expected_params = ["john", "TRUE"]
 
         query, params = self.db_util._build_query(table_name, conditions, operator, query_type)
 
@@ -88,12 +117,12 @@ class DataBaseUtilTestCase(unittest.TestCase):
         self.assertEqual(params, expected_params)
 
 
-
+#WORK
     def test_delete_many(self):
         # Test deleting multiple records
-        table_name = 'users'
+        table_name = 'student'
         column = "user_id"
-        user_ids = [202345671, 202345672]
+        user_ids = ["9e6fde3566ae0547", "8fc313baf96b1fdk"]
 
         # Überprüfen, ob die Benutzer vor dem Löschen existieren
         for user_id in user_ids:
@@ -109,6 +138,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
             print(f"User {user_id} exists after deletion: {exists_after}")  # Debugging-Ausgabe
             self.assertFalse(exists_after, f"User {user_id} should have been deleted")
 
+#WORK
     def test_exist_user_id(self):
         user_id_to_test = 202345671
         expected_exists = False  # Setzen Sie dies auf True, wenn der Benutzer existieren soll
@@ -120,43 +150,48 @@ class DataBaseUtilTestCase(unittest.TestCase):
         # Assert, dass der Benutzer wie erwartet existiert oder nicht existiert
         self.assertEqual(exists, expected_exists, f"User {user_id_to_test} existence check failed")
 
-
+#WORK
     def test_update_one(self):
         table_name = 'users'
         column = "user_id"
-        id_value = 202345676
-        new_values = {"username": "arthur_updated", "remember_me": False}
-
+        id_value = "9e6fde3566ae0547"
+        new_values = {"username": "arthur.morgan_updated", "remember_me": False}
         self.db_util.update_one(table_name, column, id_value, new_values)
 
+#WORK
     def test_initialise(self):
         data_path = EnvVariableUtil.get_env_variable('JSON_FILE_PATH')
-        #print(f"JSON_FILE_PATH: {data_path}")  # Debug-Ausgabe
         self.db_util.initialise(json_file=data_path)
 
-
+#WORK
     def test_insert_with_duplicate_true(self):
+        new_user_id = self.db_util.generate_unique_id()
         obj = {
-                "user_id": 202345671,
-                "username": "arthur_morgan",
-                "password": "password123",
-                "user_typ": "student",
-                "remember_me": True
-             }
+            "user_id": new_user_id,
+            "username": "eren.jaeger",
+            "password": "thisismypassword",
+            "first_name": "eren",
+            "last_name": "jaeger",
+            "bio": "tatakai! tatakai!",
+            "remember_me": True
+        }
         self.db_util.insert_one('users', obj, 'user_id', dublicate=True)
-        # Verify the insertion logic, including checking for incremented keys.
 
+#WORK
     def test_insert_with_duplicate_false(self):
+        new_user_id = self.db_util.generate_unique_id()
         obj = {
-                "user_id": 202345671,
-                "username": "arthur_morgan",
-                "password": "password123",
-                "user_typ": "student",
-                "remember_me": True
-             }
+            "user_id": new_user_id,
+            "username": "eren.jaeger",
+            "password": "thisismypassword",
+            "first_name": "eren",
+            "last_name": "jaeger",
+            "bio": "tatakai! tatakai!",
+            "remember_me": True
+        }
         self.db_util.insert_one('users', obj, 'user_id', dublicate=False)
-        # Verify that the entry is present.
 
+#WORKS
     def test_save_data_to_csv(self):
         data_users = [
             {"username": "arthur.morgan", "password": "password123", "first_name": "arthur", "last_name": "morgan",

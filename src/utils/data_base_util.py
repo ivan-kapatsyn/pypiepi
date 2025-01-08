@@ -55,6 +55,14 @@ class DataBaseUtil:
     def insert_one(self, table_name: str, obj: Dict[str, any], column: str, dublicate: bool = False) -> None:
         print(f"Inserting in table {table_name}")
 
+        obj = {
+            key: json.dumps(value) if isinstance(value, (list, dict)) else value
+            for key, value in obj.items()
+        }
+
+        if "password" in obj:
+            obj["password"] = PasswordUtils.hash_password(obj["password"])
+
         # Prepare the insert statement
         columns = ', '.join(obj.keys())
         values_placeholder = ', '.join(['%s'] * len(obj))
@@ -85,7 +93,6 @@ class DataBaseUtil:
             if exists:
                 raise Exception(f"Duplicate entry for {column}: {obj[column]}")
 
-        # Execute the insert command
         self.__execute_command(sql_query=query, params=tuple(obj.values()))
         print(f"Inserted {obj} into {table_name}")  # Debug output
 
@@ -98,6 +105,14 @@ class DataBaseUtil:
             return
 
         print(f"Inserting into {table_name}...")  # Debug output
+
+        for obj in objects:
+            if "password" in obj:
+                obj["password"] = PasswordUtils.hash_password(obj["password"])
+            for key, value in obj.items():
+                if isinstance(value, (list, dict)):
+                    obj[key] = json.dumps(value)
+
         if dublicate:
             # Collect existing keys in one query for efficiency
             existing_keys_query = f"SELECT {column} FROM {table_name} WHERE {column} IN %s;"
@@ -110,8 +125,6 @@ class DataBaseUtil:
 
             # Update objects with unique keys
             for obj in objects:
-                if not isinstance(obj, dict):
-                    raise TypeError(f"Expected dict, got {type(obj)}")
                 while obj.get(column) in existing_keys:
                     obj[column] = self.generate_unique_id()
                 existing_keys.add(obj[column])
@@ -147,7 +160,7 @@ class DataBaseUtil:
 
 
 # -------LOAD ONE------
-    def load_data(self, table_name: str, column: str, value:any ) -> DictRow:
+    def load_one(self, table_name: str, column: str, value:any) -> DictRow | None:
         if not column.isidentifier():
             raise ValueError(f"Invalid column name: {column}")
 
@@ -155,9 +168,19 @@ class DataBaseUtil:
         result_load = self.__fetch_one(query, (value,))
 
         if result_load is None:
-            raise Exception(f"No entry found where {column} = {value}.")
-        else:
-            return result_load
+            print(f"No entry found where {column} = {value}.")
+            return None
+
+        if "qualification" in result_load and result_load["qualification"] is not None:
+            if isinstance(result_load["qualification"], str):
+                result_load["qualification"] = json.loads(
+                    result_load["qualification"])
+            elif isinstance(result_load["qualification"], list):
+                pass
+            else:
+                raise TypeError(f"Unexpected type for qualification: {type(result_load['qualification'])}")
+
+        return result_load
 
 
 # ------LOAD MANY DATA-------
@@ -194,6 +217,7 @@ class DataBaseUtil:
 # -----DELETING ONE---------
     def delete_one(self, table_name: str, id_value: Any) -> None:
         id_column = self.get_primary_key_column(table_name)
+
         query = f"DELETE FROM {table_name} WHERE {id_column} = %s;"
         self.__execute_command(query, (id_value, ))
         print(f"Deleted record from {table_name} where {id_column} = {id_value}.")
