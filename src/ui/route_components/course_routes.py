@@ -56,7 +56,7 @@ class CoursesRoutes:
         user_type = 'Tutor'
         if user_type == 'Tutor':
             page = 'course_info_tutor.html'
-            return render_template(page)
+            return render_template(page, user_id=user_id, username=user.username, remember_me=user.remember_me)
         elif user_type == 'Student':
             # Todo implemant later
             pass
