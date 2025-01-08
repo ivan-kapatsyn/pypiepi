@@ -1,10 +1,10 @@
 import secrets
 import uuid
-
 from src.utils.password_utils import PasswordUtils
 import psycopg2
 import psycopg2.extras
 import json
+import pandas as pd
 from pathlib import Path
 from pandas.core.interchange import column
 from psycopg2._psycopg import cursor
@@ -71,7 +71,7 @@ class DataBaseUtil:
                 if not exists:
                     break  # Exit the loop if the key is unique
 
-                # Increment the key value to find a new unique key
+                # generates a new unique_id to find a new unique key
                 initial_key_value = self.generate_unique_id()
                 obj[column] = initial_key_value
                 print(f"Updated object key: {obj[column]}")  # Debug output
@@ -175,7 +175,6 @@ class DataBaseUtil:
 
         print(f"Executing query: {query} with values: {values}")
 
-        # Use self.__execute_command to handle execution and error management
         results = self.__execute_command(
             sql_query=query,
             params=params,
@@ -278,7 +277,6 @@ class DataBaseUtil:
                 if data:
                     fieldnames = list(data[0].keys())
                     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
                     writer.writeheader()
 
                     for row in data:
@@ -428,8 +426,7 @@ class DataBaseUtil:
 #-------CREATES THE SCHEMES FOR THE DATABASE--------
     def __create_schemes(self, json_file):
         try:
-            with open(json_file) as file:
-                data = json.load(file)
+            data = pd.read_json(json_file)
             tables = data.get("tables", [])
             for table in tables:
                 table_name = table.get("table_name")
@@ -520,7 +517,7 @@ class DataBaseUtil:
         file_to_table_map = {
             os.path.splitext(file_name)[0]: os.path.join(csv_directory, file_name)
             for file_name in os.listdir(csv_directory)
-            if file_name.endswith('.csv')
+            if file_name.lower().endswith('.csv')
         }
 
         for table_name in table_order:
@@ -528,9 +525,8 @@ class DataBaseUtil:
                 file_path = file_to_table_map[table_name]
 
                 try:
-                    with open(file_path, 'r', encoding='utf-8') as csv_file:
-                        reader = csv.DictReader(csv_file)
-                        rows = [row for row in reader]
+                    reader = pd.read_csv(file_path)
+                    rows = reader.to_dict(orient='records')
 
                     if rows:
                         print(f"Inserting data into {table_name} from {os.path.basename(file_path)}...")
