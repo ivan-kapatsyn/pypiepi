@@ -3,7 +3,7 @@ import webbrowser
 
 from flask import Flask
 
-from src.ui.route_components.courses import CoursesRoutes
+from src.ui.route_components.course_routes import CoursesRoutes
 from src.ui.route_components.login_routes import LoginRoutes
 from src.ui.route_components.register_routes import RegisterRoutes
 from src.ui.route_components.tutor_routes import TutorRoutes
