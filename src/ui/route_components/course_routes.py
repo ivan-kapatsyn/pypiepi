@@ -49,17 +49,35 @@ class CoursesRoutes:
             schedule=[TimeWindow(day='Mon', start_time='9AM', end_time='10AM'),
                       TimeWindow(day='Thu', start_time='9AM', end_time='10AM')],
             location=Room('Prov.103'),
-            evaluation=Evaluation([(8.9,'it was nice')]), # Todo specify the structure of Evaluation
-            announcements=['Today the class is off'] # Todo add date to the announcement
+            evaluation=Evaluation([(8.9, 'it was nice')]),  # Todo specify the structure of Evaluation
+            announcements=['Today the class is off']  # Todo add date to the announcement
         )
         # Todo add user_type to the User
         user_type = 'Tutor'
         if user_type == 'Tutor':
             page = 'course_info_tutor.html'
-            return render_template(page, user_id=user_id, username=user.username, remember_me=user.remember_me)
+            return render_template(page, user_id=user_id, username=user.username,
+                                   remember_me=user.remember_me,
+                                   course_data=CoursesRoutes.__cunstruct_course_data(course))
         elif user_type == 'Student':
             # Todo implemant later
             pass
         else:
             # Todo implement later
             pass
+
+    @staticmethod
+    def __cunstruct_course_data(course: Course):
+        course_data = {
+            'Course name': course.name,
+            'Qualification': course.qualification.name,
+            'Tutor': course.tutor.first_name + ' ' + course.tutor.last_name,
+            'Room': course.location.name,
+            'Schedule': '\n'.join([f'{x.day} {x.start_time}' for x in course.schedule]),
+            'Max participants': course.max_participants,
+        }
+        course_data = [{
+            'name': key,
+            'value': val
+        } for key, val in course_data.items()]
+        return course_data
