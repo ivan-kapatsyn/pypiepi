@@ -42,7 +42,7 @@ jobs:
         echo "local   all             all                                     trust" >> C:/pgdata/pg_hba.conf
         echo "host    all             all             127.0.0.1/32            trust" >> C:/pgdata/pg_hba.conf
         echo "host    all             all             ::1/128                 trust" >> C:/pgdata/pg_hba.conf
-        pg_ctl start -D C:\pgdata -l logfile
+        pg_ctl -D C:\pgdata -l logfile start
         psql -c "CREATE DATABASE postgres;" -U postgres
         psql -c "CREATE USER postgres WITH PASSWORD '12345';" -U postgres
       shell: cmd
