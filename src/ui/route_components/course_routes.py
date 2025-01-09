@@ -90,6 +90,7 @@ class CoursesRoutes:
     @main_bp.route('/add_announcement/<course_id>/', methods=['POST'])
     def add_announcement(course_id: str):
         # Todo an announcement in db by Course.get_course_by_id() and Course.update()
+        message = request.json['message']
         return Response(status=204)
 
     @staticmethod
