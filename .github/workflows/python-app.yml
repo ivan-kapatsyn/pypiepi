@@ -35,11 +35,13 @@ jobs:
     # Step 5: Initialise db
     - name: Initialize PostgreSQL Database
       run: |
-        refreshenv
+        set "PATH=C:\Program Files\PostgreSQL\17\bin;%PATH%"
+        echo "PATH=C:\Program Files\PostgreSQL\17\bin;%PATH%" >> $GITHUB_ENV
         pg_ctl initdb -D C:\pgdata
         pg_ctl start -D C:\pgdata -l logfile
         psql -c "CREATE DATABASE postgres;" -U postgres
         psql -c "CREATE USER postgres WITH PASSWORD '12345';" -U postgres
+      shell: cmd
 
     # Step 6: Read all the .env variabes from test.env
     - name: Load test.env variables
