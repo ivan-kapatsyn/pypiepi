@@ -38,6 +38,10 @@ jobs:
         set "PATH=C:\Program Files\PostgreSQL\17\bin;%PATH%"
         echo "PATH=C:\Program Files\PostgreSQL\17\bin;%PATH%" >> $GITHUB_ENV
         pg_ctl initdb -D C:\pgdata
+        echo "Updating pg_hba.conf for trust authentication..."
+        echo "local   all             all                                     trust" >> C:/pgdata/pg_hba.conf
+        echo "host    all             all             127.0.0.1/32            trust" >> C:/pgdata/pg_hba.conf
+        echo "host    all             all             ::1/128                 trust" >> C:/pgdata/pg_hba.conf
         pg_ctl start -D C:\pgdata -l logfile
         psql -c "CREATE DATABASE postgres;" -U postgres
         psql -c "CREATE USER postgres WITH PASSWORD '12345';" -U postgres
