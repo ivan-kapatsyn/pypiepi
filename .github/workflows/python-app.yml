@@ -42,7 +42,8 @@ jobs:
         echo "local   all             all                                     trust" >> C:/pgdata/pg_hba.conf
         echo "host    all             all             127.0.0.1/32            trust" >> C:/pgdata/pg_hba.conf
         echo "host    all             all             ::1/128                 trust" >> C:/pgdata/pg_hba.conf
-        pg_ctl -D C:\pgdata -l logfile start
+        echo "listen_addresses = '127.0.0.1'" >> C:/pgdata/postgresql.conf
+        pg_ctl -D C:\pgdata -l logfile -o "-h 127.0.0.1" start
         psql -c "CREATE DATABASE postgres;" -U postgres
         psql -c "CREATE USER postgres WITH PASSWORD '12345';" -U postgres
       shell: cmd
@@ -69,6 +70,6 @@ jobs:
     # Step 8: Run unittest for all test folders
     - name: Run unittests
       run: |
-        python -m unittest discover -s test/backend -p "*.py"
-        python -m unittest discover -s test/ui -p "*.py"
-        python -m unittest discover -s test/util -p "*.py"
+        python -m unittest discover -s tests/backend -p "*.py"
+        python -m unittest discover -s tests/ui -p "*.py"
+        python -m unittest discover -s tests/utils -p "*.py"
