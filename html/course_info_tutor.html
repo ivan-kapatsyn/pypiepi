@@ -114,8 +114,7 @@
                 if (document.getElementById('cancel-button')) {
                     document.getElementById('cancel-button').remove();
                 }
-            }
-            else {
+            } else {
                 const container = document.getElementById('data-container');
                 const editButtonHtml = `<button id="edit-button-${name}" onclick="enableEdit('${name}')">Edit</button>`;
                 container.querySelector('#ok-button').outerHTML = editButtonHtml;
@@ -186,10 +185,10 @@
                     if (document.getElementById('cancel-button')) {
                         document.getElementById('cancel-button').remove();
                     }
-                    if (document.getElementById('edit-input')){
+                    if (document.getElementById('edit-input')) {
                         document.getElementById('edit-input').remove();
                     }
-                    if (document.getElementById('data-announcement')){
+                    if (document.getElementById('data-announcement')) {
                         document.getElementById('data-announcement').remove();
                     }
                     const editButton = document.getElementById('edit-button-announcement');
