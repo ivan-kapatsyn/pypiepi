@@ -109,8 +109,7 @@
             // Replace "Ok" and "Cancel" with the "Edit" button
             if (name === 'announcement') {
                 const container = document.getElementById('announcements_container');
-                const editButtonHtml = `<button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>`;
-                container.querySelector('#ok-button').outerHTML = editButtonHtml;
+                container.querySelector('#ok-button').outerHTML = `<button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>`;
                 if (document.getElementById('cancel-button')) {
                     document.getElementById('cancel-button').remove();
                 }
