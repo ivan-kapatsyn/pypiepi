@@ -35,7 +35,7 @@ jobs:
     # Step 5: Initialise db
     - name: Initialize PostgreSQL Database
       run: |
-        set "PATH=C:\Program Files\PostgreSQL\17\bin;%PATH%"
+        refreshenv
         pg_ctl initdb -D C:\pgdata
         pg_ctl start -D C:\pgdata -l logfile
         psql -c "CREATE DATABASE postgres;" -U postgres
