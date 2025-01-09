@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, render_template, request, redirect, url_for, flash
+from flask import Blueprint, Response, render_template, request, redirect, url_for
 
 from src.backend.course import Course
 from src.backend.evaluation import Evaluation
