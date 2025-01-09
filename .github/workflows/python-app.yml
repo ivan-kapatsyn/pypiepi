@@ -67,7 +67,13 @@ jobs:
         echo PROJECT_PATH=${{ github.workspace }} >> $GITHUB_ENV
         echo PASSWORD="12345" >> $GITHUB_ENV
 
-    # Step 8: Run unittest for all test folders
+    # Step 8: Run tables initialisation
+    - name: Tables initialisation
+      run: |
+        python -m scripts.initialize_db
+      continue-on-error: true
+
+    # Step 9: Run unittest for all test folders
     - name: Run Backend unittests
       run: |
         python -m unittest discover -s tests/backend -p "*.py"
