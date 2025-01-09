@@ -47,13 +47,12 @@
 
             // Replace name with an input field
             const currentValue = nameSpan.innerText;
-            nameSpan.innerHTML = `<input id="edit-input" value="${currentValue}" style="width: 70%;">`;
+            nameSpan.innerHTML = `<input id="edit-input" value="" style="width: 70%;">`;
 
             // Replace "Edit" button with "Ok" and "Cancel"
             if (name === 'announcement') {
-                const newValue = document.getElementById('edit-input').value;
                 editButton.outerHTML = `
-                <button id="ok-button" onclick="makeAnAnnouncement('${newValue}')">Ok</button>
+                <button id="ok-button" onclick="makeAnAnnouncement()">Ok</button>
                 <button id="cancel-button" onclick="cancelEdit('${currentValue}', '${name}')">Cancel</button>
             `;
             } else {
@@ -108,11 +107,21 @@
 
         function resetButtons(name) {
             // Replace "Ok" and "Cancel" with the "Edit" button
-            const container = document.getElementById('data-container');
-            const editButtonHtml = `<button id="edit-button-${name}" onclick="enableEdit('${name}')">Edit</button>`;
-            container.querySelector('#ok-button').outerHTML = editButtonHtml;
-            if (document.getElementById('cancel-button')) {
-                document.getElementById('cancel-button').remove();
+            if (name === 'announcement') {
+                const container = document.getElementById('announcements_container');
+                const editButtonHtml = `<button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>`;
+                container.querySelector('#ok-button').outerHTML = editButtonHtml;
+                if (document.getElementById('cancel-button')) {
+                    document.getElementById('cancel-button').remove();
+                }
+            }
+            else {
+                const container = document.getElementById('data-container');
+                const editButtonHtml = `<button id="edit-button-${name}" onclick="enableEdit('${name}')">Edit</button>`;
+                container.querySelector('#ok-button').outerHTML = editButtonHtml;
+                if (document.getElementById('cancel-button')) {
+                    document.getElementById('cancel-button').remove();
+                }
             }
         }
     </script>
@@ -148,8 +157,9 @@
         }
     </script>
     <script>
-        function makeAnAnnouncement(message) {
+        function makeAnAnnouncement() {
             // Call the Flask endpoint with the new data
+            const message = document.getElementById('edit-input').value;
             fetch("/course/add_announcement/{{ course_id }}/", {
                 method: 'POST',
                 headers: {
@@ -176,11 +186,16 @@
                     if (document.getElementById('cancel-button')) {
                         document.getElementById('cancel-button').remove();
                     }
+                    if (document.getElementById('edit-input')){
+                        document.getElementById('edit-input').remove();
+                    }
+                    if (document.getElementById('data-announcement')){
+                        document.getElementById('data-announcement').remove();
+                    }
                     const editButton = document.getElementById('edit-button-announcement');
                     editButton.outerHTML = `
-                        <span>
-                            - ${message}
-                        </span><br>
+                        <span>- ${message}</span><br>
+                        <span id="data-announcement"></span>
                         ${editButton.outerHTML}
                     `;
                 } else {
