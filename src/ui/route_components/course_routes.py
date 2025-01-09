@@ -74,7 +74,7 @@ class CoursesRoutes:
                                    announcements=course.announcements
                                    )
         elif user_type == 'Student':
-            # Todo implemant later
+            # Todo implement later
             pass
         else:
             # Todo implement later
