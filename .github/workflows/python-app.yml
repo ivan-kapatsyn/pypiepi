@@ -46,6 +46,14 @@ jobs:
         psql -c "CREATE DATABASE postgres;" -U postgres
         psql -c "CREATE USER postgres WITH PASSWORD '12345';" -U postgres
       shell: cmd
+      continue-on-error: true  # Ensures subsequent steps execute even if this fails
+
+    - name: View PostgreSQL Logs
+      if: always()  # Ensures this step runs regardless of success or failure of previous steps
+      run: |
+        echo "PostgreSQL Log File Contents:"
+        type logfile
+      shell: cmd
 
     # Step 6: Read all the .env variabes from test.env
     - name: Load test.env variables
