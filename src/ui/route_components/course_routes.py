@@ -51,8 +51,10 @@ class CoursesRoutes:
                 ("Markus", 'Applied Data Science'),
                 ("Lilit", 'Applied Informatics')
             ],
-            schedule=[TimeWindow(day='Mon', start_time='9AM', end_time='10AM'),
-                      TimeWindow(day='Thu', start_time='9AM', end_time='10AM')],
+            schedule=[
+                TimeWindow(day='Mon', start_time='9AM', end_time='10AM'),
+                TimeWindow(day='Thu', start_time='9AM', end_time='10AM')
+            ],
             location=Room('Prov.103'),
             evaluation=Evaluation([(8.9, 'it was nice')]),  # Todo specify the structure of Evaluation
             announcements=['Today the class is off']  # Todo add date to the announcement
