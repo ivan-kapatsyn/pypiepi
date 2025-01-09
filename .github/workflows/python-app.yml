@@ -41,19 +41,33 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    # Step 4: Read all the .env variabes from test.env
+    # Step 4: Download PostgreSQL
+    - name: Download PostgreSQL
+      run: |
+        choco install postgresql --version=14.0 -y
+      shell: cmd
+
+    # Step 5: Initialise db
+    - name: Initialize PostgreSQL Database
+      run: |
+        set "PATH=C:\Program Files\PostgreSQL\14\bin;%PATH%"
+        pg_ctl initdb -D C:\pgdata
+        pg_ctl start -D C:\pgdata -l logfile
+        psql -c "CREATE DATABASE postgres;" -U postgres
+        psql -c "CREATE USER postgres WITH PASSWORD 'postgres';" -U postgres
+
+    # Step 6: Read all the .env variabes from test.env
     - name: Load test.env variables
       run: |
         python -c "from dotenv import load_dotenv; load_dotenv(dotenv_path='test.env')"
     
-    # Step 5: Reset .env variabes that contain credentials
+    # Step 7: Reset .env variabes that contain credentials
     - name: Set environment variables
       run: |
         echo PROJECT_PATH=${{ github.workspace }} >> $GITHUB_ENV
         echo PASSWORD="postgres" >> $GITHUB_ENV
-        
 
-    # Step 6: Run unittest for all test folders
+    # Step 8: Run unittest for all test folders
     - name: Run unittests
       run: |
         python -m unittest discover -s test/backend -p "*.py"
