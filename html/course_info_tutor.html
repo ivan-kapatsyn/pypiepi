@@ -42,7 +42,6 @@
     </script>
     <script>
         function enableEdit(name) {
-            const container = document.getElementById('data-container');
             const nameSpan = document.getElementById('data-' + name);
             const editButton = document.getElementById('edit-button-' + name);
 
@@ -51,10 +50,18 @@
             nameSpan.innerHTML = `<input id="edit-input" value="${currentValue}" style="width: 70%;">`;
 
             // Replace "Edit" button with "Ok" and "Cancel"
-            editButton.outerHTML = `
-            <button id="ok-button" onclick="saveData('${name}')">Ok</button>
-            <button id="cancel-button" onclick="cancelEdit('${currentValue}', '${name}')">Cancel</button>
-        `;
+            if (name === 'announcement') {
+                const newValue = document.getElementById('edit-input').value;
+                editButton.outerHTML = `
+                <button id="ok-button" onclick="makeAnAnnouncement('${newValue}')">Ok</button>
+                <button id="cancel-button" onclick="cancelEdit('${currentValue}', '${name}')">Cancel</button>
+            `;
+            } else {
+                editButton.outerHTML = `
+                <button id="ok-button" onclick="saveData('${name}')">Ok</button>
+                <button id="cancel-button" onclick="cancelEdit('${currentValue}', '${name}')">Cancel</button>
+            `;
+            }
         }
 
         function saveData(name) {
@@ -121,6 +128,7 @@
                 span.style.border = `2px solid ${color}`;
             });
         }
+
         // Ensure DOM is loaded before calling the function
         document.addEventListener('DOMContentLoaded', applyRatingColors);
     </script>
@@ -137,6 +145,59 @@
                     window.location.href = "/tutor/{{ user_id }}/personal_bio"
                 }
             });
+        }
+    </script>
+    <script>
+        function makeAnAnnouncement(message) {
+            // Call the Flask endpoint with the new data
+            fetch("/course/add_announcement/{{ course_id }}/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    'message': message
+                })
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                if (response.status === 204) {
+                    return {'success': true}; // Handle empty responses
+                }
+
+                return response.json(); // Otherwise, parse JSON
+            }).then(data => {
+                if (data.success) {
+                    const container = document.getElementById('announcements_container');
+                    const editButtonHtml = `<button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>`;
+                    container.querySelector('#ok-button').outerHTML = editButtonHtml;
+                    if (document.getElementById('cancel-button')) {
+                        document.getElementById('cancel-button').remove();
+                    }
+                    const editButton = document.getElementById('edit-button-announcement');
+                    editButton.outerHTML = `
+                        <span>
+                            - ${message}
+                        </span><br>
+                        ${editButton.outerHTML}
+                    `;
+                } else {
+                    const container = document.getElementById('announcements_container');
+                    const editButtonHtml = `<button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>`;
+                    container.querySelector('#ok-button').outerHTML = editButtonHtml;
+                    if (document.getElementById('cancel-button')) {
+                        document.getElementById('cancel-button').remove();
+                    }
+                    alert('Failed to update data!');
+
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Failed to update data!');
+            });
+
         }
     </script>
 </head>
@@ -187,11 +248,11 @@
 </div>
 <h2>Rating</h2>
 <div>
-    <span>Average rating:</span>
+    <h4>Average rating:</h4>
     <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
 </div>
 <div>
-    <span>Comments:</span><br>
+    <h4>Comments:</h4><br>
     {% for feedback in feedback_list %}
     <span>{{ feedback.i }}) {{ feedback.name }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
     {% endfor %}
@@ -201,7 +262,8 @@
     {% for announcement in announcements %}
     <span>- {{ announcement }}</span><br>
     {% endfor %}
-
+    <span id="data-announcement"></span>
+    <button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>
 </div>
 <button onclick="deleteCourse()">Delete the course</button>
 </body>
