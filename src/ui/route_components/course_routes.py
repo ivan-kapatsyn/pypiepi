@@ -85,6 +85,12 @@ class CoursesRoutes:
         return redirect(url_for('tutor.personal_bio', user_id=user_id))
 
     @staticmethod
+    @main_bp.route('/add_announcement/<course_id>/', methods=['POST'])
+    def add_announcement(course_id: str):
+        # Todo an announcement in db by Course.get_course_by_id() and Course.update()
+        return Response(status=204)
+
+    @staticmethod
     def __construct_course_data(course: Course):
         course_data = {
             'Course name': course.name,
