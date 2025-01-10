@@ -216,6 +216,7 @@
 </div>
 <div>
     <h4>Comments:</h4>
+
     {% for feedback in feedback_list %}
     <span>{{ feedback.i }}) {{ feedback.name }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
     {% endfor %}
