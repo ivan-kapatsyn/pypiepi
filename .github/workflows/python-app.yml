@@ -38,12 +38,15 @@ jobs:
         set "PATH=C:\Program Files\PostgreSQL\17\bin;%PATH%"
         echo "PATH=C:\Program Files\PostgreSQL\17\bin;%PATH%" >> $GITHUB_ENV
         pg_ctl initdb -D C:\pgdata
-        echo "Updating pg_hba.conf for trust authentication..."
-        echo "local   all             all                                     trust" >> C:/pgdata/pg_hba.conf
-        echo "host    all             all             127.0.0.1/32            trust" >> C:/pgdata/pg_hba.conf
-        echo "host    all             all             ::1/128                 trust" >> C:/pgdata/pg_hba.conf
+        cat > C:/pgdata/pg_hba.conf << EOF
+        local   all             all                                     trust
+        host    all             all             127.0.0.1/32            trust
+        host    all             all             ::1/128                 trust
+        EOF
+        
+        # Configure PostgreSQL to listen on localhost
         echo "listen_addresses = '127.0.0.1'" >> C:/pgdata/postgresql.conf
-        pg_ctl -D C:\pgdata -l logfile -o "-h 127.0.0.1" start
+        pg_ctl -D C:\pgdata -l logfile start
         psql -c "CREATE DATABASE postgres;" -U postgres
         psql -c "CREATE USER postgres WITH PASSWORD '12345';" -U postgres
       shell: cmd
@@ -59,7 +62,7 @@ jobs:
     # Step 6: Read all the .env variabes from test.env
     - name: Load test.env variables
       run: |
-        python -c "from dotenv import load_dotenv; load_dotenv(dotenv_path='test.env')"
+        cat test.env >> $GITHUB_ENV
     
     # Step 7: Reset .env variabes that contain credentials
     - name: Set environment variables
@@ -71,7 +74,6 @@ jobs:
     - name: Tables initialisation
       run: |
         python -m scripts.initialize_db
-      continue-on-error: true
 
     # Step 9: Run unittest for all test folders
     - name: Run Backend unittests
@@ -88,5 +90,15 @@ jobs:
       run: |
         python -m unittest discover -s tests/utils -p "*.py"
       continue-on-error: true
+
+    - name: Determine Failure
+      if: always() # Ensure this step always runs
+      run: |
+        if grep -q 'exit status 1' $GITHUB_STEP_SUMMARY; then
+          echo "Some tests failed."
+          exit 1
+        else
+          echo "All tests passed."
+        fi
         
         
