@@ -125,6 +125,22 @@
 
         }
     </script>
+    <script>
+        function applyRatingColors() {
+            document.querySelectorAll('.rating').forEach(span => {
+                const rating = parseFloat(span.dataset.rating);
+                const normalized = rating / 10;
+                const red = Math.round((1 - normalized) * 255);
+                const green = Math.round(normalized * 255);
+                const color = `rgb(${red}, ${green}, 0)`;
+                span.style.color = color;
+                span.style.border = `2px solid ${color}`;
+            });
+        }
+
+        // Ensure DOM is loaded before calling the function
+        document.addEventListener('DOMContentLoaded', applyRatingColors);
+    </script>
 </head>
 <body>
 <header class="d-flex justify-content-center align-items-center p-3 bg-light border-bottom">
@@ -194,6 +210,16 @@
     </tbody>
 </table>
 <h3>Rating</h3>
+<div>
+    <h4>Average rating:</h4>
+    <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
+</div>
+<div>
+    <h4>Comments:</h4>
+    {% for feedback in feedback_list %}
+    <span>{{ feedback.i }}) {{ feedback.name }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
+    {% endfor %}
+</div>
 <footer>
     <div>
         <button id="new course" onclick="add_new_course('{{ user_id }}')">Add new course</button>
