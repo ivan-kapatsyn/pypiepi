@@ -38,7 +38,7 @@ jobs:
         set "PATH=C:\Program Files\PostgreSQL\17\bin;%PATH%"
         echo "PATH=C:\Program Files\PostgreSQL\17\bin;%PATH%" >> $GITHUB_ENV
         pg_ctl initdb -D C:\pgdata
-        type > C:/pgdata/pg_hba.conf << EOF
+        cat > C:/pgdata/pg_hba.conf << EOF
         local   all             all                                     trust
         host    all             all             127.0.0.1/32            trust
         host    all             all             ::1/128                 trust
@@ -49,7 +49,6 @@ jobs:
         pg_ctl -D C:\pgdata -l logfile start
         psql -c "CREATE DATABASE postgres;" -U postgres
         psql -c "CREATE USER postgres WITH PASSWORD '12345';" -U postgres
-      shell: cmd
       continue-on-error: true  # Ensures subsequent steps execute even if this fails
 
     - name: View PostgreSQL Logs
@@ -58,6 +57,7 @@ jobs:
         echo "PostgreSQL Log File Contents:"
         type logfile
       shell: cmd
+      continue-on-error: true
 
     # Step 6: Read all the .env variabes from test.env
     - name: Load test.env variables
