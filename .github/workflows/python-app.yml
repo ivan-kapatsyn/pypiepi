@@ -38,7 +38,7 @@ jobs:
         set "PATH=C:\Program Files\PostgreSQL\17\bin;%PATH%"
         echo "PATH=C:\Program Files\PostgreSQL\17\bin;%PATH%" >> $GITHUB_ENV
         pg_ctl initdb -D C:\pgdata
-        cat > C:/pgdata/pg_hba.conf << EOF
+        type > C:/pgdata/pg_hba.conf << EOF
         local   all             all                                     trust
         host    all             all             127.0.0.1/32            trust
         host    all             all             ::1/128                 trust
