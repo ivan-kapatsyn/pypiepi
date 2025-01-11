@@ -1,5 +1,8 @@
 import os
 import unittest
+
+from pandas.core.interchange import column
+
 from src.utils.data_base_util import DataBaseUtil
 from src.utils.env_variable_util import EnvVariableUtil
 
@@ -26,7 +29,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
                            "arthur", "morgan", "NaN",True]
         self.assertEqual(self.db_util.load_one(table_name, column,id_value), expected_result)
 
-
+#WORK
     def test_load_many(self):
         table_name = 'users'
         filter_function = "first_name = %s"
@@ -64,28 +67,24 @@ class DataBaseUtilTestCase(unittest.TestCase):
         id_value = "2efafa285df19ac9"
         self.assertEqual(self.db_util.delete_one(table_name, id_value), None)
 
-        # WORK
+#WORK
     def test_delete_many(self):
-        # Test deleting multiple records
         table_name = 'users'
         column = "user_id"
         user_ids = ["9b5bdd1016946389", "961ce05a42f05144", "8d66502c89d550c9"]
 
-        # Überprüfen, ob die Benutzer vor dem Löschen existieren
         for user_id in user_ids:
             exists_before = self.db_util.exists_user_by_id(table_name, user_id)
-            print(f"User {user_id} exists before deletion: {exists_before}")  # Debugging-Ausgabe
+            print(f"User {user_id} exists before deletion: {exists_before}")
 
-        # Führen Sie die Löschoperation durch
         self.db_util.delete_many(table_name, column, user_ids)
 
-        # Überprüfen Sie die Existenz der Benutzer nach dem Löschen
         for user_id in user_ids:
             exists_after = self.db_util.exists_user_by_id(table_name, user_id)
-            print(f"User {user_id} exists after deletion: {exists_after}")  # Debugging-Ausgabe
+            print(f"User {user_id} exists after deletion: {exists_after}")
             self.assertFalse(exists_after, f"User {user_id} should have been deleted")
 
-    #WORK
+#WORK
     def test_insert_one(self):
         obj1 = {
             "user_id": "9e6fde3566ae0547",
@@ -124,7 +123,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
         self.assertEqual(loaded_data['remember_me'], True)
 
 #WORK
-    def test_insert_many_data(self):
+    def test_insert_many(self):
         new_user_id = self.db_util.generate_unique_id()
         objects = [
             {
@@ -155,6 +154,40 @@ class DataBaseUtilTestCase(unittest.TestCase):
             self.assertEqual(loaded_data['remember_me'], obj['remember_me'])
 
 #WORK
+    def test_update_one(self):
+        table_name = 'users'
+        column = "user_id"
+        id_value = "9e6fde3566ae0547"
+        new_values = {"username": "arthur.morgan_updated", "remember_me": False}
+        self.db_util.update_one(table_name, column, id_value, new_values)
+
+#WORK
+    def test_update_many(self):
+        table_name = 'users'
+        conditions = [
+            {"user_id": "9e6fde3566ae0547"},
+            {"user_id": "063dfafed02ea11d"}
+            ]
+        new_values = [
+            {"remember_me": "TRUE"},
+            {"remember_me": "TRUE"}
+            ]
+        self.db_util.update_many(table_name, conditions, new_values)
+        result = self.db_util.load_many(
+            table_name,
+            "user_id = %s",
+            ["9e6fde3566ae0547"]
+            )
+        self.assertEqual(result[0]["remember_me"], True)
+
+        result = self.db_util.load_many(
+            table_name,
+            "user_id = %s",
+            ["063dfafed02ea11d"]
+            )
+        self.assertEqual(result[0]["remember_me"], True)
+
+#WORK
     def test_build_query_select(self):
         table_name = "users"
         conditions = [("first_name", "john"), ("remember_me", "TRUE")]
@@ -170,7 +203,6 @@ class DataBaseUtilTestCase(unittest.TestCase):
         self.assertEqual(params, expected_params)
 
 
-
 #WORK
     def test_exist_user_id(self):
         user_id_to_test = 202345671
@@ -182,14 +214,6 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
         # Assert, dass der Benutzer wie erwartet existiert oder nicht existiert
         self.assertEqual(exists, expected_exists, f"User {user_id_to_test} existence check failed")
-
-#WORK
-    def test_update_one(self):
-        table_name = 'users'
-        column = "user_id"
-        id_value = "9e6fde3566ae0547"
-        new_values = {"username": "arthur.morgan_updated", "remember_me": False}
-        self.db_util.update_one(table_name, column, id_value, new_values)
 
 #WORK
     def test_initialise(self):
