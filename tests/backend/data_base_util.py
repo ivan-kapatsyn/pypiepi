@@ -16,7 +16,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
                 table_name), True)
 
 #WORK
-    def test_load_data(self):
+    def test_load_one(self):
         table_name = 'users'
         column = "user_id"
         id_value = "9e6fde3566ae0547"
@@ -26,13 +26,66 @@ class DataBaseUtilTestCase(unittest.TestCase):
                            "arthur", "morgan", "NaN",True]
         self.assertEqual(self.db_util.load_one(table_name, column,id_value), expected_result)
 
+
+    def test_load_many(self):
+        table_name = 'users'
+        filter_function = "first_name = %s"
+        user_first_name = ["john"]
+
+        expected_result = [
+            [
+                "506c1a851263a9e5",
+                "john.doe",
+                "JDJiJDEyJHFBdGhDL3RRYks5b2J0UHRpemZqbXVScERjb2c3dzF2MHl4WVNJVmdkWXZvMWtRTFZPejVL",
+                "john",
+                "doe",
+                "Shrek is love. Shrek is live",
+                True
+            ],
+            [
+                "19995af5bef504ee",
+                "john.marston",
+                "JDJiJDEyJEVuSkM0UGRic2FVQzloRWtrQU1sVy5weE1QeHJZQy5wTjRNb1g3Si50R2JGVnlxcjYudFJx",  # password
+                "john",
+                "marston",
+                "NaN",
+                False
+            ]
+        ]
+
+        result = self.db_util.load_many(table_name, filter_function, user_first_name)
+
+        self.assertEqual(result, expected_result)
+
+
 #WORK
-    def test_delete_data(self):
+    def test_delete_one(self):
         table_name = 'users'
         id_value = "2efafa285df19ac9"
         self.assertEqual(self.db_util.delete_one(table_name, id_value), None)
 
-#WORK
+        # WORK
+    def test_delete_many(self):
+        # Test deleting multiple records
+        table_name = 'users'
+        column = "user_id"
+        user_ids = ["9b5bdd1016946389", "961ce05a42f05144", "8d66502c89d550c9"]
+
+        # Überprüfen, ob die Benutzer vor dem Löschen existieren
+        for user_id in user_ids:
+            exists_before = self.db_util.exists_user_by_id(table_name, user_id)
+            print(f"User {user_id} exists before deletion: {exists_before}")  # Debugging-Ausgabe
+
+        # Führen Sie die Löschoperation durch
+        self.db_util.delete_many(table_name, column, user_ids)
+
+        # Überprüfen Sie die Existenz der Benutzer nach dem Löschen
+        for user_id in user_ids:
+            exists_after = self.db_util.exists_user_by_id(table_name, user_id)
+            print(f"User {user_id} exists after deletion: {exists_after}")  # Debugging-Ausgabe
+            self.assertFalse(exists_after, f"User {user_id} should have been deleted")
+
+    #WORK
     def test_insert_one(self):
         obj1 = {
             "user_id": "9e6fde3566ae0547",
@@ -117,26 +170,6 @@ class DataBaseUtilTestCase(unittest.TestCase):
         self.assertEqual(params, expected_params)
 
 
-#WORK
-    def test_delete_many(self):
-        # Test deleting multiple records
-        table_name = 'student'
-        column = "user_id"
-        user_ids = ["9e6fde3566ae0547", "8fc313baf96b1fdk"]
-
-        # Überprüfen, ob die Benutzer vor dem Löschen existieren
-        for user_id in user_ids:
-            exists_before = self.db_util.exists_user_by_id(table_name, user_id)
-            print(f"User {user_id} exists before deletion: {exists_before}")  # Debugging-Ausgabe
-
-        # Führen Sie die Löschoperation durch
-        self.db_util.delete_many(table_name, column, user_ids)
-
-        # Überprüfen Sie die Existenz der Benutzer nach dem Löschen
-        for user_id in user_ids:
-            exists_after = self.db_util.exists_user_by_id(table_name, user_id)
-            print(f"User {user_id} exists after deletion: {exists_after}")  # Debugging-Ausgabe
-            self.assertFalse(exists_after, f"User {user_id} should have been deleted")
 
 #WORK
     def test_exist_user_id(self):

@@ -63,7 +63,6 @@ class DataBaseUtil:
         if "password" in obj:
             obj["password"] = PasswordUtils.hash_password(obj["password"])
 
-        # Prepare the insert statement
         columns = ', '.join(obj.keys())
         values_placeholder = ', '.join(['%s'] * len(obj))
         query = f'INSERT INTO {table_name} ({columns}) VALUES ({values_placeholder});'
@@ -71,21 +70,18 @@ class DataBaseUtil:
         if dublicate:
             initial_key_value = obj[column]
             while True:
-                # Check if the current key value exists
                 query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
                 self.__execute_command(query_check, (initial_key_value,))
                 exists = self.cursor.fetchone()[0]
 
                 if not exists:
-                    break  # Exit the loop if the key is unique
+                    break
 
-                # generates a new unique_id to find a new unique key
                 initial_key_value = self.generate_unique_id()
                 obj[column] = initial_key_value
-                print(f"Updated object key: {obj[column]}")  # Debug output
+                print(f"Updated object key: {obj[column]}")
 
         else:
-            # Check for duplicates before inserting if not allowing duplicates
             query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
             self.__execute_command(query_check, (obj[column],))
             exists = self.cursor.fetchone()[0]
@@ -94,17 +90,17 @@ class DataBaseUtil:
                 raise Exception(f"Duplicate entry for {column}: {obj[column]}")
 
         self.__execute_command(sql_query=query, params=tuple(obj.values()))
-        print(f"Inserted {obj} into {table_name}")  # Debug output
+        print(f"Inserted {obj} into {table_name}")
 
 
 # ------INSERT MANY TO THE DATABASE--------
     def insert_many(self, table_name: str, objects: List[Dict[str, any]], column: str,
                     dublicate: bool = False) -> None:
         if not objects:
-            print("No objects to insert.")  # Debug output
+            print("No objects to insert.")
             return
 
-        print(f"Inserting into {table_name}...")  # Debug output
+        print(f"Inserting into {table_name}...")
 
         for obj in objects:
             if "password" in obj:
@@ -114,7 +110,6 @@ class DataBaseUtil:
                     obj[key] = json.dumps(value)
 
         if dublicate:
-            # Collect existing keys in one query for efficiency
             existing_keys_query = f"SELECT {column} FROM {table_name} WHERE {column} IN %s;"
             existing_keys = set()
 
@@ -123,13 +118,11 @@ class DataBaseUtil:
             for row in self.cursor.fetchall():
                 existing_keys.add(row[0])
 
-            # Update objects with unique keys
             for obj in objects:
                 while obj.get(column) in existing_keys:
                     obj[column] = self.generate_unique_id()
                 existing_keys.add(obj[column])
 
-                # Prepare and execute batch insert
         columns = ', '.join(objects[0].keys())
         values_placeholder = ', '.join(['%s'] * len(objects[0]))
         query = f"INSERT INTO {table_name} ({columns}) VALUES {', '.join(['(' + values_placeholder + ')' for _ in objects])};"
@@ -155,7 +148,7 @@ class DataBaseUtil:
     def exists_user_by_id(self, table_name: str, user_id: Any) -> bool:
         query = f"SELECT EXISTS(SELECT 1 FROM {table_name} WHERE user_id = %s);"
         result = self.__fetch_one(query, (user_id,))
-        print(f"Checking existence for user_id {user_id}: result = {result}")  # Debug-Ausgabe
+        print(f"Checking existence for user_id {user_id}: result = {result}")
         return result[0] if result else False
 
 
@@ -185,13 +178,17 @@ class DataBaseUtil:
 
 # ------LOAD MANY DATA-------
     def load_many(self, table_name: str, filter_function: str = None, values: List[Any] = None) -> List[Dict[str, Any]]:
-        if values:
-            placeholders = ', '.join(['%s'] * len(values))
-            query = f'SELECT * FROM {table_name} WHERE {filter_function.replace('%s', placeholders)};'
-            params = tuple(values)
-        elif filter_function:
+        """
+            Loads multiple records from a database table based on optional filter conditions.
+
+            :param table_name: The name of the database table.
+            :param filter_function: Optional SQL filter condition with placeholders (%s).
+            :param values: List of values to substitute into the filter placeholders.
+            :return: List of dictionaries containing the loaded records.
+            """
+        if values and filter_function or filter_function:
             query = f'SELECT * FROM {table_name} WHERE {filter_function};'
-            params = ()
+            params = tuple(values)
         else:
             query = f'SELECT * FROM {table_name};'
             params = ()
@@ -206,8 +203,8 @@ class DataBaseUtil:
             log_message=f"Loading records from {table_name} with filter {filter_function}."
             )
 
-        if results is not None:  # Check if results are not None (indicating no error occurred)
-            print(f"Successfully loaded {len(results)} records from {table_name}.")  # Debug output
+        if results:
+            print(f"Successfully loaded {len(results)} records from {table_name}.")
             return results
         else:
             print(f"Error during batch load in {table_name}.")
@@ -232,9 +229,9 @@ class DataBaseUtil:
         placeholders = ', '.join(['%s'] * len(values))
         query = f"DELETE FROM {table_name} WHERE {column} IN ({placeholders});"
 
-        print(f"Deleting {len(values)} records from {table_name} where {column} matches.")  # Debug output
+        print(f"Deleting {len(values)} records from {table_name} where {column} matches.")
         self.__execute_command(sql_query=query, params=tuple(values))
-        print(f"Successfully deleted {len(values)} records from {table_name}.")  # Debug output
+        print(f"Successfully deleted {len(values)} records from {table_name}.")
 
 
 #-------UPDATE ONE-----
@@ -265,7 +262,7 @@ class DataBaseUtil:
 # -------UPDATE DATA--------
     def update_many(self, table_name: str, conditions: List[Dict[str, Any]], new_values: List[Dict[str, Any]]) -> None:
         if not new_values:
-            print("No updates provided.")  # Debug output
+            print("No updates provided.")
             return
 
         for condition, new_value in zip(conditions, new_values):
@@ -274,7 +271,7 @@ class DataBaseUtil:
             query = f"UPDATE {table_name} SET {set_clause} WHERE {where_clause};"
 
             params = tuple(new_value.values()) + tuple(condition.values())
-            print(f"Executing update query: {query} with params: {params}")  # Debug output
+            print(f"Executing update query: {query} with params: {params}")
 
             affected_rows = self.__execute_command(
                 sql_query=query,
@@ -471,24 +468,20 @@ class DataBaseUtil:
                     data_type = str(data_type).strip()
                     constraints = str(constraints).strip()
 
-                    # If it is a FOREIGN KEY, add it to a separate list
                     if "FOREIGN KEY" in constraints:
                         foreign_keys.append(
                             f"FOREIGN KEY ({column_name}) {constraints.split('FOREIGN KEY')[1].strip()}")
                         constraints = ""
 
-                    # Create the column definition
                     column_definition = f"{column_name} {data_type} {constraints}".strip()
                     column_definitions.append(column_definition)
 
-                # Creating the script for creating a table
                 create_table_script = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(column_definitions)}"
 
-                # add the FOREIGN KEYS if it's available
                 if foreign_keys:
                     create_table_script += f", {', '.join(foreign_keys)}"
 
-                create_table_script += ");"  # Schließe die CREATE TABLE-Anweisung ab
+                create_table_script += ");"
 
                 print(f"Create Table {table_name}")
                 print(create_table_script)
@@ -518,9 +511,9 @@ class DataBaseUtil:
 
 #------FETCH MANY-------
     def __fetch_all(self, query: str, params: Tuple[Any, ...] = ()) -> List[Dict[str, Any]]:
-        self.__execute_command(sql_query=query, params=params)  # Execute the command without fetch_one
-        columns = [desc[0] for desc in self.cursor.description]  # Get column names
-        return [dict(zip(columns, row)) for row in self.cursor.fetchall()]  # Fetch all rows
+        self.__execute_command(sql_query=query, params=params)
+        columns = [desc[0] for desc in self.cursor.description]
+        return [dict(zip(columns, row)) for row in self.cursor.fetchall()]
 
 
 # -------POPULATE WITH VALUES
