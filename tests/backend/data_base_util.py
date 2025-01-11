@@ -62,10 +62,18 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
 
 #WORK
-    def test_delete_one(self):
+    def test_delete_one_with_id(self):
         table_name = 'users'
         id_value = "2efafa285df19ac9"
-        self.assertEqual(self.db_util.delete_one(table_name, id_value), None)
+        self.assertEqual(self.db_util.delete_one_with_id(table_name, id_value), None)
+
+
+#WORK
+    def test_delete_one(self):
+        table_name = 'users'
+        column_d = "user_id"
+        value_d = "063dfafed02ea11d"
+        self.assertEqual(self.db_util.delete_one(table_name, column_d, value_d), None)
 
 #WORK
     def test_delete_many(self):

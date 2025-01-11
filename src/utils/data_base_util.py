@@ -53,6 +53,18 @@ class DataBaseUtil:
 
 # ------INSERT ONE TO THE DATABASE--------
     def insert_one(self, table_name: str, obj: Dict[str, any], column: str, dublicate: bool = False) -> None:
+        """
+        Inserts a single record into the specified table.
+
+        Parameters:
+        - table_name (str): The name of the table where the record will be inserted.
+        - obj (Dict[str, any]): A dictionary representing the record to be inserted, where keys are column names.
+        - column (str): The name of the column used to check for duplicates.
+        - dublicate (bool): Indicates whether to allow duplicate entries. Defaults to False.
+
+        Returns:
+        - None: This method does not return a value.
+        """
         print(f"Inserting in table {table_name}")
 
         obj = {
@@ -96,6 +108,18 @@ class DataBaseUtil:
 # ------INSERT MANY TO THE DATABASE--------
     def insert_many(self, table_name: str, objects: List[Dict[str, any]], column: str,
                     dublicate: bool = False) -> None:
+        """
+        Inserts multiple records into the specified table.
+
+        Parameters:
+        - table_name (str): The name of the table where multiple records will be inserted.
+        - objects (List[Dict[str, any]]): A list of dictionaries, each representing a record to be inserted.
+        - column (str): The name of the column used to check for duplicates.
+        - dublicate (bool): Indicates whether to allow duplicate entries during insertion. Defaults to False.
+
+        Returns:
+        - None: This method does not return a value.
+        """
         if not objects:
             print("No objects to insert.")
             return
@@ -154,6 +178,21 @@ class DataBaseUtil:
 
 # -------LOAD ONE------
     def load_one(self, table_name: str, column: str, value:any) -> DictRow | None:
+        """
+            Loads a single record from the specified table based on a given column and value.
+
+            Parameters:
+            - table_name (str): The name of the table from which to load the record.
+            - column (str): The name of the column used to filter the records. Must be a valid identifier.
+            - value (any): The value to match in the specified column. The type should correspond to the column's data type.
+
+            Returns:
+            - DictRow | None: A dictionary representing the record if found, or None if no record matches the criteria.
+
+            Raises:
+            - ValueError: If the provided column name is not a valid identifier.
+            - TypeError: If the qualification field in the result has an unexpected type.
+        """
         if not column.isidentifier():
             raise ValueError(f"Invalid column name: {column}")
 
@@ -179,13 +218,20 @@ class DataBaseUtil:
 # ------LOAD MANY DATA-------
     def load_many(self, table_name: str, filter_function: str = None, values: List[Any] = None) -> List[Dict[str, Any]]:
         """
-            Loads multiple records from a database table based on optional filter conditions.
+        Loads multiple records from the specified table, optionally filtered by a condition.
 
-            :param table_name: The name of the database table.
-            :param filter_function: Optional SQL filter condition with placeholders (%s).
-            :param values: List of values to substitute into the filter placeholders.
-            :return: List of dictionaries containing the loaded records.
-            """
+        Parameters:
+        - table_name (str): The name of the table from which to load records.
+        - filter_function (str, optional): An optional SQL filter string to apply to the query. If provided, must be a valid SQL condition.
+        - values (List[Any], optional): A list of values to bind to the filter function placeholders, if any.
+
+        Returns:
+        - List[Dict[str, Any]]: A list of dictionaries representing the records loaded from the table.
+                                 Each dictionary corresponds to a record, or an empty list if no records are found.
+
+        Raises:
+        - Exception: If an error occurs during the query execution.
+        """
         if values and filter_function or filter_function:
             query = f'SELECT * FROM {table_name} WHERE {filter_function};'
             params = tuple(values)
@@ -211,8 +257,22 @@ class DataBaseUtil:
             return []
 
 
-# -----DELETING ONE---------
-    def delete_one(self, table_name: str, id_value: Any) -> None:
+# -----DELETE ONE WITH ID---------
+    def delete_one_with_id(self, table_name: str, id_value: Any) -> None:
+        """
+        Deletes a single record from the specified table using its primary key.
+
+        Parameters:
+        - table_name (str): The name of the table from which to delete the record.
+        - id_value (any): The value of the primary key to identify the record to be deleted.
+                          The type should correspond to the primary key's data type.
+
+        Returns:
+        - None: This method does not return a value.
+
+        Raises:
+        - Exception: If an error occurs during the deletion process.
+        """
         id_column = self.get_primary_key_column(table_name)
 
         query = f"DELETE FROM {table_name} WHERE {id_column} = %s;"
@@ -220,8 +280,47 @@ class DataBaseUtil:
         print(f"Deleted record from {table_name} where {id_column} = {id_value}.")
 
 
+# -----DELETE ONE---------
+    def delete_one(self, table_name: str, column: str, value: Any) -> None:
+        """
+        Deletes a single record from the specified table based on a given column and value.
+
+        Parameters:
+        - table_name (str): The name of the table from which to delete the record.
+        - column (str): The name of the column used to filter the records. Must be a valid identifier.
+        - value (any): The value to match in the specified column. The type should correspond to the column's data type.
+
+        Returns:
+        - None: This method does not return a value.
+
+        Raises:
+        - ValueError: If the provided column name is not a valid identifier.
+        """
+        if not column.isidentifier():
+            raise ValueError(f"Invalid column name: {column}")
+
+        query = f"DELETE FROM {table_name} WHERE {column} = %s;"
+        self.__execute_command(query, (value,))
+        print(f"Deleted record from {table_name} where {column} = {value}.")
+
+
 # ------DELETE MANY DATA--------
     def delete_many(self, table_name: str, column: str, values: List[Any]) -> None:
+        """
+        Deletes multiple records from the specified table based on the given column and a list of values.
+
+        Parameters:
+        - table_name (str): The name of the table from which to delete records.
+        - column (str): The name of the column used as the filter criterion for deletion.
+        - values (List[Any]): A list of values to match against the specified column.
+                              Only records with a column value that matches any value in this list will be deleted.
+
+        Returns:
+        - None: This method does not return a value.
+
+        Raises:
+        - Exception: If an error occurs during the deletion process.
+        """
         if not values:
             print("No values to delete.")
             return
@@ -236,6 +335,22 @@ class DataBaseUtil:
 
 #-------UPDATE ONE-----
     def update_one(self, table_name: str, id_column: str, id_value: Any, new_values: Dict[str, Any]) -> None:
+        """
+        Updates a single record in the specified table based on the primary key.
+
+        Parameters:
+        - table_name (str): The name of the table in which the record will be updated.
+        - id_column (str): The name of the column used as the primary key to identify the record.
+        - id_value (any): The value of the primary key to match the record that needs to be updated.
+        - new_values (Dict[str, Any]): A dictionary of new values to be set for the record.
+                                        Keys represent column names and values represent the new data.
+
+        Returns:
+        - None: This method does not return a value.
+
+        Raises:
+        - Exception: If an error occurs during the update process.
+        """
         if not new_values:
             print("No new values to update.")
             return
@@ -261,6 +376,22 @@ class DataBaseUtil:
 
 # -------UPDATE DATA--------
     def update_many(self, table_name: str, conditions: List[Dict[str, Any]], new_values: List[Dict[str, Any]]) -> None:
+        """
+        Updates multiple records in the specified table based on a list of conditions and corresponding new values.
+
+        Parameters:
+        - table_name (str): The name of the table in which the records will be updated.
+        - conditions (List[Dict[str, Any]]): A list of dictionaries where each dictionary represents the conditions
+                                               to match for each record. Each key corresponds to a column name.
+        - new_values (List[Dict[str, Any]]): A list of dictionaries containing new values for each record.
+                                              Each dictionary's keys represent the column names to be updated.
+
+        Returns:
+        - None: This method does not return a value.
+
+        Raises:
+        - Exception: If an error occurs during the update process.
+        """
         if not new_values:
             print("No updates provided.")
             return
@@ -289,6 +420,24 @@ class DataBaseUtil:
 
 # ------SAVE DATA TO CSV FILE-------
     def save_data_to_csv(self, table_name: str, data: List[Dict[str, Any]], column_types: Dict[str, str], csv_directory: str = None) -> str:
+        """
+        Saves data from the specified table into a CSV file.
+
+        Parameters:
+        - table_name (str): The name of the table from which the data is extracted. This will also be used as the CSV file name.
+        - data (List[Dict[str, Any]]): A list of dictionaries where each dictionary represents a row of data.
+                                        Keys correspond to column names.
+        - column_types (Dict[str, str]): A dictionary specifying the data types of the columns. Keys are column names
+                                           and values are the data types (e.g., 'jsonb', 'password').
+        - csv_directory (str, optional): The directory where the CSV file will be saved. If not provided, it retrieves
+                                          the directory from environment variables.
+
+        Returns:
+        - str: The path to the created CSV file.
+
+        Raises:
+        - Exception: If an error occurs during the saving process or if the data is not provided.
+        """
         csv_directory = csv_directory or EnvVariableUtil.get_env_variable('CSV_FILE_PATH')
         if not os.path.exists(csv_directory):
             os.makedirs(csv_directory)
@@ -315,6 +464,19 @@ class DataBaseUtil:
 
 # -----INITIALISE DATABASE--------
     def initialise(self, json_file: str) -> None:
+        """
+        Initializes the database by dropping existing tables, creating new schemas,
+        and populating them with initial values.
+
+        Parameters:
+        - json_file (str): The path to the JSON file used for creating schemas and populating initial values.
+
+        Returns:
+        - None: This method does not return a value.
+
+        Raises:
+        - Exception: If an error occurs during the initialization process.
+        """
         print("Initializing the database...")
         self._drop_all_the_tables()
         self.__create_schemes(json_file=EnvVariableUtil.get_env_variable('JSON_FILE_PATH'))
@@ -324,6 +486,18 @@ class DataBaseUtil:
 
 # ------CHECK IF TABLE EXIST---------
     def _check_if_table_exists(self, table_name) -> bool:
+        """
+        Checks whether a specified table exists in the database.
+
+        Parameters:
+        - table_name (str): The name of the table to check for existence.
+
+        Returns:
+        - bool: True if the table exists, False otherwise.
+
+        Raises:
+        - Exception: If an error occurs while executing the existence check query.
+        """
         query = f'''SELECT EXISTS (
                         SELECT 1
                         FROM information_schema.tables
@@ -341,6 +515,15 @@ class DataBaseUtil:
 
 # -------DROP ALL TABLES----------
     def _drop_all_the_tables(self):
+        """
+        Drops all tables in the public schema of the database and recreates the schema.
+
+        Returns:
+        - bool: True if the operation was successful, False otherwise.
+
+        Raises:
+        - Exception: If an error occurs while dropping the tables.
+        """
         query = f'''DROP SCHEMA public CASCADE;
                                     CREATE SCHEMA public;    
                                     GRANT ALL ON SCHEMA public TO public;
@@ -353,14 +536,23 @@ class DataBaseUtil:
 
 
 # ------LOAD/DELETE DATA WITH CONDITIONS------
-    def _build_query(
-            self,
-            table_name: str,
-            conditions: List[Tuple[str, Any]],
-            operator: str,
-            query_type: str = "SELECT"
-    ) -> Tuple[str, List[Any]]:
+    def _build_query(self, table_name: str, conditions: List[Tuple[str, Any]], operator: str, query_type: str = "SELECT") -> Tuple[str, List[Any]]:
+        """
+        Constructs a SQL query based on specified conditions and the desired query type (SELECT or DELETE).
 
+        Parameters:
+        - table_name (str): The name of the table on which the query will be executed.
+        - conditions (List[Tuple[str, Any]]): A list of tuples where each tuple contains a column name and its corresponding value to filter the records.
+        - operator (str): The logical operator ('AND' or 'OR') used to combine conditions in the query.
+        - query_type (str): The type of query to construct ('SELECT' or 'DELETE'). Defaults to 'SELECT'.
+
+        Returns:
+        - Tuple[str, List[Any]]: A tuple containing the constructed SQL query string and a list of parameter values.
+
+        Raises:
+        - ValueError: If the operator is not 'AND' or 'OR'.
+        - ValueError: If the query type is not 'SELECT' or 'DELETE'.
+        """
         if operator not in ("AND", "OR"):
             raise ValueError("Operator must be 'AND' oder 'OR'.")
 
@@ -381,6 +573,18 @@ class DataBaseUtil:
 
 #-----GET COLUMN TYPES--------
     def _get_column_types(self, table_name: str) -> Dict[str, str]:
+        """
+        Retrieves the data types of columns for a specified table.
+
+        Parameters:
+        - table_name (str): The name of the table for which to fetch column types.
+
+        Returns:
+        - Dict[str, str]: A dictionary where keys are column names and values are their corresponding data types.
+
+        Raises:
+        - Exception: If no columns are found for the specified table.
+        """
         query = f"""
         SELECT column_name, data_type
         FROM information_schema.columns
@@ -402,7 +606,23 @@ class DataBaseUtil:
 
 
 #---EXECUTE COMMAND----
-    def __execute_command(self, sql_query: str = None, params: tuple = None, fetch_one: bool = False, fetch_all: bool = False, log_message: str =None):
+    def __execute_command(self, sql_query: str = None, params: tuple = None, fetch_one: bool = False, fetch_all: bool = False, log_message: str = None):
+        """
+        Executes a given SQL command with optional parameters and fetch options.
+
+        Parameters:
+        - sql_query (str, optional): The SQL query to be executed. Defaults to None.
+        - params (tuple, optional): A tuple of parameters to be used in the SQL query. Defaults to None.
+        - fetch_one (bool, optional): If True, fetches a single result. Defaults to False.
+        - fetch_all (bool, optional): If True, fetches all results. Defaults to False.
+        - log_message (str, optional): An optional message to log during execution.
+
+        Returns:
+        - Any: The fetched result if fetch_one or fetch_all is True, otherwise returns True upon successful execution.
+
+        Raises:
+        - Exception: If an error occurs during the execution of the command.
+        """
         try:
             self.cursor.execute(sql_query, params)
             if log_message:
@@ -422,6 +642,16 @@ class DataBaseUtil:
 
 # -------CREATING A USER----------------
     def __create_user(self, username, password):
+        """
+        Creates a new database user with the specified username and password.
+
+        Parameters:
+        - username (str): The username for the new database user.
+        - password (str): The password for the new database user.
+
+        Returns:
+        - bool: True if the user was created successfully, otherwise False.
+        """
         create_user_query = f"CREATE USER {username} WITH PASSWORD '{password}';"
         return self.__execute_command(
             sql_query=create_user_query,
@@ -431,6 +661,16 @@ class DataBaseUtil:
 
 #-------GIVING THE USER ALL PRIVILEGES--------
     def __grant_all_privileges(self, username, dbname):
+        """
+        Grants all privileges on a specified database to a given user.
+
+        Parameters:
+        - username (str): The username of the user to whom the privileges will be granted.
+        - dbname (str): The name of the database on which privileges are to be granted.
+
+        Returns:
+        - bool: True if privileges were granted successfully, otherwise False.
+        """
         grant_privileges_query = f"GRANT ALL PRIVILEGES ON DATABASE {dbname} TO {username};"
         return self.__execute_command(
             sql_query=grant_privileges_query,
@@ -441,6 +681,19 @@ class DataBaseUtil:
 
 #-------CREATES THE SCHEMES FOR THE DATABASE--------
     def __create_schemes(self, json_file):
+        """
+        Creates database schemas and tables based on the definitions provided in a JSON file.
+
+        Parameters:
+        - json_file (str): The path to the JSON file containing table and column definitions.
+
+        Returns:
+        - bool: True if all tables were created successfully, otherwise False.
+
+        Raises:
+        - ValueError: If any required fields (such as table name or column definitions) are missing in the JSON file.
+        - Exception: If there is an error during the creation of the database schema.
+        """
         try:
             data = pd.read_json(json_file)
             tables = data.get("tables", [])
@@ -498,6 +751,16 @@ class DataBaseUtil:
 
 #------FETCH ONE--------
     def __fetch_one(self, query: str, params: Tuple[Any, ...] = ()) -> DictRow | None:
+        """
+        Executes a query and fetches a single record from the database.
+
+        Parameters:
+        - query (str): The SQL query to be executed.
+        - params (Tuple[Any, ...], optional): A tuple of parameters to be used in the SQL query. Defaults to an empty tuple.
+
+        Returns:
+        - Union[DictRow, None]: A dictionary representing the record if found, or None if no record matches the criteria.
+        """
         result_fetch_one = self.__execute_command(
             sql_query=query,
             params=params,
@@ -511,6 +774,16 @@ class DataBaseUtil:
 
 #------FETCH MANY-------
     def __fetch_all(self, query: str, params: Tuple[Any, ...] = ()) -> List[Dict[str, Any]]:
+        """
+        Executes a query and fetches all matching records from the database.
+
+        Parameters:
+        - query (str): The SQL query to be executed.
+        - params (Tuple[Any, ...], optional): A tuple of parameters to be used in the SQL query. Defaults to an empty tuple.
+
+        Returns:
+        - List[Dict[str, Any]]: A list of dictionaries, where each dictionary represents a record retrieved from the database.
+        """
         self.__execute_command(sql_query=query, params=params)
         columns = [desc[0] for desc in self.cursor.description]
         return [dict(zip(columns, row)) for row in self.cursor.fetchall()]
@@ -518,6 +791,22 @@ class DataBaseUtil:
 
 # -------POPULATE WITH VALUES
     def __populate_with_values(self, csv_directory: str = None) -> None:
+        """
+        Populates database tables with values from CSV files located in the specified directory.
+
+        Parameters:
+        - csv_directory (str, optional): The path to the directory containing CSV files. If not provided, the path will be retrieved from an environment variable.
+
+        Returns:
+        - None
+
+        Raises:
+        - FileNotFoundError: If the specified CSV directory does not exist.
+        - Exception: If there is an error while processing any CSV file.
+
+        Notes:
+        The method processes predefined tables in a specific order and attempts to insert data into them. If a table does not have a corresponding CSV file, it is skipped.
+        """
         csv_directory = csv_directory or EnvVariableUtil.get_env_variable('CSV_FILE_PATH')
         print("Populating tables with values from CSV files...")
 
