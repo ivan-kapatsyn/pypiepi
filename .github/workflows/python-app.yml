@@ -7,8 +7,22 @@ on:
 
 jobs:
   test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 12345
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
     # Step 1: Checkout the code
     - name: Checkout code
@@ -18,7 +32,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.x' # Specify the required Python version
+        python-version: '3.12' # Specify the required Python version
 
     # Step 3: Install dependencies
     - name: Install dependencies
@@ -26,79 +40,47 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    # Step 4: Download PostgreSQL
-    - name: Download PostgreSQL
+    # Step 4: Read all the .env variabes from test.env
+    - name: Load environment variables from test.env
       run: |
-        choco install postgresql -y
-      shell: cmd
-
-    # Step 5: Initialise db
-    - name: Initialize PostgreSQL Database
-      run: |
-        set "PATH=C:\Program Files\PostgreSQL\17\bin;%PATH%"
-        echo "PATH=C:\Program Files\PostgreSQL\17\bin;%PATH%" >> $GITHUB_ENV
-        pg_ctl initdb -D C:\pgdata
-        cat > C:/pgdata/pg_hba.conf << EOF
-        local   all             all                                     trust
-        host    all             all             127.0.0.1/32            trust
-        host    all             all             ::1/128                 trust
-        EOF
-        
-        # Configure PostgreSQL to listen on localhost
-        echo "listen_addresses = '127.0.0.1'" >> C:/pgdata/postgresql.conf
-        pg_ctl -D C:\pgdata -l logfile start
-        psql -c "CREATE DATABASE postgres;" -U postgres
-        psql -c "CREATE USER postgres WITH PASSWORD '12345';" -U postgres
-      continue-on-error: true  # Ensures subsequent steps execute even if this fails
-
-    - name: View PostgreSQL Logs
-      if: always()  # Ensures this step runs regardless of success or failure of previous steps
-      run: |
-        echo "PostgreSQL Log File Contents:"
-        type logfile
-      shell: cmd
-      continue-on-error: true
-
-    # Step 6: Read all the .env variabes from test.env
-    - name: Load test.env variables
-      run: |
-        cat test.env >> $GITHUB_ENV
+        export $(grep -v '^#' test.env | xargs)
+        echo "GIT_ENV=$(grep -v '^#' test.env | xargs)" >> $GITHUB_ENV
     
-    # Step 7: Reset .env variabes that contain credentials
+    # Step 5: Reset .env variabes that contain credentials
     - name: Set environment variables
       run: |
-        echo PROJECT_PATH=${{ github.workspace }} >> $GITHUB_ENV
-        echo PASSWORD="12345" >> $GITHUB_ENV
+        echo "PROJECT_PATH=${{ github.workspace }}" >> $GITHUB_ENV
+        echo "PASSWORD=12345" >> $GITHUB_ENV
 
-    # Step 8: Run tables initialisation
+    # Step 6: Run tables initialisation
     - name: Tables initialisation
       run: |
         python -m scripts.initialize_db
 
-    # Step 9: Run unittest for all test folders
+    # Step 7: Run unittest for all test folders
     - name: Run Backend unittests
       run: |
         python -m unittest discover -s tests/backend -p "*.py"
       continue-on-error: true
+      id: test1
 
     - name: Run UI unittests
       run: |
         python -m unittest discover -s tests/ui -p "*.py"
       continue-on-error: true
+      id: test2
 
     - name: Run Utils unittests
       run: |
         python -m unittest discover -s tests/utils -p "*.py"
       continue-on-error: true
+      id: test3
 
-    - name: Determine Failure
-      if: always() # Ensure this step always runs
+    - name: Fail if any tests failed
       run: |
-        if grep -q 'exit status 1' $GITHUB_STEP_SUMMARY; then
-          echo "Some tests failed."
+        if [ "${{ steps.test1.outcome }}" != "success" ] || [ "${{ steps.test2.outcome }}" != "success" ] || [ "${{ steps.test3.outcome }}" != "success" ]; then
+          echo "One or more tests failed. Marking run as failed."
           exit 1
-        else
-          echo "All tests passed."
         fi
         
         
