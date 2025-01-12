@@ -1,15 +1,106 @@
+/* Basic styling */
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
-    padding: 20px;
+    margin: 0;
+    padding: 0;
     background-color: #f5f5f5;
-
+    display: flex;
+    justify-content: center; /* Center all content horizontally */
+    align-items: center; /* Center all content vertically */
+    height: 100vh; /* Full height of the viewport */
 }
 
-form div {
-    margin-bottom: 15px;
+/* Container for the entire login block (including the button) */
+.login-container {
+    background-color: #ffffff; /* White background for the box */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    padding: 30px; /* Padding inside the box */
+    width: 100%;
+    max-width: 400px; /* Limit the width */
+    text-align: center; /* Center the text inside the container */
 }
 
+/* Heading */
 h1 {
+    font-size: 24px;
     color: #333;
+    margin-bottom: 20px; /* Space below the heading */
+}
+
+/* Form fields */
+form div {
+    margin-bottom: 15px; /* Space between fields */
+    text-align: left; /* Align text to the left */
+}
+
+/* Input fields */
+input[type="text"],
+input[type="password"],
+button {
+    width: 100%; /* Make input fields take full width */
+    padding: 10px; /* Padding inside the fields */
+    margin-top: 5px; /* Small margin above the input fields */
+    font-size: 14px; /* Font size */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box; /* Include padding and border in the width */
+}
+
+/* Button styling for Login Button */
+.login-button {
+    background-color: #14B8D5; /* Your desired color for the Login Button */
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 15px 0; /* Vertical padding */
+    font-size: 18px;
+    border-radius: 5px; /* Rounded corners */
+    width: 80%; /* Button takes 80% of the container's width */
+    display: block; /* Block-level element */
+    margin-top: 20px; /* Space above the button */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
+}
+
+.login-button:hover {
+    background-color: #0d94b0; /* Darker color on hover */
+}
+
+/* Button styling for Register Button */
+.register-button {
+    background-color: #45DABA; /* Your desired color for the Register Button */
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 15px 0; /* Vertical padding */
+    font-size: 18px;
+    border-radius: 5px; /* Rounded corners */
+    width: 80%; /* Button takes 80% of the container's width */
+    display: block; /* Block-level element */
+    margin-top: 20px; /* Space above the button */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
+}
+
+.register-button:hover {
+    background-color: #e04e2f; /* Darker color on hover */
+}
+
+/* Link for registration */
+.register-link {
+    margin-top: 10px; /* Space above the link */
+    font-size: 14px;
+    color: #007bff; /* Blue color */
+}
+
+.register-link a {
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Inherit color from the parent */
+}
+
+.register-link a:hover {
+    text-decoration: underline; /* Underline on hover */
 }
