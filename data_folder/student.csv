@@ -1,5 +1,5 @@
-student_id,user_id,first_name,last_name,field_of_study
-12,202345671,arthur,morgan,economics
-123,202345672,john,doe,biology
-1234,202345674,john,marston,marketing
-12345,202345675,mary,stuart,physics
+student_id,user_id,qualification
+c6ffacc8367b6336,c6ffacc8367b6320,"[""economics""]"
+c6ffacc8367b6123,caaa6bdf09fc26e7,"[""biology""]"
+8fc313baf96b1fdk,8fc313baf96b1eee,"[""marketing""]"
+e83f4566ad7a544w,e83f4566ad7a533e,"[""business economics""]"

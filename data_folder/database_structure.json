@@ -3,51 +3,57 @@
     {
       "table_name": "users",
       "columns": [
-        {"column_name": "user_ID", "data_type": "INTEGER", "constraints": "PRIMARY KEY" },
+        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
         {"column_name": "username", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
-        {"column_name": "password", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
-        {"column_name": "user_typ", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
+        {"column_name": "password", "data_type": "VARCHAR(80)", "constraints": "NOT NULL" },
+        {"column_name": "first_name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
+        {"column_name": "last_name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
+        {"column_name": "bio", "data_type": "VARCHAR(200)" },
         {"column_name": "remember_me", "data_type": "BOOLEAN", "constraints": "NOT NULL" }
       ]
     },
     {
       "table_name": "tutor",
       "columns": [
-        {"column_name": "tutor_ID", "data_type": "INTEGER", "constraints": "PRIMARY KEY" },
-        {"column_name": "user_ID", "data_type": "INTEGER", "constraints": "FOREIGN KEY REFERENCES users(user_ID)" },
-        {"column_name": "first_name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
-        {"column_name": "last_name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
-        {"column_name": "field_of_study", "data_type": "JSONB", "constraints": "NOT NULL" }
+        {"column_name": "tutor_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
+        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES users(user_ID)" },
+        {"column_name": "qualification", "data_type": "JSONB", "constraints": "NOT NULL" }
       ]
     },
     {
       "table_name": "student",
       "columns": [
-        {"column_name": "student_ID", "data_type": "INTEGER", "constraints": "PRIMARY KEY" },
-        {"column_name": "user_ID", "data_type": "INTEGER", "constraints": "FOREIGN KEY REFERENCES users(user_ID)" },
-        {"column_name": "first_name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
-        {"column_name": "last_name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
-        {"column_name": "field_of_study", "data_type": "JSONB", "constraints": "NOT NULL" }
+        {"column_name": "student_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
+        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES users(user_ID)" },
+        {"column_name": "qualification", "data_type": "JSONB", "constraints": "NOT NULL" }
       ]
     },
     {
-      "table_name": "lessons",
+      "table_name": "course",
       "columns": [
-        {"column_name": "lesson_ID", "data_type": "INTEGER", "constraints": "PRIMARY KEY" },
-        {"column_name": "tutor_ID", "data_type": "INTEGER", "constraints": "FOREIGN KEY REFERENCES tutor(tutor_ID)" },
+        {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
+        {"column_name": "tutor_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES tutor(tutor_ID)" },
         {"column_name": "date", "data_type": "DATE", "constraints": "NOT NULL" },
-        {"column_name": "time", "data_type": "TIME", "constraints": "NOT NULL" },
+        {"column_name": "start_time", "data_type": "TIME", "constraints": "NOT NULL" },
+        {"column_name": "end_time", "data_type": "TIME", "constraints": "NOT NULL" },
         {"column_name": "room_nr", "data_type": "VARCHAR(50)", "constraints": "NOT NULL" },
         {"column_name": "title", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "description", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
-        {"column_name": "max_number_students", "data_type": "INTEGER", "constraints": "NOT NULL" }
+        {"column_name": "max_number_students", "data_type": "INTEGER", "constraints": "NOT NULL" },
+        {"column_name": "evaluation", "data_type": "FLOAT", "constraints": "NOT NULL" }
       ]
     },
     {
-      "table_name": "studentInLesson",
+      "table_name": "studentInCourse",
       "columns": [
-        {"column_name": "lesson_ID", "data_type": "INTEGER", "constraints": "FOREIGN KEY REFERENCES lessons(lesson_ID)" },
-        {"column_name": "student_ID", "data_type": "INTEGER", "constraints": "FOREIGN KEY REFERENCES student(student_ID)" }
+        {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES course(course_ID)" },
+        {"column_name": "student_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES student(student_ID)" }
+      ]
+    },
+    {
+      "table_name": "tokens",
+      "columns": [
+        {"column_name": "token", "data_type": "INTEGER", "constraints": "NOT NULL" }
       ]
     }
   ]

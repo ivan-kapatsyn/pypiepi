@@ -1,6 +1,6 @@
-user_id,username,password,user_typ,remember_me
-202345671,arthur_morgan,password123,student,TRUE
-202345672,john_doe,newpassword,admin,TRUE
-202345673,jane_doe,mypassword,admin,FALSE
-202345674,john_marston,mypasswordisbetter,student,FALSE
-202345675,mary_stuart,stupidpassword,tutor,TRUE
+username,password,first_name,last_name,bio,remember_me,user_id
+arthur.morgan,JDJiJDEyJDN1T2RkNEZEQmdnRUZTVmJYRmtQN2VMTWxXQ000Mm9pUG92NFpFRGlzREI4a1pKTEg0eFND,arthur,morgan,,TRUE,c6ffacc8367b6320
+john.doe,JDJiJDEyJG5NMHk0NEowVms2YkUyYjhjMktHVE8zUFp0YzVONDdiUTBzbWZzMVBuMWd4elMwbHpXeE1X,john,doe,Shrek is love. Shrek is live,TRUE,caaa6bdf09fc26e7
+jane.doe,JDJiJDEyJFNZL0Zlc0RsRy95eWlFcXBSRERybk9NNDlSM2xPTHFjdHVBVW4vYmFvQjhyZ2YyLjNRYlpL,jane,doe,Professional construction enthusiast,FALSE,2826d0a1177ea692
+john.marston,JDJiJDEyJG5acWs1YVlOcXZrVUxqbmhUSy5qQ09yc3pRYjRDR2o5UUVEbFpIZkk1VHFNN1Nzei5zMTZ5,john,marston,,FALSE,8fc313baf96b1eee
+mary.stuart,JDJiJDEyJFVDemdibjlBakkwZG51OVpBQXN4MmUvL1FxMDlReWpFMWtoaWQ2NS56UW9CTVB4NmJweUVl,mary,stuart,Am I a pretty girl?,TRUE,e83f4566ad7a533e
