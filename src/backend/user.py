@@ -4,7 +4,6 @@ from src.backend.data_base_util import find_user_by_username, save_user, users_w
     edit_remember_me
 
 from src.utils.password_utils import PasswordUtils
-from src.backend.course import Course
 from src.backend.evaluation import Evaluation
 from src.backend.time_window import TimeWindow
 from src.backend.qualification import Qualification
