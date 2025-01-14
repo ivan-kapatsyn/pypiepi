@@ -419,7 +419,7 @@ class DataBaseUtil:
 
 
 # ------SAVE DATA TO CSV FILE-------
-    def save_data_to_csv(self, table_name: str, data: List[Dict[str, Any]], column_types: Dict[str, str], csv_directory: str = None) -> str:
+    def save_data_to_csv(self, table_name: str, data: List[Dict[str, Any]], column_types: Dict[str, str]) -> str:
         """
         Saves data from the specified table into a CSV file.
 
@@ -438,7 +438,8 @@ class DataBaseUtil:
         Raises:
         - Exception: If an error occurs during the saving process or if the data is not provided.
         """
-        csv_directory = csv_directory or EnvVariableUtil.get_env_variable('CSV_FILE_PATH')
+        #EnvVariableUtil.get_env_variable('CSV_FILE_PATH') csv_directory or
+        csv_directory = PathUtil.get_data_path()
         if not os.path.exists(csv_directory):
             os.makedirs(csv_directory)
         csv_file = os.path.join(csv_directory, f"{table_name}.csv")
@@ -463,7 +464,7 @@ class DataBaseUtil:
 
 
 # -----INITIALISE DATABASE--------
-    def initialise(self, json_file: str) -> None:
+    def initialise(self) -> None:
         """
         Initializes the database by dropping existing tables, creating new schemas,
         and populating them with initial values.
@@ -479,7 +480,7 @@ class DataBaseUtil:
         """
         print("Initializing the database...")
         self._drop_all_the_tables()
-        self.__create_schemes(json_file=EnvVariableUtil.get_env_variable('JSON_FILE_PATH'))
+        self.__create_schemes(json_file=PathUtil.get_json_path())
         self.__populate_with_values()
 
         print("Database initialized successfully.")
@@ -790,7 +791,7 @@ class DataBaseUtil:
 
 
 # -------POPULATE WITH VALUES
-    def __populate_with_values(self, csv_directory: str = None) -> None:
+    def __populate_with_values(self) -> None:
         """
         Populates database tables with values from CSV files located in the specified directory.
 
@@ -807,7 +808,7 @@ class DataBaseUtil:
         Notes:
         The method processes predefined tables in a specific order and attempts to insert data into them. If a table does not have a corresponding CSV file, it is skipped.
         """
-        csv_directory = csv_directory or EnvVariableUtil.get_env_variable('CSV_FILE_PATH')
+        csv_directory = PathUtil.get_data_path()
         print("Populating tables with values from CSV files...")
 
         if not os.path.exists(csv_directory):

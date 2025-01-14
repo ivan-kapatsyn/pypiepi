@@ -225,8 +225,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
 #WORK
     def test_initialise(self):
-        data_path = EnvVariableUtil.get_env_variable('JSON_FILE_PATH')
-        self.db_util.initialise(json_file=data_path)
+        self.db_util.initialise()
 
 #WORK
     def test_insert_with_duplicate_true(self):
