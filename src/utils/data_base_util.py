@@ -52,7 +52,7 @@ class DataBaseUtil:
 
 
 # ------INSERT ONE TO THE DATABASE--------
-    def insert_one(self, table_name: str, obj: Dict[str, any], column: str, dublicate: bool = False) -> None:
+    def insert_one(self, table_name: str, obj: Dict[str, any], column: str, dublicate: bool = False, create_id: bool = True) -> None:
         """
         Inserts a single record into the specified table.
 
@@ -89,9 +89,10 @@ class DataBaseUtil:
                 if not exists:
                     break
 
-                initial_key_value = self.generate_unique_id()
-                obj[column] = initial_key_value
-                print(f"Updated object key: {obj[column]}")
+                if create_id:
+                    initial_key_value = self.generate_unique_id()
+                    obj[column] = initial_key_value
+                    print(f"Updated object key: {obj[column]}")
 
         else:
             query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
@@ -107,7 +108,7 @@ class DataBaseUtil:
 
 # ------INSERT MANY TO THE DATABASE--------
     def insert_many(self, table_name: str, objects: List[Dict[str, any]], column: str,
-                    dublicate: bool = False) -> None:
+                    dublicate: bool = False, create_id: bool = True) -> None:
         """
         Inserts multiple records into the specified table.
 
@@ -144,7 +145,8 @@ class DataBaseUtil:
 
             for obj in objects:
                 while obj.get(column) in existing_keys:
-                    obj[column] = self.generate_unique_id()
+                    if create_id:
+                        obj[column] = self.generate_unique_id()
                 existing_keys.add(obj[column])
 
         columns = ', '.join(objects[0].keys())
@@ -832,7 +834,7 @@ class DataBaseUtil:
 
                     if rows:
                         print(f"Inserting data into {table_name} from {os.path.basename(file_path)}...")
-                        self.insert_many(table_name, rows, column='id', dublicate=False)
+                        self.insert_many(table_name, rows, column='id', dublicate=False, create_id=False)
                     else:
                         print(f"No data found in {os.path.basename(file_path)}, skipping...")
                 except Exception as e:
