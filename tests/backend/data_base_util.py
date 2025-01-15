@@ -247,7 +247,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
 #WORK
     def test_exist_user_id(self):
-        user_id_to_test = 202345671
+        user_id_to_test = "202345671"
         expected_exists = False  # Setzen Sie dies auf True, wenn der Benutzer existieren soll
 
         # Überprüfen Sie, ob der Benutzer existiert
