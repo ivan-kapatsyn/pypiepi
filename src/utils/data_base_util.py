@@ -95,7 +95,7 @@ class DataBaseUtil:
                     print(f"Updated object key: {obj[column]}")
 
         else:
-            query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
+            query_check = f'SELECT EXISTS(SELECT * FROM {table_name} WHERE {column} = %s);'
             self.__execute_command(query_check, (obj[column],))
             exists = self.cursor.fetchone()[0]
 
@@ -173,7 +173,7 @@ class DataBaseUtil:
 
 #--------EXIST USER BY ID---------
     def exists_user_by_id(self, table_name: str, user_id: Any) -> bool:
-        query = f"SELECT EXISTS(SELECT 1 FROM {table_name} WHERE user_id = %s);"
+        query = f"SELECT EXISTS(SELECT * FROM {table_name} WHERE user_id = %s);"
         result = self.__fetch_one(query, (user_id,))
         print(f"Checking existence for user_id {user_id}: result = {result}")
         return result[0] if result else False
