@@ -167,22 +167,22 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
 # WORK
     def test_delete_one_with_id(self):
-        table_name = 'users'
+        table_name = 'student'
         id_value = "299edbe2695a53ed"
         self.assertEqual(self.db_util.delete_one_with_id(table_name, id_value), None)
 
 # WORK
     def test_delete_one(self):
-        table_name = 'users'
+        table_name = 'student'
         column_d = "user_id"
         value_d = "6a780ff0e0bdbb97"
         self.assertEqual(self.db_util.delete_one(table_name, column_d, value_d), None)
 
 # WORK
     def test_delete_many(self):
-        table_name = 'users'
+        table_name = 'student'
         column = "user_id"
-        user_ids = ["9b5bdd1016946389", "961ce05a42f05144", "8d66502c89d550c9"]
+        user_ids = ["b365cd8f07cd0520", "6a780ff0e0bdbb97"]
 
         for user_id in user_ids:
             exists_before = self.db_util.exists_user_by_id(table_name, user_id)
