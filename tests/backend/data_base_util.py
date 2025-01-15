@@ -5,6 +5,7 @@ from pandas.core.interchange import column
 
 from src.utils.data_base_util import DataBaseUtil
 from src.utils.env_variable_util import EnvVariableUtil
+from src.utils.path_util import PathUtil
 
 
 class DataBaseUtilTestCase(unittest.TestCase):
@@ -22,10 +23,10 @@ class DataBaseUtilTestCase(unittest.TestCase):
     def test_load_one(self):
         table_name = 'users'
         column = "user_id"
-        id_value = "9e6fde3566ae0547"
+        id_value = "a70030991cfada5a"
 
-        expected_result = ["9e6fde3566ae0547", "arthur.morgan",
-                           "JDJiJDEyJGxyUzIvQTROb2JCeDVpWUJzeVVDTWVPMzlDZklqZmJwZDB6d3NsLkJvLm5WaTJYUWY3N1FL",
+        expected_result = ["a70030991cfada5a", "arthur.morgan",
+                           "JDJiJDEyJHBmbnhZcFdYa1JlTWNjalUyUFFVTC41YzhhYnBmSEdPbFlDS0JUOWdLeUxtdE1XWXJIZTFL",
                            "arthur", "morgan", "NaN",True]
         self.assertEqual(self.db_util.load_one(table_name, column,id_value), expected_result)
 
@@ -96,7 +97,6 @@ class DataBaseUtilTestCase(unittest.TestCase):
     def test_insert_one(self):
         obj1 = {
             "user_id": "9e6fde3566ae0547",
-            "student_id": "c6ffacc8367b6336",
             "qualification": ["economics"]
         }
 
@@ -105,7 +105,6 @@ class DataBaseUtilTestCase(unittest.TestCase):
         loaded_data = self.db_util.load_one("student",  "student_id", value="c6ffacc8367b6336")
 
         self.assertEqual(loaded_data['user_id'], "9e6fde3566ae0547")
-        self.assertEqual(loaded_data['student_id'], "c6ffacc8367b6336")
         self.assertEqual(loaded_data['qualification'], ["economics"])
 
 #WORK
@@ -272,7 +271,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
         for entry in data_users:
             entry["user_id"] = self.db_util.generate_unique_id()
         table_name = "users"
-        csv_directory = EnvVariableUtil.get_env_variable('CSV_FILE_PATH')
+        csv_directory = PathUtil.get_data_path()
 
         try:
             column_types = self.db_util._get_column_types(table_name)

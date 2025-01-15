@@ -1,5 +1,1 @@
-lesson_id,tutor_id,date,time,room_nr,title,description,max_number_students
-123,1,2024-01-15,10:00,101,Mathematics Introduction,A basic introduction to algebra and geometry,30
-
-
-
+lesson_id,user_id,date,time,room_nr,title,description,max_number_students

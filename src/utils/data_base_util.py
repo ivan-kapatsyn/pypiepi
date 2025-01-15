@@ -108,7 +108,7 @@ class DataBaseUtil:
 
 # ------INSERT MANY TO THE DATABASE--------
     def insert_many(self, table_name: str, objects: List[Dict[str, any]], column: str,
-                    dublicate: bool = False, create_id: bool = True) -> None:
+                    dublicate: bool = False, create_id: bool = True, create_password: bool = True) -> None:
         """
         Inserts multiple records into the specified table.
 
@@ -129,7 +129,8 @@ class DataBaseUtil:
 
         for obj in objects:
             if "password" in obj:
-                obj["password"] = PasswordUtils.hash_password(obj["password"])
+                if create_password:
+                    obj["password"] = PasswordUtils.hash_password(obj["password"])
             for key, value in obj.items():
                 if isinstance(value, (list, dict)):
                     obj[key] = json.dumps(value)
@@ -834,7 +835,7 @@ class DataBaseUtil:
 
                     if rows:
                         print(f"Inserting data into {table_name} from {os.path.basename(file_path)}...")
-                        self.insert_many(table_name, rows, column='id', dublicate=False, create_id=False)
+                        self.insert_many(table_name, rows, column='id', dublicate=False, create_id=False, create_password=False)
                     else:
                         print(f"No data found in {os.path.basename(file_path)}, skipping...")
                 except Exception as e:
