@@ -82,7 +82,7 @@ class DataBaseUtil:
         if dublicate:
             initial_key_value = obj[column]
             while True:
-                query_check = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE {column} = %s);'
+                query_check = f'SELECT EXISTS(SELECT * FROM {table_name} WHERE {column} = %s);'
                 self.__execute_command(query_check, (initial_key_value,))
                 exists = self.cursor.fetchone()[0]
 

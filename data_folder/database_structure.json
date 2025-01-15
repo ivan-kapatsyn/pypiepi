@@ -15,14 +15,14 @@
     {
       "table_name": "tutor",
       "columns": [
-        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY REFERENCES users(user_ID)" },
+        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY REFERENCES users(user_ID) ON DELETE CASCADE" },
         {"column_name": "qualification", "data_type": "JSONB", "constraints": "NOT NULL" }
       ]
     },
     {
       "table_name": "student",
       "columns": [
-        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY REFERENCES users(user_ID)" },
+        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY REFERENCES users(user_ID) ON DELETE CASCADE" },
         {"column_name": "qualification", "data_type": "JSONB", "constraints": "NOT NULL" }
       ]
     },
