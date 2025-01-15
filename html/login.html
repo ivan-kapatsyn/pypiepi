@@ -11,7 +11,7 @@
                 let query = $(this).val();
                 if (query.length > 0) {
                     $.ajax({
-                        url: 'http://127.0.0.1:5000/login/get_suggestions',
+                        url: '/login/get_suggestions',
                         method: 'GET',
                         data: { query: query },
                         success: function (data) {
@@ -41,8 +41,7 @@
                 }
             });
         });
-    </script>
-    <script>
+
         $(document).on('click', '.suggestion-item', function () {
             let username = $(this).data('username');
             let userId = $(this).data('user-id');
@@ -51,7 +50,7 @@
 
             // Send suggestion to the backend
             $.ajax({
-                url: 'http://127.0.0.1:5000/login/process_suggestion',
+                url: '/login/process_suggestion',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ username: username, user_id: userId }),
@@ -68,27 +67,31 @@
     </script>
 </head>
 <body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.username.label }}<br>
+                {{ form.username(size=20, id="username-field") }}
+                <div id="suggestions"></div>
+            </div>
+            <div>
+                {{ form.password.label }}<br>
+                {{ form.password(size=32) }}
+            </div>
+            <div>
+                <!-- Hinzufügen der Klasse 'login-button' für den Login-Button -->
+                {{ form.submit(class="login-button") }}
+            </div>
+        </form>
 
-    <h1>Login</h1>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.username.label }}<br>
-             {{ form.username(size=20, id="username-field") }}
-            <div id="suggestions"></div>
-        </div>
-        <div>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
-        </div>
-        <div>
-            {{ form.submit() }}
-        </div>
-    </form>
-    <form method="POST">
-        <div>
-            {{ form.register_new_user() }}
-        </div>
-    </form>
+        <form method="POST">
+            <div>
+                <!-- Hinzufügen der Klasse 'register-button' für den Registrierungs-Button -->
+                {{ form.register_new_user(class="register-button") }}
+            </div>
+        </form>
+    </div>
 </body>
 </html>
