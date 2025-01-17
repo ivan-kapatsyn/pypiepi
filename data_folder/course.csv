@@ -1,4 +1,4 @@
-course_id,tutor_id,date,start_time,end_time,room_nr,title,description,max_number_students,evaluation
+course_id,user_id,date,start_time,end_time,room_nr,title,description,max_number_students,evaluation
 
 
 

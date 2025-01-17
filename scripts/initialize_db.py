@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     try:
         # Initialize the database
-        db_util.initialise(json_file_path)
+        db_util.initialise()
     except Exception as e:
         print(f"Error initializing the database: {e}")
     finally:

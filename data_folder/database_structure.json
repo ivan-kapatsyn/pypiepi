@@ -15,16 +15,14 @@
     {
       "table_name": "tutor",
       "columns": [
-        {"column_name": "tutor_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
-        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES users(user_ID)" },
+        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY REFERENCES users(user_ID) ON DELETE CASCADE" },
         {"column_name": "qualification", "data_type": "JSONB", "constraints": "NOT NULL" }
       ]
     },
     {
       "table_name": "student",
       "columns": [
-        {"column_name": "student_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
-        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES users(user_ID)" },
+        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY REFERENCES users(user_ID) ON DELETE CASCADE" },
         {"column_name": "qualification", "data_type": "JSONB", "constraints": "NOT NULL" }
       ]
     },
@@ -32,7 +30,7 @@
       "table_name": "course",
       "columns": [
         {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
-        {"column_name": "tutor_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES tutor(tutor_ID)" },
+        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES tutor(user_ID)" },
         {"column_name": "date", "data_type": "DATE", "constraints": "NOT NULL" },
         {"column_name": "start_time", "data_type": "TIME", "constraints": "NOT NULL" },
         {"column_name": "end_time", "data_type": "TIME", "constraints": "NOT NULL" },
@@ -47,7 +45,7 @@
       "table_name": "studentInCourse",
       "columns": [
         {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES course(course_ID)" },
-        {"column_name": "student_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES student(student_ID)" }
+        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES student(user_ID)" }
       ]
     },
     {
