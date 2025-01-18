@@ -25,10 +25,10 @@ class DataBaseUtilTestCase(unittest.TestCase):
     def test_load_one(self):
         table_name = 'users'
         column = "user_id"
-        id_value = "a70030991cfada5a"
+        id_value = "f63b0b2f7c48c85f"
 
-        expected_result = ["a70030991cfada5a", "arthur.morgan",
-                           "JDJiJDEyJHBmbnhZcFdYa1JlTWNjalUyUFFVTC41YzhhYnBmSEdPbFlDS0JUOWdLeUxtdE1XWXJIZTFL",
+        expected_result = ["f63b0b2f7c48c85f", "arthur.morgan",
+                           "JDJiJDEyJGx6RjZMbnZqTEdJcEtlY3pWZENqNmVWQkpKcnVSSGNSaU54S085TWQvc2tYQ29FQWF6d2wy",
                            "arthur", "morgan", "NaN",True]
         self.assertEqual(self.db_util.load_one(table_name, column,id_value), expected_result)
 
@@ -40,18 +40,18 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
         expected_result = [
             [
-                "299edbe2695a53ed",
+                "f67d38dee48d641f",
                 "john.doe",
-                "JDJiJDEyJHN2VTNhcUhDbXBzZkExenhvakNFdnVhcjZsOHJXdkJLNjFNSWx0cnJtR3IuakU1MWlXZERD",
+                "JDJiJDEyJHB6L3o4ZnR3SE1uQkpzS09UUUpSaS5pLzRvYks1OTVSL0s3NXVnOVVmRlFVcXp3YTkzUzNP",
                 "john",
                 "doe",
                 "Shrek is love. Shrek is live",
                 True
             ],
             [
-                "b365cd8f07cd0520",
+                "59d1dcf2a970a9fd",
                 "john.marston",
-                "JDJiJDEyJFMudTBhZHVUbGNXRjB1em8yTWo5Q2U3SlJGWkIvTHYvVjZnR2pITjhxckVjUk1zeHNvNTZD",  # password
+                "JDJiJDEyJDgxaXUuZmdNZXVPcHJCYXQveEwyRS51UVZKZ1UwLnBXVDdIVnBBQVRPdVNQWXluSm45SENT",  # password
                 "john",
                 "marston",
                 "NaN",
@@ -156,10 +156,10 @@ class DataBaseUtilTestCase(unittest.TestCase):
         new_user_id = self.db_util.generate_unique_id()
         obj = {
                     "user_id": new_user_id,
-                    "username": "charles.smith",
-                    "password": "thisismypassword",
-                    "first_name": "charles",
-                    "last_name": "smith",
+                    "username": "dutch.vanderlinde",
+                    "password": "tahiti",
+                    "first_name": "dutch",
+                    "last_name": "van der linde",
                     "bio": "",
                     "remember_me": True
                 }
@@ -168,21 +168,21 @@ class DataBaseUtilTestCase(unittest.TestCase):
 # WORK
     def test_delete_one_with_id(self):
         table_name = 'student'
-        id_value = "299edbe2695a53ed"
+        id_value = "59d1dcf2a970a9fd"
         self.assertEqual(self.db_util.delete_one_with_id(table_name, id_value), None)
 
 # WORK
     def test_delete_one(self):
         table_name = 'student'
         column_d = "user_id"
-        value_d = "6a780ff0e0bdbb97"
+        value_d = "16f9cbf0d5f0e513"
         self.assertEqual(self.db_util.delete_one(table_name, column_d, value_d), None)
 
 # WORK
     def test_delete_many(self):
         table_name = 'student'
         column = "user_id"
-        user_ids = ["b365cd8f07cd0520", "6a780ff0e0bdbb97"]
+        user_ids = ["f67d38dee48d641f", "f63b0b2f7c48c85f"]
 
         for user_id in user_ids:
             exists_before = self.db_util.exists_user_by_id(table_name, user_id)
@@ -199,7 +199,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
     def test_update_one(self):
         table_name = 'users'
         column = "user_id"
-        id_value = "a70030991cfada5a"
+        id_value = "f63b0b2f7c48c85f"
         new_values = {"username": "arthur.morgan_updated", "remember_me": False}
         self.db_util.update_one(table_name, column, id_value, new_values)
 
@@ -207,8 +207,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
     def test_update_many(self):
         table_name = 'users'
         conditions = [
-            {"user_id": "a70030991cfada5a"},
-            {"user_id": "430112d4d154a44f"}
+            {"user_id": "14d099c161cf3bea"},
+            {"user_id": "928930d566c50b2d"}
             ]
         new_values = [
             {"remember_me": False},
@@ -218,14 +218,14 @@ class DataBaseUtilTestCase(unittest.TestCase):
         result = self.db_util.load_many(
             table_name,
             "user_id = %s",
-            ["a70030991cfada5a"]
+            ["14d099c161cf3bea"]
             )
         self.assertEqual(result[0]["remember_me"], False)
 
         result = self.db_util.load_many(
             table_name,
             "user_id = %s",
-            ["430112d4d154a44f"]
+            ["928930d566c50b2d"]
             )
         self.assertEqual(result[0]["remember_me"], False)
 
@@ -256,6 +256,72 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
         # Assert, dass der Benutzer wie erwartet existiert oder nicht existiert
         self.assertEqual(exists, expected_exists, f"User {user_id_to_test} existence check failed")
+
+
+'''
+    def test_save_data_to_csv(self):
+        data_user = [
+            {"username": "arthur.morgan", "password": "password123", "first_name": "arthur", "last_name": "morgan",
+             "bio": "", "remember_me": "TRUE"},
+            {"username": "john.doe", "password": "newpassword", "first_name": "john", "last_name": "doe",
+             "bio": "Shrek is love. Shrek is live", "remember_me": "TRUE"},
+            {"username": "jane.doe", "password": "mypassword", "first_name": "jane", "last_name": "doe",
+             "bio": "Professional construction enthusiast", "remember_me": "FALSE"},
+            {"username": "john.marston", "password": "mypasswordisbetter", "first_name": "john", "last_name": "marston",
+             "bio": "", "remember_me": "FALSE"},
+            {"username": "mary.stuart", "password": "stupidpassword", "first_name": "mary", "last_name": "stuart",
+             "bio": "Am I a pretty girl?", "remember_me": "TRUE"},
+            {"username": "walter.white", "password": "heisenberg", "first_name": "walter", "last_name": "white",
+             "bio": "Say my name.", "remember_me": "TRUE"},
+            {"username": "luke.skywalker", "password": "jedi123", "first_name": "luke", "last_name": "skywalker",
+             "bio": "May the force be with you.", "remember_me": "TRUE"},
+            {"username": "rick.grimes", "password": "coral123", "first_name": "rick", "last_name": "grimes",
+             "bio": "We are the walking dead.", "remember_me": "TRUE"},
+            {"username": "jesse.pinkman", "password": "yo1234", "first_name": "jesse", "last_name": "pinkman",
+             "bio": "Yeah science!", "remember_me": "FALSE"},
+            {"username": "tony.stark", "password": "ironman", "first_name": "tony", "last_name": "stark",
+             "bio": "Genius, billionaire, playboy, philanthropist.", "remember_me": "TRUE"},
+            {"username": "barney.stinson", "password": "legenwaitforitdary", "first_name": "barney",
+             "last_name": "stinson", "bio": "Suit up!", "remember_me": "TRUE"},
+            {"username": "ted.mosby", "password": "architect4life", "first_name": "ted", "last_name": "mosby",
+             "bio": "", "remember_me": "TRUE"},
+            {"username": "patrick.star", "password": "isthiskrustykrab", "first_name": "patrick", "last_name": "star",
+             "bio": "No, this is Patrick!", "remember_me": "FALSE"},
+            {"username": "spongebob.squarepants", "password": "ilovekrabbypatties", "first_name": "spongebob",
+             "last_name": "squarepants", "bio": "", "remember_me": "TRUE"},
+            {"username": "luffy.monkey", "password": "pirateking", "first_name": "monkey", "last_name": "d. luffy",
+             "bio": "I’m gonna be the Pirate King!", "remember_me": "TRUE"},
+            {"username": "sheldon.cooper", "password": "bazinga", "first_name": "sheldon", "last_name": "cooper",
+             "bio": "I'm not crazy. My mother had me tested.", "remember_me": "TRUE"},
+            {"username": "leonard.hofstadter", "password": "physics123", "first_name": "leonard",
+             "last_name": "hofstadter", "bio": "", "remember_me": "FALSE"},
+            {"username": "patrick.star", "password": "mayonnaise", "first_name": "patrick", "last_name": "star",
+             "bio": "Is mayonnaise an instrument?", "remember_me": "TRUE"},
+            {"username": "sandy.cheeks", "password": "karate123", "first_name": "sandy", "last_name": "cheeks",
+             "bio": "A squirrel in the sea!", "remember_me": "TRUE"},
+            {"username": "max.mustermann", "password": "musterpasswort", "first_name": "max", "last_name": "mustermann",
+             "bio": "", "remember_me": "TRUE"},
+        ]
+
+        # Jede user_id generieren
+        for user in data_user:
+            user["user_id"] = self.db_util.generate_unique_id()
+
+        column_types = {
+            "user_id": "VARCHAR(16)",
+            "username": "VARCHAR(200)",
+            "password": "VARCHAR(80)",
+            "first_name": "VARCHAR(20)",
+            "last_name": "VARCHAR(200)",
+            "bio": "VARCHAR(200)",
+            "remember_me": "BOOLEAN"
+        }
+
+        table_name = "users"
+
+        self.db_util.save_data_to_csv(table_name, data_user, column_types)
+
+'''
 
 
 
