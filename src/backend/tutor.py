@@ -15,13 +15,12 @@ logger = logging.getLogger(__name__)
 
 class Tutor(User):
     def __init__(self, user_id: str, username: str, password: str,
-                 first_name: str, last_name: str, tutor_id: str,
-                 remember_me: bool = False, bio: str = None,
+                 first_name: str, last_name: str,
+                 remember_me: bool = False, bio: str = None, user_type: str = "Tutor",
                  qualifications: Optional[List[Qualification]] = None,
                  active_courses: Optional[List[Course]] = None,
                  evaluation: Optional[Evaluation] = None):
-        super().__init__(user_id, username, password, first_name, last_name, bio, remember_me)
-        self.tutor_id = tutor_id
+        super().__init__(user_id, username, password, first_name, last_name, bio, remember_me, user_type)
         self.qualifications = qualifications or []
         self.active_courses = active_courses or []
         self.evaluation = evaluation or Evaluation()
@@ -56,56 +55,40 @@ class Tutor(User):
         cls._remove_token(token)
 
         user_id = cls._generate_unique_user_id()
-        hashed_password = PasswordUtils.hash_password(password)
-        cls._save_user(user_id, username, hashed_password, first_name, last_name, remember_me)
-
-        tutor_id = cls._generate_unique_user_id()
-        cls._save_tutor(tutor_id, user_id, qualifications)
+        cls._save_user(user_id, username, password, first_name, last_name, remember_me)
+        cls._save_tutor(user_id, qualifications)
 
         logger.info(f"Tutor registered successfully with username: {username}")
         return user_id
 
-    @classmethod
-    def _get_ids(cls) -> set:
-        db = DataBaseUtil()
-        data = {tutor[0] for tutor in db.load_many("tutor")}
-        db.__del__()
-        return data
-
     @staticmethod
-    def _save_tutor(tutor_id: str, user_id: str, qualifications: List[Qualification]) -> None:
+    def _save_tutor(user_id: str, qualifications: List[Qualification]) -> None:
         tutor_data = {
-            "tutor_ID": tutor_id,
             "user_ID": user_id,
-            "qualification": qualifications
+            "qualification": [qualification.name for qualification in qualifications],
         }
         db = DataBaseUtil()
-        db.insert_one("tutor", tutor_data, "tutor_ID")
-        db.__del__()
+        db.insert_one("tutor", tutor_data, "user_ID")
 
     @staticmethod
     def _get_tokens() -> set:
         db = DataBaseUtil()
         data = db.load_many("tokens")
-        db.__del__()
         return {item[0] for item in data}
 
     @staticmethod
     def _remove_token(token: int) -> None:
         db = DataBaseUtil()
-        db.delete_one("tokens", token)
+        db.delete_one("tokens", "token",token)
         logger.info(f"Registration token '{token}' removed.")
-        db.__del__()
 
     @staticmethod
     def _find_tutor_by_user_id(user_id: str) -> Optional[List]:
         db = DataBaseUtil()
         try:
-            data = db.load_data("tutor", "user_ID", user_id)
+            data = db.load_one("tutor", "user_ID", user_id)
         except Exception as e:
             data = None
-        finally:
-            db.__del__()
         return data
 
     @classmethod
@@ -115,4 +98,4 @@ class Tutor(User):
             logger.warning(f"No tutor data for user '{user_id}'.")
             return {}
 
-        return {"tutor_id": tutor_data[0], "qualifications": [Qualification(q) for q in tutor_data[2]]}
+        return {"user_type": "Tutor", "qualifications": [Qualification(q) for q in tutor_data[1]]}

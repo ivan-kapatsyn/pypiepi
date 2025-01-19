@@ -1,3 +1,4 @@
+# TODO remove later, for testing
 """ User Passwords
 arthur.morgan: password123
 john.doe: newpassword
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 class User:
     def __init__(self, user_id: str, username: str, password: str, first_name: str, last_name: str,
-                bio: str = None, remember_me: bool = False):
+                bio: str = None, remember_me: bool = False, user_type: str = None):
         self.user_id = user_id
         self.username = username
         self.password = password
@@ -27,6 +28,7 @@ class User:
         self.last_name = last_name
         self.bio = bio or None
         self.remember_me = remember_me
+        self.user_type = user_type or None
 
     @classmethod
     def authenticate(cls, username: str, password: str) -> Optional["User"]:
@@ -78,7 +80,7 @@ class User:
         hashed_password = PasswordUtils.hash_password(password)
         user_id = cls._generate_unique_user_id()
 
-        cls._save_user(user_id, username, hashed_password, first_name, last_name, remember_me)
+        cls._save_user(user_id, username, password, first_name, last_name, remember_me)
         logger.info(f"User '{username}' registered successfully.")
         return cls(user_id, username, hashed_password, first_name, last_name, remember_me=remember_me)
 
@@ -144,28 +146,23 @@ class User:
         db = DataBaseUtil()
         db.update_one("users", "user_ID", self.user_id, updates)
         logger.info(f"Updated user data: {updates}")
-        db.__del__()
 
     @staticmethod
     def _find_user_by_username(username: str) -> Optional[List]:
         db = DataBaseUtil()
         try:
-            data = db.load_data("users", "username", username)
+            data = db.load_one("users", "username", username)
         except Exception as e:
             data = None
-        finally:
-            db.__del__()
         return data
 
     @staticmethod
     def _find_user_by_id(user_id: str) -> Optional[List]:
         db = DataBaseUtil()
         try:
-            data = db.load_data("users", "user_ID", user_id)
+            data = db.load_one("users", "user_ID", user_id)
         except Exception as e:
             data = None
-        finally:
-            db.__del__()
         return data
 
     @staticmethod
@@ -181,13 +178,11 @@ class User:
         }
         db = DataBaseUtil()
         db.insert_one("users", user_data, "user_ID")
-        db.__del__()
 
     @staticmethod
     def _get_users_with_remember_me() -> List[Dict]:
         db = DataBaseUtil()
         data = db.load_many("users", "remember_me", [True])
-        db.__del__()
         return data
 
     @classmethod
@@ -202,7 +197,6 @@ class User:
     def _get_ids(cls) -> set:
         db = DataBaseUtil()
         data = {user[0] for user in db.load_many("users")}
-        db.__del__()
         return data
 
     @staticmethod
