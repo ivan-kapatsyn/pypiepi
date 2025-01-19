@@ -20,7 +20,7 @@ class LoginRoutes:
     def get_suggestions():
         query = request.args.get('query', '')
         if query:
-            suggestions: List[User] = User.search_for_a_saved_users(query)
+            suggestions: List[User] = User.search_saved_users(query)
         else:
             suggestions = []
         return jsonify([{
