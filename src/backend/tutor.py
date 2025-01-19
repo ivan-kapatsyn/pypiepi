@@ -98,5 +98,3 @@ class Tutor(User):
 
         return {"user_type": "Tutor", "qualifications": [Qualification(q) for q in tutor_data[1]],
                 "active_courses": Course.get_course_by_user_id(user_id)}
-
-print(Tutor.get_user_by_id("430112d4d154a44f").active_courses[0].name)
