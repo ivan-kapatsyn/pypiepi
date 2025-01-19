@@ -10,6 +10,25 @@ body {
     height: 100vh; /* Full height of the viewport */
 }
 
+.header {
+    background-color: cadetblue;
+    top: 0;
+    width: 100%;
+    position: fixed;
+    z-index: 1000;
+    color: black;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px; /* Weniger Innenabstand, wenn ein Bild verwendet wird */
+    text-align: center; /* Text bleibt zentriert */
+}
+
+.header-image {
+    max-width: 100%; /* Verhindert, dass das Bild größer als der Header wird */
+    height: auto; /* Hält das Seitenverhältnis des Bildes bei */
+    display: block; /* Entfernt Lücken unter dem Bild */
+    margin: 0 auto; /* Zentriert das Bild */
+}
+
 /* Container for the entire login block (including the button) */
 .login-container {
     background-color: #ffffff; /* White background for the box */
