@@ -3,12 +3,45 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f5f5f5;
+    height: 100vh; /* Höhe des Viewports */
     display: flex; /* Aktiviert Flexbox */
-    justify-content: center; /* Zentriert horizontal */
+    flex-direction: column; /* Setzt Flex-Elemente untereinander */
+    justify-content: flex-start; /* Stellt sicher, dass der Header oben bleibt */
     align-items: center; /* Zentriert vertikal */
     height: 100vh; /* Höhe des Viewports */
 
+}
 
+/* Banner-Stil */
+.header {
+    background-color: #cccccc; /* Banner-Farbe */
+    color: black;              /* Textfarbe */
+    text-align: center;        /* Text zentrieren */
+    padding: 2px 0;           /* Weniger Padding für einen schmaleren Header */
+    font-family: Arial, sans-serif; /* Schriftart */
+    font-size: 12px;           /* Textgröße */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Schattierung für ein weiches Aussehen */
+    position: relative;       /* Position relativ setzen, damit er nicht fixiert ist */
+    top: 0;                    /* Setzt den Banner ganz nach oben */
+    left: 0;                   /* Setzt den Banner ganz nach links */
+    width: 100%;               /* Macht den Banner so breit wie der Bildschirm */
+    z-index: 1000;             /* Stellt sicher, dass der Banner über anderen Elementen liegt */
+    border-bottom-left-radius: 15px;  /* Abrunden der unteren linken Ecke */
+    border-bottom-right-radius: 15px; /* Abrunden der unteren rechten Ecke */
+}
+
+/* Optional: Effekt bei Hover */
+.header:hover {
+    background-color: mediumturquoise; /* Etwas dunkler bei Hover */
+    transition: background-color 0.3s ease; /* Sanfter Übergang */
+}
+
+
+.header-image {
+    max-width: 100%; /* Verhindert, dass das Bild größer als der Header wird */
+    height: auto; /* Hält das Seitenverhältnis des Bildes bei */
+    display: block; /* Entfernt Lücken unter dem Bild */
+    margin: 0 auto; /* Zentriert das Bild */
 }
 
 .register-container {
@@ -19,11 +52,41 @@ body {
     width: 100%;
     max-width: 400px; /* Limit the width */
     text-align: center; /* Center the text inside the container */
+    margin-top: 20px; /* Verhindert, dass der Container direkt an den Header anschlägt */
+}
 
+.user-type-select-button {
+    background-color: #14B8D5;
+    color: black;
+    border-radius: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.user-type-select-button:hover {
+    background-color: #0d94b0;
+}
+
+.create-button {
+    background-color: #45DABA;
+    color: black;
+    font-size: 18px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    width: 80%; /* Button takes 80% of the container's width */
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto; /* Falls notwendig für zusätzliche Zentrierung (ist wohl nötig) */
+}
+
+.create-button:hover {
+    background-color: teal;
 }
 
 form div {
-    margin-bottom: 15px;
+    margin-bottom: 15px; /* Space between fields */
+    text-align: left; /* Align text to the left */
 }
 
 h1 {
@@ -33,5 +96,3 @@ h1 {
 #tutor-qualification-attribute-list .attribute-item {
     margin-left: 20px; /* Adjust this value to control the shift */
 }
-
-

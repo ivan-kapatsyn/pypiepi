@@ -68,7 +68,14 @@
         }
     </script>
 </head>
+
 <body>
+
+    <div class="header">
+        <h1>TutorMe</h1>
+       <!-- <img src="pypiepi/html/css/banner.png" class="header-image" alt="TutorMe"> --> <!-- ???????? -->
+    </div>
+
     <div class="register-container">
         <h1>Register New User</h1>
         <form method="POST">
@@ -91,7 +98,7 @@
             </div>
             <div>
                 {{ form.usertype.label }}<br>
-                {{ form.usertype(id="usertype", onchange="toggleFields()") }}
+                {{ form.usertype(class="user-type-select-button", id="usertype", onchange="toggleFields()") }} <!-- button on its own -->
             </div>
 
             <!-- Dynamic Fields -->
@@ -132,10 +139,9 @@
             </div>
 
             <div>
-                {{ form.submit() }}
+                {{ form.submit(class="create-button") }} <!-- button on its own -->
             </div>
         </form>
     </div>
 </body>
 </html>
-

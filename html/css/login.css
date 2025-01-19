@@ -10,17 +10,30 @@ body {
     height: 100vh; /* Full height of the viewport */
 }
 
+/* Banner-Stil */
 .header {
-    background-color: cadetblue;
-    top: 0;
-    width: 100%;
-    position: fixed;
-    z-index: 1000;
-    color: black;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 10px; /* Weniger Innenabstand, wenn ein Bild verwendet wird */
-    text-align: center; /* Text bleibt zentriert */
+    background-color: #cccccc; /* Banner-Farbe */
+    color: black;              /* Textfarbe */
+    text-align: center;        /* Text zentrieren */
+    padding: 2px 0;           /* Oben und unten etwas Abstand */
+    font-family: Arial, sans-serif; /* Schriftart */
+    font-size: 15px;           /* Textgröße */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Schattierung für ein weiches Aussehen */
+    position: fixed;           /* Fixiert den Banner oben */
+    top: 0;                    /* Setzt den Banner ganz nach oben */
+    left: 0;                   /* Setzt den Banner ganz nach links */
+    width: 100%;               /* Macht den Banner so breit wie der Bildschirm */
+    z-index: 1000;             /* Stellt sicher, dass der Banner über anderen Elementen liegt */
+    border-bottom-left-radius: 15px;  /* Abrunden der unteren linken Ecke */
+    border-bottom-right-radius: 15px; /* Abrunden der unteren rechten Ecke */
 }
+
+/* Optional: Effekt bei Hover */
+.header:hover {
+    background-color: mediumturquoise; /* Etwas dunkler bei Hover */
+    transition: background-color 0.3s ease; /* Sanfter Übergang */
+}
+
 
 .header-image {
     max-width: 100%; /* Verhindert, dass das Bild größer als der Header wird */
@@ -105,7 +118,7 @@ button {
 }
 
 .register-button:hover {
-    background-color: #e04e2f; /* Darker color on hover */
+    background-color: mediumpurple; /* Darker color on hover */
 }
 
 /* Link for registration */
