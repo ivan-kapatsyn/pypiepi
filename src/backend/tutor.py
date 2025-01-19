@@ -1,10 +1,8 @@
 from typing import List, Optional, Dict
 
 from src.backend.user import User
-from src.utils.data_base_util import DataBaseUtil
-from src.utils.password_utils import PasswordUtils
 from src.backend.course import Course
-from src.backend.evaluation import Evaluation
+from src.utils.data_base_util import DataBaseUtil
 from src.backend.qualification import Qualification
 from src.backend.exceptions import DuplicationError, WrongTokenError
 
@@ -18,12 +16,12 @@ class Tutor(User):
                  first_name: str, last_name: str,
                  remember_me: bool = False, bio: str = None, user_type: str = "Tutor",
                  qualifications: Optional[List[Qualification]] = None,
-                 active_courses: Optional[List[Course]] = None,
-                 evaluation: Optional[Evaluation] = None):
+                 active_courses: Optional[List["Course"]] = None,
+                 evaluations: Optional[List["Evaluation"]] = None):
         super().__init__(user_id, username, password, first_name, last_name, bio, remember_me, user_type)
         self.qualifications = qualifications or []
         self.active_courses = active_courses or []
-        self.evaluation = evaluation or Evaluation()
+        self.evaluations = evaluations or []
 
     @classmethod
     def register_new_tutor(cls, username: str, password: str, first_name: str, last_name: str,
@@ -98,4 +96,7 @@ class Tutor(User):
             logger.warning(f"No tutor data for user '{user_id}'.")
             return {}
 
-        return {"user_type": "Tutor", "qualifications": [Qualification(q) for q in tutor_data[1]]}
+        return {"user_type": "Tutor", "qualifications": [Qualification(q) for q in tutor_data[1]],
+                "active_courses": Course.get_course_by_user_id(user_id)}
+
+print(Tutor.get_user_by_id("430112d4d154a44f").active_courses[0].name)

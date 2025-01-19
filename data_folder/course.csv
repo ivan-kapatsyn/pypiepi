@@ -1,5 +1,2 @@
-course_id,user_id,date,start_time,end_time,room_nr,title,description,max_number_students,evaluation
-
-
-
-
+course_ID,user_id,name,qualifications,room_id,schedule,max_participants,description
+f61985b87284171a,430112d4d154a44f,Math couse for begginers,Math,e9c8f4da22c45c77,Mon9-12,25,Easy math course

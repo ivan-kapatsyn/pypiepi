@@ -817,7 +817,7 @@ class DataBaseUtil:
         if not os.path.exists(csv_directory):
             raise FileNotFoundError(f"The directory '{csv_directory}' does not exist.")
 
-        table_order = ["tokens", "users", "student", "tutor", "course", "studentincourse"]
+        table_order = ["tokens", "users", "student", "tutor", "room", "course", "announcement", "studentincourse"]
 
         file_to_table_map = {
             os.path.splitext(file_name)[0]: os.path.join(csv_directory, file_name)
