@@ -88,7 +88,7 @@ class TestCourse(unittest.TestCase):
         course = Course.get_course_by_id(course_id)
         self.assertIsNone(course)
 
-    def test_get_course_by_user_id_success(self):
+    def test_get_courses_by_user_id_success(self):
         user_id = "b365cd8f07cd0520"
 
         course_id_1 = Course.add_new_course(
@@ -109,14 +109,14 @@ class TestCourse(unittest.TestCase):
             max_participants=30
         )
 
-        courses = Course.get_course_by_user_id(user_id)
+        courses = Course.get_courses_by_user_id(user_id)
 
         self.assertEqual(len(courses), 2)
         self.assertEqual(courses[0].user_id, user_id)
         self.assertEqual(courses[1].user_id, user_id)
 
-    def test_get_course_by_user_id_no_courses(self):
-        courses = Course.get_course_by_user_id("non_existent_user")
+    def test_get_courses_by_user_id_no_courses(self):
+        courses = Course.get_courses_by_user_id("non_existent_user")
         self.assertEqual(len(courses), 0)
 
 
