@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 
+from src.backend.exceptions import DuplicationError, WrongTokenError
 from src.backend.qualification import Qualification
 from src.backend.tutor import Tutor
 from src.ui.forms.register_new_user import RegisterNewUser
@@ -11,6 +12,7 @@ class RegisterRoutes:
     @staticmethod
     @main_bp.route('/new_user', methods=['GET', 'POST'])
     def new_user():
+        register_page = r'register.html'
         form = RegisterNewUser()
         if form.validate_on_submit():
             data = form.data
@@ -34,7 +36,14 @@ class RegisterRoutes:
                 else:
                     additional_info['qualifications'] = [Qualification(name) for name in additional_info['qualifications']]
                 data = {**data, **additional_info}
-                user_id = Tutor.register_new_user(**data)
+                try:
+                    user_id = Tutor.register_new_user(**data)
+                except DuplicationError as e:
+                    flash(str(e), 'danger')
+                    return render_template(register_page, form=form, error_message=str(e))
+                except WrongTokenError as e:
+                    flash(str(e), 'danger')
+                    return render_template(register_page, form=form, error_message=str(e))
             elif user_type == 'admin':
                 additional_info['admin_info_1'] = request.form.get('admin_info_1')
                 additional_info['admin_info_2'] = request.form.get('admin_info_2')
@@ -44,5 +53,5 @@ class RegisterRoutes:
                 user_id = 1
             return redirect(url_for(f'{user_type}.personal_bio', user_id=user_id))
 
-        register_page = r'register.html'
+
         return render_template(register_page, form=form)

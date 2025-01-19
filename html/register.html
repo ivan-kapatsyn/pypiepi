@@ -69,6 +69,11 @@
     </script>
 </head>
 <body>
+{% if error_message is not none %}
+    <div style="padding: 20px; color: red;">
+        {{ error_message }}
+    </div>
+{% endif %}
 <form method="POST">
     {{ form.hidden_tag() }}
     <div>
