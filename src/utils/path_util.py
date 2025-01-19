@@ -28,3 +28,9 @@ class PathUtil:
         static_path = EnvVariableUtil.get_env_variable('DATA_RELATIVE_PATH')
         return Path(project_path, static_path)
 
+    @staticmethod
+    def get_json_path():
+        project_path = PathUtil.get_project_path()
+        static_path = EnvVariableUtil.get_env_variable('DATA_RELATIVE_PATH')
+        return Path(project_path, static_path) / r'database_structure.json'
+
