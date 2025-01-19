@@ -4,8 +4,8 @@ from src.backend.course import Course
 from src.backend.evaluation import Evaluation
 from src.backend.qualification import Qualification
 from src.backend.room import Room
-from src.backend.time_window import TimeWindow
-from src.backend.user import User, Tutor
+from src.backend.tutor import Tutor
+from src.backend.user import User
 from src.ui.forms.create_new_course import CourseCreationForm
 
 
@@ -52,8 +52,8 @@ class CoursesRoutes:
                 ("Lilit", 'Applied Informatics')
             ],
             schedule=[
-                TimeWindow(day='Mon', start_time='9AM', end_time='10AM'),
-                TimeWindow(day='Thu', start_time='9AM', end_time='10AM')
+                'Mon 9AM-10AM',
+                'Thu 9AM-10AM'
             ],
             location=Room('Prov.103'),
             evaluation=Evaluation([(8.9, 'it was nice')]),  # Todo specify the structure of Evaluation
