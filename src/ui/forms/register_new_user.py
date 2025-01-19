@@ -6,10 +6,10 @@ from wtforms.validators import DataRequired, Length
 
 class RegisterNewUser(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=25)])
-    name = StringField('First name', validators=[DataRequired(), Length(min=4, max=25)])
-    surname = StringField('Last name', validators=[DataRequired(), Length(min=4, max=25)])
+    first_name = StringField('First name', validators=[DataRequired(), Length(min=4, max=25)])
+    last_name = StringField('Last name', validators=[DataRequired(), Length(min=4, max=25)])
     password = PasswordField('Enter your password', validators=[DataRequired()])
-    usertype = SelectField(
+    user_type = SelectField(
         'User Type',
         choices=[('student', 'Student'), ('tutor', 'Tutor'), ('admin', 'Admin')],
         validators=[DataRequired()]
