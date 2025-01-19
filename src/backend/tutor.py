@@ -24,7 +24,7 @@ class Tutor(User):
         self.evaluations = evaluations or []
 
     @classmethod
-    def register_new_tutor(cls, username: str, password: str, first_name: str, last_name: str,
+    def register_new_user(cls, username: str, password: str, first_name: str, last_name: str,
                           token: int, qualifications: List[Qualification], remember_me: bool = False) -> str:
         """
         Registers a new tutor with validation.
