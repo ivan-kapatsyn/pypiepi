@@ -110,7 +110,7 @@
     </script>
     <script>
         function add_new_course(userId) {
-            fetch('/courses/new/' + userId, {
+            fetch('/course/new/' + userId, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -120,7 +120,7 @@
                     throw new Error('Network response was not ok');
                 }
 
-                window.location.href = '/courses/new/' + userId;
+                window.location.href = '/course/new/' + userId;
             });
 
         }
