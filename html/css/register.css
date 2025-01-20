@@ -44,6 +44,16 @@ body {
     margin: 0 auto; /* Zentriert das Bild */
 }
 
+/* Eingabefelder mit abgerundeten Ecken */
+.input-field {
+    border-radius: 10px; /* Abgerundete Ecken für die Textboxen */
+    padding: 10px; /* Etwas Padding für den Inhalt */
+    border: 1px solid #ccc; /* Einfache Randlinie */
+    width: 100%; /* Breite auf 100% setzen (falls gewünscht) */
+    height: 30px;
+    box-sizing: border-box; /* Box-Modell anpassen */
+}
+
 .register-container {
     background-color: #ffffff; /* White background for the box */
     border-radius: 10px; /* Rounded corners */
