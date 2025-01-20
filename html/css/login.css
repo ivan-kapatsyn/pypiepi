@@ -42,6 +42,18 @@ body {
     margin: 0 auto; /* Zentriert das Bild */
 }
 
+/* Eingabefelder mit abgerundeten Ecken */
+.input-field {
+    border-radius: 10px; /* Abgerundete Ecken für die Textboxen */
+    padding: 10px; /* Etwas Padding für den Inhalt */
+    border: 1px solid #ccc; /* Einfache Randlinie */
+    width: 100%; /* Breite auf 100% setzen (falls gewünscht) */
+    box-sizing: border-box; /* Box-Modell anpassen */
+}
+
+
+
+
 /* Container for the entire login block (including the button) */
 .login-container {
     background-color: #ffffff; /* White background for the box */
@@ -64,19 +76,6 @@ h1 {
 form div {
     margin-bottom: 15px; /* Space between fields */
     text-align: left; /* Align text to the left */
-}
-
-/* Input fields */
-input[type="text"],
-input[type="password"],
-button {
-    width: 100%; /* Make input fields take full width */
-    padding: 10px; /* Padding inside the fields */
-    margin-top: 5px; /* Small margin above the input fields */
-    font-size: 14px; /* Font size */
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 5px; /* Rounded corners */
-    box-sizing: border-box; /* Include padding and border in the width */
 }
 
 /* Button styling for Login Button */

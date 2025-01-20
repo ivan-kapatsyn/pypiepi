@@ -82,19 +82,19 @@
             {{ form.hidden_tag() }}
             <div>
                 {{ form.username.label }}<br>
-                {{ form.username(size=32) }}
+                {{ form.username(class="input-field", size=32, id="username-field") }}
             </div>
             <div>
                 {{ form.name.label }}<br>
-                {{ form.name(size=32) }}
+                {{ form.name(class="input-field", size=32, id="name-field") }}
             </div>
             <div>
                 {{ form.surname.label }}<br>
-                {{ form.surname(size=32) }}
+                {{ form.surname(class="input-field", size=32, id="surname-field") }}
             </div>
             <div>
                 {{ form.password.label }}<br>
-                {{ form.password(size=32) }}
+                {{ form.password(class="input-field", size=32, id="password-field") }}
             </div>
             <div>
                 {{ form.usertype.label }}<br>
