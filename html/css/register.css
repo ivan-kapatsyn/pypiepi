@@ -17,17 +17,21 @@ body {
     background-color: #cccccc; /* Banner-Farbe */
     color: black;              /* Textfarbe */
     text-align: center;        /* Text zentrieren */
-    padding: 2px 0;           /* Weniger Padding für einen schmaleren Header */
+    padding: 2px 0;           /* Oben und unten etwas Abstand */
     font-family: Arial, sans-serif; /* Schriftart */
-    font-size: 12px;           /* Textgröße */
+    font-size: 15px;           /* Textgröße */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Schattierung für ein weiches Aussehen */
-    position: relative;       /* Position relativ setzen, damit er nicht fixiert ist */
+    position: fixed;           /* Fixiert den Banner oben */
     top: 0;                    /* Setzt den Banner ganz nach oben */
     left: 0;                   /* Setzt den Banner ganz nach links */
     width: 100%;               /* Macht den Banner so breit wie der Bildschirm */
+    height: 10%;
     z-index: 1000;             /* Stellt sicher, dass der Banner über anderen Elementen liegt */
     border-bottom-left-radius: 15px;  /* Abrunden der unteren linken Ecke */
     border-bottom-right-radius: 15px; /* Abrunden der unteren rechten Ecke */
+    display: flex; /* Aktiviert Flexbox */
+    align-items: center; /* Vertikal zentrieren */
+    justify-content: space-between; /* Text zentrieren und Bild nach links */
 }
 
 /* Optional: Effekt bei Hover */
@@ -39,9 +43,15 @@ body {
 
 .header-image {
     max-width: 100%; /* Verhindert, dass das Bild größer als der Header wird */
+    max-height: 100%;
     height: auto; /* Hält das Seitenverhältnis des Bildes bei */
-    display: block; /* Entfernt Lücken unter dem Bild */
-    margin: 0 auto; /* Zentriert das Bild */
+    align-content: start;
+
+}
+
+.header-text {
+    flex-grow: 1; /* Hiermit wird der Text mittig ausgerichtet */
+    text-align: center; /* Text im Container zentrieren */
 }
 
 /* Eingabefelder mit abgerundeten Ecken */
@@ -62,7 +72,7 @@ body {
     width: 100%;
     max-width: 400px; /* Limit the width */
     text-align: center; /* Center the text inside the container */
-    margin-top: 20px; /* Verhindert, dass der Container direkt an den Header anschlägt */
+    margin-top: 100px; /* Verhindert, dass der Container direkt an den Header anschlägt */
 }
 
 .user-type-select-button {
@@ -101,6 +111,10 @@ form div {
 
 h1 {
     color: #333;
+}
+
+.qualifications_fields{
+    align-self: flex-start;
 }
 
 #tutor-qualification-attribute-list .attribute-item {
