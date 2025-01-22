@@ -29,7 +29,11 @@ class RegisterRoutes:
                 # TODO add Student.register_new_user()
                 user_id = 1
             elif user_type == 'tutor':
-                additional_info['token'] = int(request.form.get('tutor_info_1'))
+                try:
+                    additional_info['token'] = int(request.form.get('tutor_info_1'))
+                except ValueError as e:
+                    flash(str(e), 'danger')
+                    return render_template(register_page, form=form, error_message="Token has to be a number")
                 additional_info['qualifications'] = request.form.getlist('tutor_info_2[]')
                 if len(additional_info['qualifications']) == 0 and additional_info['qualifications'][0] == '':
                     additional_info['qualifications'] = []
