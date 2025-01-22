@@ -87,6 +87,11 @@ body {
     background-color: #0d94b0;
 }
 
+.qualifications_input{
+    align-self: flex-start;
+    margin-left: -20px;
+}
+
 .create-button {
     background-color: #45DABA;
     color: black;
@@ -113,9 +118,7 @@ h1 {
     color: #333;
 }
 
-.qualifications_fields{
-    align-self: flex-start;
-}
+
 
 #tutor-qualification-attribute-list .attribute-item {
     margin-left: 20px; /* Adjust this value to control the shift */
