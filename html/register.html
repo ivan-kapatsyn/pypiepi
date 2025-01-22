@@ -72,8 +72,8 @@
 <body>
 
     <div class="header">
-        <h1>TutorMe</h1>
-       <!-- <img src="pypiepi/html/css/banner.png" class="header-image" alt="TutorMe"> --> <!-- ???????? -->
+       <img src="{{ url_for('static', filename='banner.png') }}" class="header-image" alt="TutorMe">
+        <h1 class="header-text">TutorMe</h1>
     </div>
 
     <div class="register-container">
@@ -115,7 +115,7 @@
             </div>
             <div id="tutor-field-2" style="display: none;">
                 <label>Qualifications:</label>
-                <div id="tutor-qualification-attribute-list">
+                <div id="tutor-qualification-attribute-list" class="qualifications_fields">
                     <div class="attribute-item">
                         <input type="text" name="tutor_info_2[]" class="tutor-info" placeholder="Enter a qualification">
                         <button type="button" onclick="removeTutorAttribute(this)">X</button>
