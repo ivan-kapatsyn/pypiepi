@@ -1,6 +1,8 @@
 import unittest
 from datetime import datetime
 from src.backend.announcement import Announcement
+from src.backend.course import Course
+from src.backend.qualification import Qualification
 
 
 class TestAnnouncement(unittest.TestCase):
@@ -24,7 +26,8 @@ class TestAnnouncement(unittest.TestCase):
         self.assertIsNone(announcement)
 
     def test_get_announcements_by_course_id(self):
-        course_id = "f61985b87284171a"
+        course_id = Course.add_new_course("test", "430112d4d154a44f", Qualification("Math"),
+                                          "1e06e1ddca76f5d4", "Mon9-12", 25)
         message_1 = "First announcement."
         message_2 = "Second announcement."
 
