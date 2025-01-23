@@ -66,19 +66,26 @@
         });
     </script>
 </head>
+
 <body>
+
+    <div class="header">
+       <img src="{{ url_for('static', filename='banner.png') }}" class="header-image" alt="TutorMe">
+        <h1 class="header-text">TutorMe</h1>
+    </div>
+
     <div class="login-container">
         <h1>Login</h1>
         <form method="POST">
             {{ form.hidden_tag() }}
             <div>
                 {{ form.username.label }}<br>
-                {{ form.username(size=20, id="username-field") }}
+                {{ form.username(class="input-field", size=20, id="username-field") }}
                 <div id="suggestions"></div>
             </div>
             <div>
                 {{ form.password.label }}<br>
-                {{ form.password(size=32) }}
+                {{ form.password(class="input-field", size=32, id="password-field") }}
             </div>
             <div>
                 <!-- Hinzufügen der Klasse 'login-button' für den Login-Button -->
