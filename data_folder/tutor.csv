@@ -1,6 +1,5 @@
-user_id,qualification
-14d099c161cf3bea,"[""Computer Science""]"
-928930d566c50b2d,"[""Data Science""]"
-96a5850368da614c,"[""physics""]"
-5018f42297a6c369,"[""Information Systems""]"
-c86b672c1d8fd8ec,"[""Mathematics""]"
+user_id,qualification,active_course
+14d099c161cf3bea,"[""Computer Science""]","[""3dbcded69cd4c5c1""]"
+928930d566c50b2d,"[""Data Science""]","[""fad8840b055e7ecf""]"
+96a5850368da614c,"[""physics""]","[""10e4251ea8a88b3c""]"
+5018f42297a6c369,"[""Information Systems""]","[""f785d13af172f421""]"

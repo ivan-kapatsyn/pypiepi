@@ -817,7 +817,7 @@ class DataBaseUtil:
         if not os.path.exists(csv_directory):
             raise FileNotFoundError(f"The directory '{csv_directory}' does not exist.")
 
-        table_order = ["tokens", "users", "student", "tutor", "course", "studentincourse"]
+        table_order = ["tokens", "users", "student", "tutor", "course", "studentincourse", "announcement","evaluation"]
 
         file_to_table_map = {
             os.path.splitext(file_name)[0]: os.path.join(csv_directory, file_name)
@@ -843,22 +843,6 @@ class DataBaseUtil:
             else:
                 print(f"No data file found for table '{table_name}', skipping...")
 
-
-
-    def insert_to_csv(self, table_name, data, column_types):
-        """
-        Speichert die Daten in eine CSV-Datei. Wenn die Datei existiert, werden die neuen Daten angehängt.
-        """
-        file_path = f"{table_name}.csv"
-
-        # Data in einen DataFrame konvertieren
-        df = pd.DataFrame(data)
-
-        # CSV schreiben: Falls die Datei existiert, anhängen; andernfalls schreiben
-        if os.path.exists(file_path):
-            df.to_csv(file_path, mode='a', index=False, header=False)  # Header nicht erneut schreiben
-        else:
-            df.to_csv(file_path, mode='w', index=False, header=True)  # Datei neu erstellen mit Header
 
 
     def __enter__(self):

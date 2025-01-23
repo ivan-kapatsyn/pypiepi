@@ -39,7 +39,6 @@
         {"column_name": "title", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "description", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "max_number_students", "data_type": "INTEGER", "constraints": "NOT NULL" },
-        {"column_name": "feedbacks", "data_type": "JSONB"},
         {"column_name": "evaluation", "data_type": "FLOAT", "constraints": "NOT NULL" }
       ]
     },
@@ -48,8 +47,7 @@
       "columns": [
         {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY REFERENCES course(course_ID) ON DELETE CASCADE" },
         {"column_name": "author_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES student(user_ID)" },
-        {"column_name": "date", "data_type": "DATE", "constraints": "NOT NULL" },
-        {"column_name": "time", "data_type": "TIME", "constraints": "NOT NULL" },
+        {"column_name": "created_at", "data_type": "TIMESTAMP", "constraints": "NOT NULL" },
         {"column_name": "feedback", "data_type": "VARCHAR(200)" },
         {"column_name": "grade", "data_type": "FLOAT", "constraints": "NOT NULL" }
       ]
@@ -58,9 +56,8 @@
       "table_name": "Announcement",
       "columns": [
         {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY REFERENCES course(course_ID) ON DELETE CASCADE" },
-        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES tutor(user_ID)" },
-        {"column_name": "date", "data_type": "DATE", "constraints": "NOT NULL" },
-        {"column_name": "time", "data_type": "TIME", "constraints": "NOT NULL" },
+        {"column_name": "tutor_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES tutor(user_ID)" },
+        {"column_name": "created_at", "data_type": "TIMESTAMP", "constraints": "NOT NULL" },
         {"column_name": "announcement", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" }
       ]
     },
