@@ -92,7 +92,7 @@ class Course:
         return cls(**course_data)
 
     @classmethod
-    def get_course_by_user_id(cls, user_id: str) -> List["Course"]:
+    def get_courses_by_user_id(cls, user_id: str) -> List["Course"]:
         """
         Retrieves all courses associated with a given user ID.
 
