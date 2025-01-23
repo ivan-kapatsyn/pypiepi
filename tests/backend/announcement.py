@@ -24,22 +24,18 @@ class TestAnnouncement(unittest.TestCase):
         self.assertIsNone(announcement)
 
     def test_get_announcements_by_course_id(self):
-        course_id = "f61985b87284171a"
-        message_1 = "First announcement."
-        message_2 = "Second announcement."
-
-        announcement_id_1 = Announcement.add_new_announcement(course_id, message_1)
-        announcement_id_2 = Announcement.add_new_announcement(course_id, message_2)
-
+        course_id = "39104442b2660b56"
         announcements = Announcement.get_announcements_by_course_id(course_id)
 
         self.assertEqual(len(announcements), 2)
 
         self.assertEqual(announcements[0].course_id, course_id)
-        self.assertEqual(announcements[0].message, message_1)
+        self.assertIsInstance(announcements[0].date, datetime)
+        self.assertEqual(announcements[0].message, "First announcement.")
 
         self.assertEqual(announcements[1].course_id, course_id)
-        self.assertEqual(announcements[1].message, message_2)
+        self.assertIsInstance(announcements[0].date, datetime)
+        self.assertEqual(announcements[1].message, "Second announcement.")
 
     def test_get_announcements_by_course_id_empty(self):
         course_id = "course_not_found"

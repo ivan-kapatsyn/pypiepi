@@ -1,4 +1,5 @@
 from typing import List, Optional, Dict
+from random import randint
 
 from src.backend.user import User
 from src.backend.course import Course
@@ -59,6 +60,16 @@ class Tutor(User):
         logger.info(f"Tutor registered successfully with username: {username}")
         return user_id
 
+    @classmethod
+    def generate_token(cls) -> int:
+        existing_tokens = cls._get_tokens()
+        while True:
+            new_token = randint(100, 999)
+            if new_token not in existing_tokens:
+                db = DataBaseUtil()
+                db.insert_one("tokens", {"token": new_token}, "token")
+                return new_token
+
     @staticmethod
     def _save_tutor(user_id: str, qualifications: List[Qualification]) -> None:
         tutor_data = {
@@ -97,4 +108,4 @@ class Tutor(User):
             return {}
 
         return {"user_type": "Tutor", "qualifications": [Qualification(q) for q in tutor_data[1]],
-                "active_courses": Course.get_course_by_user_id(user_id)}
+                "active_courses": Course.get_courses_by_user_id(user_id)}

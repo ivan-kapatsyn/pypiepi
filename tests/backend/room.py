@@ -1,11 +1,12 @@
 import unittest
+from secrets import token_hex
 from src.backend.room import Room
 
 
 class TestRoom(unittest.TestCase):
 
     def test_add_new_room_success(self):
-        room_name = "Lecture Hall 1"
+        room_name = token_hex(8)
         room_id = Room.add_new_room(room_name)
 
         room = Room.get_room_by_id(room_id)

@@ -1,4 +1,5 @@
 import unittest
+from secrets import token_hex
 from src.backend.tutor import Tutor
 from src.backend.qualification import Qualification
 from src.backend.exceptions import DuplicationError, WrongTokenError
@@ -6,16 +7,20 @@ from src.backend.exceptions import DuplicationError, WrongTokenError
 class TestTutorDatabase(unittest.TestCase):
 
     def test_register_new_tutor_success(self):
-        token = 111
-        user_id = Tutor.register_new_tutor("tutor.new","newpassword",
-                                           "New","Tutor", token,
+        token = Tutor.generate_token()
+        test_username = token_hex(8)
+
+        user_id = Tutor.register_new_tutor(test_username,"newpassword",
+                                           "Test","Tutor", token,
                                            [Qualification("Math")])
         self.assertIsNotNone(user_id)
 
         tutor = Tutor.get_user_by_id(user_id)
         self.assertIsNotNone(tutor)
-        self.assertEqual(tutor.username, "tutor.new")
+        self.assertEqual(tutor.username, test_username)
         self.assertEqual(tutor.qualifications[0].name, "Math")
+
+        self.assertNotIn(token, Tutor._get_tokens())
 
     def test_register_new_tutor_duplicate_username(self):
         with self.assertRaises(DuplicationError):
@@ -29,7 +34,7 @@ class TestTutorDatabase(unittest.TestCase):
             )
 
     def test_register_new_tutor_invalid_token(self):
-            with self.assertRaises(WrongTokenError):
+        with self.assertRaises(WrongTokenError):
                 Tutor.register_new_tutor(
                     "invalid.token",
                     "password",
@@ -40,9 +45,11 @@ class TestTutorDatabase(unittest.TestCase):
                 )
 
     def test_register_new_tutor_removes_token(self):
-        token = 123
+        token = Tutor.generate_token()
+        test_username = token_hex(8)
+
         Tutor.register_new_tutor(
-            "tutor.removetoken",
+            test_username,
             "removetoken",
             "Remove",
             "Token",
