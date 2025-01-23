@@ -1,4 +1,5 @@
 import unittest
+from secrets import token_hex
 from src.backend.exceptions import DuplicationError
 from src.backend.user import User
 
@@ -18,13 +19,14 @@ class TestUserDatabase(unittest.TestCase):
         self.assertIsNone(user)
 
     def test_register_new_user_success(self):
-        user = User.register_new_user("new.user", "newpassword", "New", "User", remember_me=True)
+        test_username = token_hex(8)
+        user = User.register_new_user(test_username, "newpassword", "Test", "User", remember_me=True)
         self.assertIsNotNone(user)
-        self.assertEqual(user.username, "new.user")
+        self.assertEqual(user.username, test_username)
 
-        saved_user = User.authenticate("new.user", "newpassword")
+        saved_user = User.authenticate(test_username, "newpassword")
         self.assertIsNotNone(saved_user)
-        self.assertEqual(saved_user.username, "new.user")
+        self.assertEqual(saved_user.username, test_username)
 
     def test_register_new_user_duplicate(self):
         with self.assertRaises(DuplicationError):
