@@ -8,7 +8,7 @@ import pandas as pd
 from pathlib import Path
 from pandas.core.interchange import column
 from psycopg2._psycopg import cursor
-from typing import Any, Dict, List, Tuple, Callable
+from typing import Any, Dict, List, Tuple
 from psycopg2.extras import DictRow
 from src.utils.env_variable_util import EnvVariableUtil
 from src.utils.path_util import PathUtil
@@ -842,6 +842,23 @@ class DataBaseUtil:
                     print(f"Error processing {os.path.basename(file_path)}: {e}")
             else:
                 print(f"No data file found for table '{table_name}', skipping...")
+
+
+
+    def insert_to_csv(self, table_name, data, column_types):
+        """
+        Speichert die Daten in eine CSV-Datei. Wenn die Datei existiert, werden die neuen Daten angehängt.
+        """
+        file_path = f"{table_name}.csv"
+
+        # Data in einen DataFrame konvertieren
+        df = pd.DataFrame(data)
+
+        # CSV schreiben: Falls die Datei existiert, anhängen; andernfalls schreiben
+        if os.path.exists(file_path):
+            df.to_csv(file_path, mode='a', index=False, header=False)  # Header nicht erneut schreiben
+        else:
+            df.to_csv(file_path, mode='w', index=False, header=True)  # Datei neu erstellen mit Header
 
 
     def __enter__(self):
