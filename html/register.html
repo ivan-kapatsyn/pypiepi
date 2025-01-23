@@ -75,14 +75,15 @@
         <h1 class="header-text">TutorMe</h1>
     </div>
 
-    {% if error_message is not none %}
-        <div style="padding: 20px; color: red;">
-            {{ error_message }}
-        </div>
-    {% endif %}
+
 
     <div class="register-container">
         <h1>Register New User</h1>
+        {% if error_message is not none %}
+        <div style="padding: 20px; color: red;">
+            {{ error_message }}
+        </div>
+        {% endif %}
         <form method="POST">
             {{ form.hidden_tag() }}
             <div>
@@ -90,20 +91,20 @@
                 {{ form.username(class="input-field", size=32, id="username-field") }}
             </div>
             <div>
-                {{ form.name.label }}<br>
-                {{ form.name(class="input-field", size=32, id="name-field") }}
+                {{ form.first_name.label }}<br>
+                {{ form.first_name(class="input-field", size=32, id="first_name-field") }}
             </div>
             <div>
-                {{ form.surname.label }}<br>
-                {{ form.surname(class="input-field", size=32, id="surname-field") }}
+                {{ form.last_name.label }}<br>
+                {{ form.last_name(class="input-field", size=32, id="last_name-field") }}
             </div>
             <div>
                 {{ form.password.label }}<br>
                 {{ form.password(class="input-field", size=32, id="password-field") }}
             </div>
             <div>
-                {{ form.usertype.label }}<br>
-                {{ form.usertype(class="user-type-select-button", id="usertype", onchange="toggleFields()") }} <!-- button on its own -->
+                {{ form.user_type.label }}<br>
+                {{ form.user_type(class="user-type-select-button", id="usertype", onchange="toggleFields()") }} <!-- button on its own -->
             </div>
 
             <!-- Dynamic Fields -->

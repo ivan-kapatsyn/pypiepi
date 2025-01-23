@@ -10,7 +10,7 @@ class TestTutorDatabase(unittest.TestCase):
         token = Tutor.generate_token()
         test_username = token_hex(8)
 
-        user_id = Tutor.register_new_tutor(test_username,"newpassword",
+        user_id = Tutor.register_new_user(test_username,"newpassword",
                                            "Test","Tutor", token,
                                            [Qualification("Math")])
         self.assertIsNotNone(user_id)
@@ -24,7 +24,7 @@ class TestTutorDatabase(unittest.TestCase):
 
     def test_register_new_tutor_duplicate_username(self):
         with self.assertRaises(DuplicationError):
-            Tutor.register_new_tutor(
+            Tutor.register_new_user(
                 "mary.stuart",
                 "newpassword",
                 "Mary",
@@ -35,7 +35,7 @@ class TestTutorDatabase(unittest.TestCase):
 
     def test_register_new_tutor_invalid_token(self):
         with self.assertRaises(WrongTokenError):
-                Tutor.register_new_tutor(
+                Tutor.register_new_user(
                     "invalid.token",
                     "password",
                     "Invalid",
@@ -48,7 +48,7 @@ class TestTutorDatabase(unittest.TestCase):
         token = Tutor.generate_token()
         test_username = token_hex(8)
 
-        Tutor.register_new_tutor(
+        Tutor.register_new_user(
             test_username,
             "removetoken",
             "Remove",
