@@ -97,4 +97,4 @@ class Tutor(User):
             return {}
 
         return {"user_type": "Tutor", "qualifications": [Qualification(q) for q in tutor_data[1]],
-                "active_courses": Course.get_course_by_user_id(user_id)}
+                "active_courses": Course.get_courses_by_user_id(user_id)}
