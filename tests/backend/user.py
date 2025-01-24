@@ -1,54 +1,57 @@
 import unittest
-from unittest.mock import patch
-from src.backend.user import Tutor, Qualification, DuplicationError, WrongTokenError
+from secrets import token_hex
+from src.backend.exceptions import DuplicationError
+from src.backend.user import User
 
+class TestUserDatabase(unittest.TestCase):
 
-class TestRegisterNewTutor(unittest.TestCase):
+    def test_authenticate_success(self):
+        user = User.authenticate("john.doe", "newpassword")
+        self.assertIsNotNone(user)
+        self.assertEqual(user.username, "john.doe")
 
-    @patch('src.backend.user.register_token_exists')
-    @patch('src.backend.user.remove_register_token')
-    @patch('src.backend.user.save_user')
-    @patch('src.backend.user.save_tutor')
-    def test_register_new_tutor_success(self, mock_save_tutor, mock_save_user,
-                                        mock_remove_register_token, mock_register_token_exists):
-        username = "new_tutor"
-        first_name = "John"
-        last_name = "Doe"
-        password = "password123"
-        token = 123
-        qualifications = [Qualification("Math")]
+    def test_authenticate_incorrect_password(self):
+        user = User.authenticate("john.doe", "wrongpassword")
+        self.assertIsNone(user)
 
-        user_id = Tutor.register_new_tutor(username, first_name, last_name, password,
-                                           token, qualifications)
+    def test_authenticate_user_not_found(self):
+        user = User.authenticate("nonexistent", "password123")
+        self.assertIsNone(user)
 
-        self.assertTrue(user_id)
-        self.assertIsInstance(user_id, str)
-        mock_register_token_exists.assert_called_once_with(token)
-        mock_remove_register_token.assert_called_once_with(token)
-        mock_save_user.assert_called_once()
-        mock_save_tutor.assert_called_once()
+    def test_register_new_user_success(self):
+        test_username = token_hex(8)
+        user = User.register_new_user(test_username, "newpassword", "Test", "User", remember_me=True)
+        self.assertIsNotNone(user)
+        self.assertEqual(user.username, test_username)
 
-    def test_register_new_tutor_duplicate_username(self):
-        username = "user1"
-        first_name = "John"
-        last_name = "Doe"
-        password = "password123"
-        tutor_register_number = 123
-        qualifications = [Qualification("Math")]
+        saved_user = User.authenticate(test_username, "newpassword")
+        self.assertIsNotNone(saved_user)
+        self.assertEqual(saved_user.username, test_username)
 
+    def test_register_new_user_duplicate(self):
         with self.assertRaises(DuplicationError):
-            Tutor.register_new_tutor(username, first_name, last_name, password, tutor_register_number, qualifications)
+            User.register_new_user("john.doe", "newpassword", "John", "Doe")
 
-    def test_register_new_tutor_invalid_token(self):
-        username = "new_tutor"
-        first_name = "John"
-        last_name = "Doe"
-        password = "password123"
-        tutor_register_number = 99999
-        qualifications = [Qualification("Math")]
+    def test_get_user_by_id_success(self):
+        user = User.get_user_by_id("299edbe2695a53ed")
+        self.assertIsNotNone(user)
+        self.assertEqual(user.username, "john.doe")
 
-        with self.assertRaises(WrongTokenError):
-            Tutor.register_new_tutor(username, first_name, last_name, password, tutor_register_number, qualifications)
+    def test_get_user_by_id_not_found(self):
+        user = User.get_user_by_id("nonexistent_id")
+        self.assertIsNone(user)
+
+    def test_search_saved_users(self):
+        users = User.search_saved_users("john")
+        self.assertEqual(len(users), 1)
+        self.assertTrue(all("john" in user.username for user in users))
+
+    def test_toggle_remember_me(self):
+        user = User.get_user_by_id("a70030991cfada5a")
+        initial_status = user.remember_me
+        user.toggle_remember_me()
+        updated_user = User.get_user_by_id("a70030991cfada5a")
+        self.assertNotEqual(initial_status, updated_user.remember_me)
 
 if __name__ == "__main__":
     unittest.main()

@@ -28,16 +28,32 @@
       ]
     },
     {
+      "table_name": "room",
+      "columns": [
+        {"column_name": "room_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
+        {"column_name": "name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" }
+      ]
+    },
+    {
       "table_name": "course",
       "columns": [
         {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
-        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES tutor(user_ID)" },
-        {"column_name": "schedule", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
-        {"column_name": "room_nr", "data_type": "VARCHAR(50)", "constraints": "NOT NULL" },
+        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES users(user_ID)" },
         {"column_name": "title", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
-        {"column_name": "description", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
-        {"column_name": "max_number_students", "data_type": "INTEGER", "constraints": "NOT NULL" },
-        {"column_name": "evaluation", "data_type": "FLOAT", "constraints": "NOT NULL" }
+        {"column_name": "qualifications", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
+        {"column_name": "room_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES room(room_ID)" },
+        {"column_name": "schedule", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
+        {"column_name": "max_participants", "data_type": "INTEGER", "constraints": "NOT NULL" },
+        {"column_name": "description", "data_type": "VARCHAR(200)" }
+      ]
+    },
+    {
+      "table_name": "announcement",
+      "columns": [
+        {"column_name": "announcement_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
+        {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES course(course_ID)" },
+        {"column_name": "date", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
+        {"column_name": "message", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" }
       ]
     },
     {
@@ -69,7 +85,7 @@
     {
       "table_name": "tokens",
       "columns": [
-        {"column_name": "token", "data_type": "INTEGER", "constraints": "NOT NULL" }
+        {"column_name": "token", "data_type": "INTEGER", "constraints": "PRIMARY KEY" }
       ]
     }
   ]

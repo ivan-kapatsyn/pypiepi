@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Personal Bio</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='tutor_personal_info.css') }}">
+    <meta charset="UTF-8">
+    <title>Course info</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='course_info_tutor.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
@@ -41,19 +42,25 @@
     </script>
     <script>
         function enableEdit(name) {
-            const container = document.getElementById('data-container');
             const nameSpan = document.getElementById('data-' + name);
             const editButton = document.getElementById('edit-button-' + name);
 
             // Replace name with an input field
             const currentValue = nameSpan.innerText;
-            nameSpan.innerHTML = `<input id="edit-input" value="${currentValue}" style="width: 70%;">`;
+            nameSpan.innerHTML = `<input id="edit-input" value="" style="width: 70%;">`;
 
             // Replace "Edit" button with "Ok" and "Cancel"
-            editButton.outerHTML = `
-            <button id="ok-button" onclick="saveData('${name}')">Ok</button>
-            <button id="cancel-button" onclick="cancelEdit('${currentValue}', '${name}')">Cancel</button>
-        `;
+            if (name === 'announcement') {
+                editButton.outerHTML = `
+                <button id="ok-button" onclick="makeAnAnnouncement()">Ok</button>
+                <button id="cancel-button" onclick="cancelEdit('${currentValue}', '${name}')">Cancel</button>
+            `;
+            } else {
+                editButton.outerHTML = `
+                <button id="ok-button" onclick="saveData('${name}')">Ok</button>
+                <button id="cancel-button" onclick="cancelEdit('${currentValue}', '${name}')">Cancel</button>
+            `;
+            }
         }
 
         function saveData(name) {
@@ -100,29 +107,19 @@
 
         function resetButtons(name) {
             // Replace "Ok" and "Cancel" with the "Edit" button
-            const container = document.getElementById('data-container');
-            const editButtonHtml = `<button id="edit-button-${name}" onclick="enableEdit('${name}')">Edit</button>`;
-            container.querySelector('#ok-button').outerHTML = editButtonHtml;
-            if (document.getElementById('cancel-button')) {
-                document.getElementById('cancel-button').remove();
+            if (name === 'announcement') {
+                const container = document.getElementById('announcements_container');
+                container.querySelector('#ok-button').outerHTML = `<button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>`;
+                if (document.getElementById('cancel-button')) {
+                    document.getElementById('cancel-button').remove();
+                }
+            } else {
+                const container = document.getElementById('data-container');
+                container.querySelector('#ok-button').outerHTML = `<button id="edit-button-${name}" onclick="enableEdit('${name}')">Edit</button>`;
+                if (document.getElementById('cancel-button')) {
+                    document.getElementById('cancel-button').remove();
+                }
             }
-        }
-    </script>
-    <script>
-        function add_new_course(userId) {
-            fetch('/course/new/' + userId, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                window.location.href = '/course/new/' + userId;
-            });
-
         }
     </script>
     <script>
@@ -141,14 +138,84 @@
         // Ensure DOM is loaded before calling the function
         document.addEventListener('DOMContentLoaded', applyRatingColors);
     </script>
+    <script>
+        function deleteCourse() {
+            // Call the Flask endpoint with the new data
+            fetch("/course/delete_course/{{ course_id }}/{{ user_id }}", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = "/tutor/{{ user_id }}/personal_bio"
+                }
+            });
+        }
+    </script>
+    <script>
+        function makeAnAnnouncement() {
+            // Call the Flask endpoint with the new data
+            const message = document.getElementById('edit-input').value;
+            fetch("/course/add_announcement/{{ course_id }}/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    'message': message
+                })
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                if (response.status === 204) {
+                    return {'success': true}; // Handle empty responses
+                }
+
+                return response.json(); // Otherwise, parse JSON
+            }).then(data => {
+                if (data.success) {
+                    const container = document.getElementById('announcements_container');
+                    container.querySelector('#ok-button').outerHTML = `<button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>`;
+                    if (document.getElementById('cancel-button')) {
+                        document.getElementById('cancel-button').remove();
+                    }
+                    if (document.getElementById('edit-input')) {
+                        document.getElementById('edit-input').remove();
+                    }
+                    if (document.getElementById('data-announcement')) {
+                        document.getElementById('data-announcement').remove();
+                    }
+                    const editButton = document.getElementById('edit-button-announcement');
+                    editButton.outerHTML = `
+                        <span>- ${message}</span><br>
+                        <span id="data-announcement"></span>
+                        ${editButton.outerHTML}
+                    `;
+                } else {
+                    const container = document.getElementById('announcements_container');
+                    container.querySelector('#ok-button').outerHTML = `<button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>`;
+                    if (document.getElementById('cancel-button')) {
+                        document.getElementById('cancel-button').remove();
+                    }
+                    alert('Failed to update data!');
+
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Failed to update data!');
+            });
+
+        }
+    </script>
 </head>
 <body>
 <header class="d-flex justify-content-center align-items-center p-3 bg-light border-bottom">
-    <!-- Logo -->
     <div class="header-logo">
         <img src="{{ url_for('static', filename='banner.png') }}" alt="Logo" style="height: 50px;">
     </div>
-    <!-- Login Info Dropdown -->
     <div class="dropdown ms-auto">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -168,9 +235,9 @@
         </ul>
     </div>
 </header>
-<h3>Personal Info</h3>
+<h2>General Info</h2>
 <div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
-    {% for item in data %}
+    {% for item in course_data %}
     <div>
         <span style="font-weight: bold;">{{ item.name }}:</span>
         <span id="data-{{ item.name }}">{{ item.value }}</span>
@@ -178,54 +245,34 @@
     </div>
     {% endfor %}
 </div>
-<h3>Schedule</h3>
-<table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
-    <thead>
-    <tr>
-        <th>Time</th>
-        <th>Monday</th>
-        <th>Tuesday</th>
-        <th>Wednesday</th>
-        <th>Thursday</th>
-        <th>Friday</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for time in times %}
-    <tr>
-        <td>{{ time }}</td>
-        {% for day in days %}
-        <td>
-            {% for event in events %}
-            {% if event.day == day and event.time == time %}
-            <div onclick="window.location.href='{{ event.url }}'">
-                {{ event.name }}
-            </div>
-            {% endif %}
-            {% endfor %}
-        </td>
-        {% endfor %}
-    </tr>
+<h2>Listeners</h2>
+<div id="students_container">
+    {% for student in students_list %}
+    <div>
+        <span>{{ student.i }})  {{ student.first_name }} {{ student.last_name }}: </span>
+        <span style="font-style: italic">{{ student.study_program }}</span>
+    </div>
     {% endfor %}
-    </tbody>
-</table>
-<h3>Rating</h3>
+</div>
+<h2>Rating</h2>
 <div>
     <h4>Average rating:</h4>
     <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
 </div>
 <div>
-    <h4>Comments:</h4>
-
+    <h4>Comments:</h4><br>
     {% for feedback in feedback_list %}
     <span>{{ feedback.i }}) {{ feedback.name }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
     {% endfor %}
 </div>
-<footer>
-    <div>
-        <button id="new course" onclick="add_new_course('{{ user_id }}')">Add new course</button>
-    </div>
-</footer>
-
+<h2>Announcements</h2>
+<div id="announcements_container">
+    {% for announcement in announcements %}
+    <span>- {{ announcement }}</span><br>
+    {% endfor %}
+    <span id="data-announcement"></span>
+    <button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>
+</div>
+<button onclick="deleteCourse()">Delete the course</button>
 </body>
 </html>

@@ -1,3 +1,4 @@
 course_id,tutor_id,created_at,announcement
-d4f1293aa67b387b,39104442b2660b56,2025-01-23 17:54:03.532310,First announcement.
-bc6cb315bda647bf,39104442b2660b56,2025-01-23 17:54:03.532310,Second announcement
+announcement_ID,course_ID,date,message
+d4f1293aa67b387b,c86b672c1d8fd8ec,2025-01-23 17:54:03.532310,First announcement.
+bc6cb315bda647bf,c86b672c1d8fd8ec,2025-01-23 17:54:03.532310,Second announcement

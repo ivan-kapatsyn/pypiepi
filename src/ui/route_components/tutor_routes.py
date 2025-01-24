@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify
 
-from src.backend.user import Tutor
+from src.backend.tutor import Tutor
 
 
 class TutorRoutes:
@@ -28,13 +28,17 @@ class TutorRoutes:
             {"name": "First Name", "value": tutor.first_name},
 
         ]
-
+        average_rating, feedbacks = TutorRoutes.__construct_feedback_data([
+            (6.7, 'It was ok'),
+            (9.1, "I liked it")
+        ])
         personal_bio_page = r'tutor_personal_info.html'
         return render_template(personal_bio_page, username=tutor.username,
                                user_id=user_id, remember_me = tutor.remember_me,
                                data=data,
                                events=courses,
-                               days=TutorRoutes.TIMETABLE_DAYS, times=TutorRoutes.TIMETABLE_TIME)
+                               days=TutorRoutes.TIMETABLE_DAYS, times=TutorRoutes.TIMETABLE_TIME,
+                               average_rating=average_rating,feedback_list=feedbacks)
 
     @staticmethod
     @main_bp.route('/<user_id>/update-data', methods=['GET', 'POST'])
@@ -53,3 +57,18 @@ class TutorRoutes:
         finally:
             status = 204 if success else 500
             return jsonify(success=success), status
+
+    @staticmethod
+    def __construct_feedback_data(feedbacks):
+        # Todo replace it when Student is implemented
+        result = []
+        average = 0
+        for i, feedback in enumerate(feedbacks):
+            result.append({
+                'i': i + 1,
+                'rating': feedback[0],
+                'name': 'Anonymous',
+                'comment': feedback[1]
+            })
+            average += feedback[0]
+        return average/len(feedbacks), result

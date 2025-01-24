@@ -1,9 +1,4 @@
-user_ID,schedule,room_nr,title,description,max_number_students,evaluation,course_id
-14d099c161cf3bea,Tue10-12,Room A,Python 101,A course for beginners that covers the basics of programming in Python.,10,,3dbcded69cd4c5c1
-928930d566c50b2d,Mon14-16,Room B,Analysis for beginners,the title says all,10,9.7,fad8840b055e7ecf
-96a5850368da614c,Fri9-11,Room C,Web development with HTML and CSS,A course that covers the basics of web development with HTML and CSS.,20,6.9,10e4251ea8a88b3c
-5018f42297a6c369,Wed14-16,13:00:00,15:00:00,Room D,Introduction to artificial intelligence,A course that covers the basics of artificial intelligence and machine learning.,15,,f785d13af172f421
-
-430112d4d154a44f,Math couse for begginers,Math,e9c8f4da22c45c77,Mon9-12,25,Easy math course,f61985b87284171a
-b365cd8f07cd0520,Advanced Python,Computer Science,e9c8f4da22c45c77,Wed9-12,25,Advanced Python programming course,dc295cc4dd09d5b1
-b365cd8f07cd0520,Advanced Java,Computer Science,e9c8f4da22c45c77,Tue9-12,25,Advanced Java course,39104442b2660b56
+course_ID,user_id,title,qualifications,room_id,schedule,max_participants,description
+f61985b87284171a,430112d4d154a44f,Math couse for begginers,Math,e9c8f4da22c45c77,Mon9-12,25,Easy math course
+dc295cc4dd09d5b1,b365cd8f07cd0520,Advanced Python,Computer Science,e9c8f4da22c45c77,Wed9-12,25,Advanced Python programming course
+39104442b2660b56,b365cd8f07cd0520,Advanced Java,Computer Science,e9c8f4da22c45c77,Tue9-12,25,Advanced Java course

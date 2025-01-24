@@ -10,6 +10,61 @@ body {
     height: 100vh; /* Full height of the viewport */
 }
 
+/* Banner-Stil */
+.header {
+    background-color: #cccccc; /* Banner-Farbe */
+    color: black;              /* Textfarbe */
+    text-align: center;        /* Text zentrieren */
+    padding: 2px 0;           /* Oben und unten etwas Abstand */
+    font-family: Arial, sans-serif; /* Schriftart */
+    font-size: 15px;           /* Textgröße */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Schattierung für ein weiches Aussehen */
+    position: fixed;           /* Fixiert den Banner oben */
+    top: 0;                    /* Setzt den Banner ganz nach oben */
+    left: 0;                   /* Setzt den Banner ganz nach links */
+    width: 100%;               /* Macht den Banner so breit wie der Bildschirm */
+    height: 10%;
+    z-index: 1000;             /* Stellt sicher, dass der Banner über anderen Elementen liegt */
+    border-bottom-left-radius: 15px;  /* Abrunden der unteren linken Ecke */
+    border-bottom-right-radius: 15px; /* Abrunden der unteren rechten Ecke */
+    display: flex; /* Aktiviert Flexbox */
+    align-items: center; /* Vertikal zentrieren */
+    justify-content: space-between; /* Text zentrieren und Bild nach links */
+
+}
+
+/* Optional: Effekt bei Hover */
+.header:hover {
+    background-color: mediumturquoise; /* Etwas dunkler bei Hover */
+    transition: background-color 0.3s ease; /* Sanfter Übergang */
+}
+
+
+.header-image {
+    max-width: 100%; /* Verhindert, dass das Bild größer als der Header wird */
+    max-height: 100%;
+    height: auto; /* Hält das Seitenverhältnis des Bildes bei */
+    align-content: start;
+
+}
+
+.header-text {
+    flex-grow: 1; /* Hiermit wird der Text mittig ausgerichtet */
+    text-align: center; /* Text im Container zentrieren */
+}
+
+/* Eingabefelder mit abgerundeten Ecken */
+.input-field {
+    border-radius: 10px; /* Abgerundete Ecken für die Textboxen */
+    padding: 10px; /* Etwas Padding für den Inhalt */
+    border: 1px solid #ccc; /* Einfache Randlinie */
+    width: 100%; /* Breite auf 100% setzen (falls gewünscht) */
+    box-sizing: border-box; /* Box-Modell anpassen */
+}
+
+
+
+
 /* Container for the entire login block (including the button) */
 .login-container {
     background-color: #ffffff; /* White background for the box */
@@ -32,19 +87,6 @@ h1 {
 form div {
     margin-bottom: 15px; /* Space between fields */
     text-align: left; /* Align text to the left */
-}
-
-/* Input fields */
-input[type="text"],
-input[type="password"],
-button {
-    width: 100%; /* Make input fields take full width */
-    padding: 10px; /* Padding inside the fields */
-    margin-top: 5px; /* Small margin above the input fields */
-    font-size: 14px; /* Font size */
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 5px; /* Rounded corners */
-    box-sizing: border-box; /* Include padding and border in the width */
 }
 
 /* Button styling for Login Button */
@@ -86,7 +128,7 @@ button {
 }
 
 .register-button:hover {
-    background-color: #e04e2f; /* Darker color on hover */
+    background-color: mediumpurple; /* Darker color on hover */
 }
 
 /* Link for registration */

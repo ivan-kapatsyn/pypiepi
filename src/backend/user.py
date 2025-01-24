@@ -1,235 +1,207 @@
-# TODO data_base_util Dummy
-from src.backend.data_base_util import find_user_by_username, save_user, users_with_remember_me, get_user_ids, \
-    find_user_by_id, register_token_exists, remove_register_token, save_tutor, get_tutor_ids, find_tutor_by_user_id, \
-    edit_remember_me
-
-from src.utils.password_utils import PasswordUtils
-from src.backend.evaluation import Evaluation
-from src.backend.time_window import TimeWindow
-from src.backend.qualification import Qualification
-from src.backend.exceptions import DuplicationError, WrongTokenError
-
-from typing import List, Optional
+# TODO remove later, for testing
+""" User Passwords
+arthur.morgan: password123
+john.doe: newpassword
+jane.doe: mypassword
+john.marston: mypasswordisbetter
+mary.stuart: stupidpassword
+"""
+from typing import List, Optional, Dict, Any
 from secrets import token_hex
+
+from src.utils.data_base_util import DataBaseUtil
+from src.utils.password_utils import PasswordUtils
+from src.backend.exceptions import DuplicationError
+
+# Configure logging
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 class User:
-    def __init__(self, user_id: str, username: str, password: str, remember_me: bool = False, bio: str = None,
-                 first_name: str = None, last_name: str = None):
+    def __init__(self, user_id: str, username: str, password: str, first_name: str, last_name: str,
+                bio: str = None, remember_me: bool = False, user_type: str = None):
         self.user_id = user_id
         self.username = username
         self.password = password
-        self.remember_me = remember_me
-        # TODO replace with Student/Tutor info
-        self.bio = bio
         self.first_name = first_name
         self.last_name = last_name
+        self.bio = bio or None
+        self.remember_me = remember_me
+        self.user_type = user_type or None
 
     @classmethod
     def authenticate(cls, username: str, password: str) -> Optional["User"]:
         """
         Authenticate a user by username and password.
+
+        Args:
+            username (str): The user's username.
+            password (str): The user's password.
+
         Returns:
-            User instance if successful, None otherwise.
+            User: The authenticated user object, or None if authentication fails.
         """
-        user_data = find_user_by_username(username)
-        if not user_data or not PasswordUtils.verify_password(password, user_data["password"]):
-            logger.warning(f"Authentication failed for username: {username}")
+        user_data = cls._find_user_by_username(username)
+        if user_data is None:
+            logger.warning(f"Authentication failed: User '{username}' not found.")
             return None
 
-        return cls(
-            user_id=user_data["userID"],
-            username=user_data["username"],
-            password=user_data["password"],
-            remember_me=user_data.get("remember_me", False),
-            bio=user_data.get("bio", None),
-            first_name=user_data.get("first_name", None),
-            last_name=user_data.get("last_name", None),
-        )
+        user = cls(*user_data)
+        if not PasswordUtils.verify_password(password, user.password):
+            logger.warning(f"Authentication failed: Incorrect password for user '{username}'.")
+            return None
+
+        logger.info(f"User '{username}' authenticated successfully.")
+        return user
 
     @classmethod
-    def register_new_user(cls, username: str, password: str, remember_me: bool = False) -> "User":
+    def register_new_user(cls, username: str, password: str, first_name: str, last_name: str,
+                          remember_me: bool = False) -> "User":
         """
-        Registers a new user.
-        Raises:
-            DuplicationError: If the username already exists.
+        Register a new user.
+
+        Args:
+            username (str): The username of the new user.
+            password (str): The plaintext password for the new user.
+            first_name (str): The user's first name.
+            last_name (str): The user's last name.
+            remember_me (bool): The user's remember me option.
+
         Returns:
-            User instance of the new user.
+            User: The newly registered user object.
+
+        Raises:
+            DuplicationError: If a user with the given username already exists.
         """
-        if find_user_by_username(username):
-            raise DuplicationError(f"User with username '{username}' already exists.")
+        if cls._find_user_by_username(username) is not None:
+            raise DuplicationError(f"Registration failed: User '{username}' already exists.")
 
         hashed_password = PasswordUtils.hash_password(password)
         user_id = cls._generate_unique_user_id()
 
-        new_user_data = {
-            "userID": user_id,
-            "username": username,
-            "password": hashed_password,
-            "remember_me": remember_me
-        }
-
-        save_user(new_user_data)
-        logger.info(f"User registered successfully with username: {username}")
-
-        return cls(
-            user_id=user_id,
-            username=username,
-            password=hashed_password,
-            remember_me=remember_me,
-        )
-
-    @classmethod
-    def search_for_a_saved_users(cls, username_substr: str) -> List["User"]:
-        """
-        Returns a list of matching User instances.
-        """
-        users_data = users_with_remember_me()
-
-        # TODO remake on the data base side
-        matching_users = [user for user in users_data if user['username'].startswith(username_substr.lower())]
-
-        return [cls(user_id=user["userID"], username=user["username"], password=user["password"],
-                    remember_me=user.get("remember_me", False), bio=user.get("bio", None),
-                    first_name=user.get("first_name", None), last_name=user.get("last_name", None))
-                for user in matching_users]
-
-    @classmethod
-    def _generate_unique_user_id(cls) -> str:
-        """
-        Returns a random 16-character string.
-        """
-        user_ids = cls.get_ids()
-        while True:
-            user_id = token_hex(8)
-            if user_id not in user_ids:
-                return user_id
-
-    @classmethod
-    def get_ids(cls) -> set:
-        """
-        Retrieves all user IDs.
-        """
-        return set(get_user_ids())
+        cls._save_user(user_id, username, password, first_name, last_name, remember_me)
+        logger.info(f"User '{username}' registered successfully.")
+        return cls(user_id, username, hashed_password, first_name, last_name, remember_me=remember_me)
 
     @classmethod
     def get_user_by_id(cls, user_id: str) -> Optional["User"]:
         """
         Retrieve a user by their ID.
+
+        Args:
+            user_id (str): The user's ID.
+
+        Returns:
+            User: The user object, or None if no matching user is found.
         """
-        # TODO remake it to retrieve a User instance by its id in the db
-        user_data = find_user_by_id(user_id)
-        if not user_data:
+        user_data = cls._find_user_by_id(user_id)
+        if user_data is None:
+            logger.warning(f"No user found with ID '{user_id}'.")
             return None
 
-        tutor_data = find_tutor_by_user_id(user_id)
-        if tutor_data:
-            return Tutor(
-                user_id=user_data["userID"],
-                username=user_data["username"],
-                password=user_data["password"],
-                remember_me=user_data.get("remember_me", False),
-                bio=user_data.get("bio", None),
-                first_name=user_data.get("firstName", None),
-                last_name=user_data.get("lastName", None),
-                tutor_id=tutor_data["tutorID"],
-                qualifications=tutor_data.get("qualifications", []),
-                available_time=tutor_data.get("available_time", []),
-                active_courses=tutor_data.get("active_courses", []),
-                evaluation=tutor_data.get("evaluation", None),
-            )
-
-        return cls(
-            user_id=user_data["userID"],
-            username=user_data["username"],
-            password=user_data["password"],
-            remember_me=user_data.get("remember_me", False),
-            bio=user_data.get("bio", None),
-            first_name=user_data.get("first_name", None),
-            last_name=user_data.get("last_name", None)
-        )
-
-    def toggle_saved_button(self):
-        """
-        Toggles the 'remember_me' field between True and False.
-        """
-        self.remember_me = not self.remember_me
-        edit_remember_me(self.user_id, self.remember_me)
-
-class Tutor(User):
-    # TODO attributes based on the issue and JSON data base structure, might change later
-    def __init__(self, user_id: str, username: str, password: str,
-                 tutor_id: str, first_name: str, last_name: str,
-                 remember_me: bool = False, bio: str = None,
-                 qualifications: Optional[List["Qualification"]] = None,
-                 available_time: Optional[List["TimeWindow"]] = None,
-                 active_courses: Optional[List["Course"]] = None,
-                 evaluation: Optional["Evaluation"] = None):
-        super().__init__(user_id, username, password, remember_me, bio, first_name, last_name)
-        self.tutor_id = tutor_id
-        self.qualifications = qualifications or []
-        self.available_time = available_time or []
-        self.active_courses = active_courses or []
-        self.evaluation = evaluation
-
-    @staticmethod
-    def register_new_tutor(username: str, first_name: str, last_name: str, password: str,
-                          tutor_register_number: int, qualifications: List["Qualification"]) -> str:
-        """
-        Register a new tutor with validation and default settings.
-        """
-        if find_user_by_username(username):
-            raise DuplicationError(f"User with username '{username}' already exists.")
-
-        if not register_token_exists(tutor_register_number):
-            raise WrongTokenError(f"Invalid register token '{tutor_register_number}'.")
-        remove_register_token(tutor_register_number)
-
-        available_time = Tutor._default_available_time()
-        evaluation = Evaluation()
-
-        user_id = User._generate_unique_user_id()
         user_data = {
-            "userID": user_id,
-            "username": username,
-            "password": PasswordUtils.hash_password(password),
-            "remember_me": False,
-            "bio": None,
-            "first_name": first_name,
-            "last_name": last_name
+            "user_id": user_data[0],
+            "username": user_data[1],
+            "password": user_data[2],
+            "first_name": user_data[3],
+            "last_name": user_data[4],
+            "bio": user_data[5],
+            "remember_me": user_data[6]
         }
+        user_data.update(cls._extend_fields_by_user_id(user_id))
 
-        tutor_data = {
-            "userID": user_id,
-            "tutorID": User._generate_unique_user_id(),
-            "qualifications": qualifications,
-            "available_time": available_time,
-            "active_courses": None,
-            "evaluation": evaluation
-        }
-
-        save_user(user_data)
-        save_tutor(tutor_data)
-
-        logger.info(f"Tutor registered successfully with username: {username}")
-        return user_id
-
-    @staticmethod
-    def _default_available_time() -> List[TimeWindow]:
-        """
-        Generate default available time for a tutor.
-        """
-        return [TimeWindow(day, "9:00", "18:00")
-                for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]]
+        return cls(**user_data)
 
     @classmethod
-    def get_ids(cls) -> set:
+    def search_saved_users(cls, username_substr: str) -> List["User"]:
         """
-        Retrieves all tutor IDs.
-        """
-        return set(get_tutor_ids())
+        Searches for users whose usernames contain the given substring and have 'remember_me' enabled.
 
-class Student(User):
-    pass
+        Args:
+            username_substr (str): Substring to search for in usernames.
+
+        Returns:
+            List[User]: List of matching user objects.
+        """
+        users = [cls(*user) for user in cls._get_users_with_remember_me()]
+        matching_users = [user for user in users if username_substr.lower() in user.username.lower()]
+        return matching_users
+
+    def toggle_remember_me(self) -> None:
+        """
+        Toggle the 'remember_me' status for the current user.
+        """
+        self.remember_me = not self.remember_me
+        self.update_user_values({"remember_me": self.remember_me})
+        logger.info(f"User '{self.username}' updated 'remember_me' to {self.remember_me}.")
+
+    def update_user_values(self, updates: Dict[str, Any]) -> None:
+        """
+        Updates fields for a user in the database.
+
+        Args:
+            updates (Dict[str, Any]): Dictionary of fields and values to update.
+        """
+        db = DataBaseUtil()
+        db.update_one("users", "user_ID", self.user_id, updates)
+        logger.info(f"Updated user data: {updates}")
+
+    @staticmethod
+    def _find_user_by_username(username: str) -> Optional[List]:
+        db = DataBaseUtil()
+        try:
+            data = db.load_one("users", "username", username)
+        except Exception as e:
+            data = None
+        return data
+
+    @staticmethod
+    def _find_user_by_id(user_id: str) -> Optional[List]:
+        db = DataBaseUtil()
+        try:
+            data = db.load_one("users", "user_ID", user_id)
+        except Exception as e:
+            data = None
+        return data
+
+    @staticmethod
+    def _save_user(user_id: str, username: str, password: str, first_name: str, last_name: str,
+                   remember_me: bool = False) -> None:
+        user_data = {
+            "user_ID": user_id,
+            "username": username,
+            "password": password,
+            "first_name": first_name,
+            "last_name": last_name,
+            "remember_me": remember_me
+        }
+        db = DataBaseUtil()
+        db.insert_one("users", user_data, "user_ID")
+
+    @staticmethod
+    def _get_users_with_remember_me() -> List[Dict]:
+        db = DataBaseUtil()
+        data = db.load_many("users", "remember_me", [True])
+        return data
+
+    @classmethod
+    def _generate_unique_user_id(cls) -> str:
+        existing_ids = cls._get_ids()
+        while True:
+            user_id = token_hex(8)
+            if user_id not in existing_ids:
+                return user_id
+
+    @classmethod
+    def _get_ids(cls) -> set:
+        db = DataBaseUtil()
+        data = {user[0] for user in db.load_many("users")}
+        return data
+
+    @staticmethod
+    def _extend_fields_by_user_id(user_id: str) -> Dict:
+        """
+        Placeholder for extending user fields.
+        """
+        return {}

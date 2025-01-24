@@ -20,7 +20,7 @@ class LoginRoutes:
     def get_suggestions():
         query = request.args.get('query', '')
         if query:
-            suggestions: List[User] = User.search_for_a_saved_users(query)
+            suggestions: List[User] = User.search_saved_users(query)
         else:
             suggestions = []
         return jsonify([{
@@ -43,15 +43,5 @@ class LoginRoutes:
                     flash('Invalid username or password', 'danger')
             if form.register_new_user.data:
                 return redirect(url_for('register.new_user'))
-        # TODO extract the path from the utils
         login_page = r'login.html'
         return render_template(login_page, form=form)
-
-    @staticmethod
-    @main_bp.route('/personal_bio/<user_id>')
-    def personal_bio(user_id):
-        user = User.get_user_by_id(user_id)
-
-        personal_bio_page = r'personal_bio.html'
-        # Todo remake bio when implementing Student and Tutor functionality
-        return render_template(personal_bio_page, username=user.username, bio=f"This is {user.bio}'s page")
