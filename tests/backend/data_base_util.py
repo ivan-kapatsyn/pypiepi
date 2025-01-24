@@ -49,7 +49,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
                 True
             ],
             [
-                "59d1dcf2a970a9fd",
+                "b365cd8f07cd0520",
                 "john.marston",
                 "JDJiJDEyJDgxaXUuZmdNZXVPcHJCYXQveEwyRS51UVZKZ1UwLnBXVDdIVnBBQVRPdVNQWXluSm45SENT",  # password
                 "john",
