@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify
 
-from src.backend.user import Tutor
+from src.backend.tutor import Tutor
 
 
 class TutorRoutes:
