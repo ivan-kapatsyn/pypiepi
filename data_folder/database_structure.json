@@ -39,7 +39,7 @@
       "columns": [
         {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
         {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES users(user_ID)" },
-        {"column_name": "title", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
+        {"column_name": "name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "qualifications", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "room_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES room(room_ID)" },
         {"column_name": "schedule", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
