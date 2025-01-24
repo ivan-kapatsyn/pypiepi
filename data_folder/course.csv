@@ -1,5 +1,4 @@
-user_ID,date,start_time,end_time,room_nr,title,description,max_number_students,evaluation,course_id
-14d099c161cf3bea,2025-01-20,10:00:00,12:00:00,Room A,Python 101,A course for beginners that covers the basics of programming in Python.,10,,98ce3f859d74d46a
-928930d566c50b2d,2024-10-12,14:00:00,16:00:00,Room B,Analysis for beginners,the title says all,10,9.7,e5e49026549b7374
-96a5850368da614c,2025-10-03,09:00:00,11:00:00,Room C,Web development with HTML and CSS,A course that covers the basics of web development with HTML and CSS.,20,6.9,c5db75b51bae52a5
-5018f42297a6c369,2025-03-04,13:00:00,15:00:00,Room D,Introduction to artificial intelligence,A course that covers the basics of artificial intelligence and machine learning.,15,,fb33f4e584dd98e0
+user_id,title,qualifications,room_id,schedule,max_participants,description,course_id
+430112d4d154a44f,Math couse for begginers,Math,e9c8f4da22c45c77,Mon9-12,25,Easy math course,f61985b87284171a
+b365cd8f07cd0520,Advanced Python,Computer Science,e9c8f4da22c45c77,Wed9-12,25,Advanced Python programming course,dc295cc4dd09d5b1
+b365cd8f07cd0520,Advanced Java,Computer Science,e9c8f4da22c45c77,Tue9-12,25,Advanced Java course,39104442b2660b56
