@@ -128,3 +128,6 @@ h1 {
     margin-left: 20px; /* Adjust this value to control the shift */
 }
 
+.hidden {
+    display: none;
+}
