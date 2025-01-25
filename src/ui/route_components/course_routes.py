@@ -1,9 +1,10 @@
+from datetime import datetime, timedelta
+from typing import List
+
 from flask import Blueprint, Response, render_template, request, redirect, url_for
 
 from src.backend.course import Course
 from src.backend.evaluation import Evaluation
-from src.backend.qualification import Qualification
-from src.backend.room import Room
 from src.backend.tutor import Tutor
 from src.backend.user import User
 from src.ui.forms.create_new_course import CourseCreationForm
@@ -37,28 +38,21 @@ class CoursesRoutes:
 
     @staticmethod
     @main_bp.route('/info/<course_id>/<user_id>')
-    def info(user_id: str, course_id: int):
+    def info(user_id: str, course_id: str):
         user = User.get_user_by_id(user_id)
-        # Todo retrieve Course by Course.get_course_by_id()
-        course = Course(
-            name="Mafia 1",
-            qualification=Qualification("Math"),
-            max_participants=30,
-            tutor=user,  # We assume that we will log in from the tutors perspective
-            students=[
-                ("Lorenz", 'Applied Data Science'),
-                ("Sofia", 'Applied Informatics'),
-                ("Markus", 'Applied Data Science'),
-                ("Lilit", 'Applied Informatics')
-            ],
-            schedule=[
-                'Mon 9AM-10AM',
-                'Thu 9AM-10AM'
-            ],
-            location=Room('Prov.103'),
-            evaluation=Evaluation([(8.9, 'it was nice')]),  # Todo specify the structure of Evaluation
-            announcements=['Today the class is off']  # Todo add date to the announcement
-        )
+        course = Course.get_course_by_id(course_id)
+        student_list = [
+            User.get_user_by_id('430112d4d154a44f'),
+            User.get_user_by_id('a76d22eb46a882d2'),
+            User.get_user_by_id('903d839e277ca6b9'),
+            User.get_user_by_id('99b92b9c4c483607')
+        ]
+        evaluations = [
+            Evaluation(evaluation_id='1', author=User.get_user_by_id('a76d22eb46a882d2'), date=datetime.now(),
+                       numeric_evaluation=8, feedback='It was nice'),
+            Evaluation(evaluation_id='1', author=User.get_user_by_id('99b92b9c4c483607'), date=datetime.now() - timedelta(days=1.0),
+                       numeric_evaluation=6, feedback='It was ok')
+        ]
         # Todo add user_type to the User
         user_type = 'Tutor'
         if user_type == 'Tutor':
@@ -68,9 +62,9 @@ class CoursesRoutes:
                                    username=user.username,
                                    remember_me=user.remember_me,
                                    course_data=CoursesRoutes.__construct_course_data(course),
-                                   students_list=CoursesRoutes.__construct_student_data(course.students),
-                                   average_rating=CoursesRoutes.__get_average_evaluation(course.evaluation.ratings),
-                                   feedback_list=CoursesRoutes.__construct_feedback_data(course.evaluation.ratings),
+                                   students_list=CoursesRoutes.__construct_student_data(student_list),
+                                   average_rating=CoursesRoutes.__get_average_evaluation(evaluations),
+                                   feedback_list=CoursesRoutes.__construct_feedback_data(evaluations),
                                    announcements=course.announcements
                                    )
         elif user_type == 'Student':
@@ -98,9 +92,9 @@ class CoursesRoutes:
         course_data = {
             'Course name': course.name,
             'Qualification': course.qualification.name,
-            'Tutor': course.tutor.first_name + ' ' + course.tutor.last_name,
-            'Room': course.location.name,
-            'Schedule': '\n'.join([f'{x.day} {x.start_time}' for x in course.schedule]),
+            'Tutor': Tutor.get_user_by_id(course.user_id).first_name + ' ' + Tutor.get_user_by_id(course.user_id).last_name,
+            'Room': course.room.name,
+            'Schedule': '\n'.join([x for x in course.schedule]),
             'Max participants': course.max_participants,
         }
         course_data = [{
@@ -110,31 +104,32 @@ class CoursesRoutes:
         return course_data
 
     @staticmethod
-    def __construct_student_data(students):
+    def __construct_student_data(students: List[User]):
         # Todo replace it when Student is implemented
         result = []
         for i, student in enumerate(students):
             result.append({
                 'i': i + 1,
-                'first_name': student[0],
-                'last_name': 'Surname',
-                'study_program': student[1]
+                'first_name': student.first_name,
+                'last_name': student.last_name,
+                'study_program': "Some study program",
             })
         return result
 
     @staticmethod
-    def __get_average_evaluation(evaluation):
-        return sum([x[0] for x in evaluation]) / len(evaluation)
+    def __get_average_evaluation(evaluation: List[Evaluation]):
+        return sum([x.numeric_evaluation for x in evaluation]) / len(evaluation)
 
     @staticmethod
-    def __construct_feedback_data(feedbacks):
+    def __construct_feedback_data(feedbacks: List[Evaluation]):
         # Todo replace it when Student is implemented
         result = []
         for i, feedback in enumerate(feedbacks):
             result.append({
                 'i': i + 1,
-                'rating': feedback[0],
-                'name': 'Anonymous',
-                'comment': feedback[1]
+                'rating': feedback.numeric_evaluation,
+                'name': feedback.author.first_name + ' ' + feedback.author.last_name,
+                'date': feedback.date,
+                'comment': feedback.feedback,
             })
         return result
