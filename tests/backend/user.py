@@ -33,7 +33,7 @@ class TestUserDatabase(unittest.TestCase):
             User.register_new_user("john.doe", "newpassword", "John", "Doe")
 
     def test_get_user_by_id_success(self):
-        user = User.get_user_by_id("299edbe2695a53ed")
+        user = User.get_user_by_id("f67d38dee48d641f")
         self.assertIsNotNone(user)
         self.assertEqual(user.username, "john.doe")
 
@@ -47,10 +47,10 @@ class TestUserDatabase(unittest.TestCase):
         self.assertTrue(all("john" in user.username for user in users))
 
     def test_toggle_remember_me(self):
-        user = User.get_user_by_id("a70030991cfada5a")
+        user = User.get_user_by_id("0fd78ece486e8df4")
         initial_status = user.remember_me
         user.toggle_remember_me()
-        updated_user = User.get_user_by_id("a70030991cfada5a")
+        updated_user = User.get_user_by_id("0fd78ece486e8df4")
         self.assertNotEqual(initial_status, updated_user.remember_me)
 
 if __name__ == "__main__":

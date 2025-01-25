@@ -8,7 +8,7 @@ import pandas as pd
 from pathlib import Path
 from pandas.core.interchange import column
 from psycopg2._psycopg import cursor
-from typing import Any, Dict, List, Tuple, Callable
+from typing import Any, Dict, List, Tuple
 from psycopg2.extras import DictRow
 from src.utils.env_variable_util import EnvVariableUtil
 from src.utils.path_util import PathUtil
@@ -817,7 +817,7 @@ class DataBaseUtil:
         if not os.path.exists(csv_directory):
             raise FileNotFoundError(f"The directory '{csv_directory}' does not exist.")
 
-        table_order = ["tokens", "users", "student", "tutor", "room", "course", "announcement", "studentincourse"]
+        table_order = ["tokens","room","users", "student", "tutor", "course", "studentincourse", "announcement","evaluation"]
 
         file_to_table_map = {
             os.path.splitext(file_name)[0]: os.path.join(csv_directory, file_name)
@@ -842,6 +842,7 @@ class DataBaseUtil:
                     print(f"Error processing {os.path.basename(file_path)}: {e}")
             else:
                 print(f"No data file found for table '{table_name}', skipping...")
+
 
 
     def __enter__(self):
