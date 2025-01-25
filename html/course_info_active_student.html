@@ -156,8 +156,8 @@
             let feedbackDiv = document.getElementById('feedback-form');
             document.getElementById('feedback-button').classList.add('hidden');
             feedbackDiv.innerHTML = `
-                <input type="number" id="grade" placeholder="Enter Grade (1-10)" min="1" max="10" required>
-                <textarea id="message" placeholder="Enter your feedback message" required></textarea>
+                <input type="number" id="grade" placeholder="Enter Grade (1-10)" min="1" max="10" required style="width: 180px"><br>
+                <textarea id="message" placeholder="Enter your feedback message"></textarea><br>
                 <button onclick="submitFeedback()">Submit</button>
             `;
         }
@@ -235,13 +235,12 @@
     <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
 </div>
 <div>
-    <h4>Comments:</h4><br>
+    <h4>Comments:</h4>
     <div id="comments-container">
         {% for feedback in feedback_list %}
         <span>{{ feedback.i }}) {{ feedback.name }} at {{ feedback.date }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
         {% endfor %}
     </div>
-
     <button id="feedback-button" onclick="showFeedbackForm()">Leave a Feedback</button>
     <div id="feedback-form"></div>
 </div>
