@@ -262,7 +262,7 @@
 <div>
     <h4>Comments:</h4><br>
     {% for feedback in feedback_list %}
-    <span>{{ feedback.i }}) {{ feedback.name }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
+    <span>{{ feedback.i }}) {{ feedback.name }} at {{ feedback.date }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
     {% endfor %}
 </div>
 <h2>Announcements</h2>
