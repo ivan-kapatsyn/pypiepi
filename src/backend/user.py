@@ -1,11 +1,3 @@
-# TODO remove later, for testing
-""" User Passwords
-arthur.morgan: password123
-john.doe: newpassword
-jane.doe: mypassword
-john.marston: mypasswordisbetter
-mary.stuart: stupidpassword
-"""
 from typing import List, Optional, Dict, Any
 from secrets import token_hex
 
