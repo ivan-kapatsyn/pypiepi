@@ -54,7 +54,7 @@ class CoursesRoutes:
                        numeric_evaluation=6, feedback='It was ok')
         ]
         # Todo add user_type to the User
-        user_type = 'Tutor'
+        user_type = 'Student'
         if user_type == 'Tutor':
             page = 'course_info_tutor.html'
             return render_template(page, user_id=user_id,
@@ -68,8 +68,24 @@ class CoursesRoutes:
                                    announcements=course.announcements
                                    )
         elif user_type == 'Student':
-            # Todo implement later
-            pass
+            #TODO Replace with if user_id in [x.user_id for x in course.student]:
+            active_student = False
+
+            if active_student:
+                #Todo implement later
+                pass
+            else:
+                page = 'course_info_non_active_student.html'
+                return render_template(page, user_id=user_id,
+                                course_id=course_id,
+                                username=user.username,
+                                remember_me=user.remember_me,
+                                course_data=CoursesRoutes.__construct_course_data(course),
+                                students_list=CoursesRoutes.__construct_student_data(student_list),
+                                average_rating=CoursesRoutes.__get_average_evaluation(evaluations),
+                                feedback_list=CoursesRoutes.__construct_feedback_data(evaluations),
+                                announcements=course.announcements
+                                )
         else:
             # Todo implement later
             pass
@@ -94,8 +110,10 @@ class CoursesRoutes:
             'Qualification': course.qualification.name,
             'Tutor': Tutor.get_user_by_id(course.user_id).first_name + ' ' + Tutor.get_user_by_id(course.user_id).last_name,
             'Room': course.room.name,
-            'Schedule': '\n'.join([x for x in course.schedule]),
+            'Schedule': course.schedule,
             'Max participants': course.max_participants,
+            #Todo replace it with course.max_participants - len(course.students)
+            'Available seats': course.max_participants - 16
         }
         course_data = [{
             'name': key,
@@ -129,7 +147,7 @@ class CoursesRoutes:
                 'i': i + 1,
                 'rating': feedback.numeric_evaluation,
                 'name': feedback.author.first_name + ' ' + feedback.author.last_name,
-                'date': feedback.date,
+                'date': feedback.date.strftime("%d.%m.%Y %H:%M:%S"),
                 'comment': feedback.feedback,
             })
         return result
