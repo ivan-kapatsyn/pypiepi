@@ -6,6 +6,7 @@ from flask import Flask
 from src.ui.route_components.course_routes import CoursesRoutes
 from src.ui.route_components.login_routes import LoginRoutes
 from src.ui.route_components.register_routes import RegisterRoutes
+from src.ui.route_components.student_routes import StudentRoutes
 from src.ui.route_components.tutor_routes import TutorRoutes
 from src.ui.route_components.user_routes import UserRoutes
 from src.utils.path_util import PathUtil
@@ -17,7 +18,7 @@ def create_app():
                 static_folder=PathUtil.get_static_path())
     app.config.from_object('src.ui.configs.configs.Config')
 
-    routes = [LoginRoutes,RegisterRoutes,TutorRoutes,UserRoutes,CoursesRoutes]
+    routes = [LoginRoutes,RegisterRoutes,TutorRoutes,UserRoutes,CoursesRoutes,StudentRoutes]
     for route in routes:
         app.register_blueprint(route.main_bp)
 
