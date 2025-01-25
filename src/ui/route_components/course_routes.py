@@ -93,7 +93,7 @@ class CoursesRoutes:
     @staticmethod
     @main_bp.route('/delete_course/<course_id>/<user_id>')
     def delete_course(course_id: str, user_id: str):
-        # Todo delete course in db
+        Course.get_course_by_id(course_id).delete_course()
         return redirect(url_for('tutor.personal_bio', user_id=user_id))
 
     @staticmethod
