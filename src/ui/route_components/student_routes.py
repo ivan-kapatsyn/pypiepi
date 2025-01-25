@@ -16,6 +16,12 @@ class StudentRoutes:
         return redirect(url_for('course.info', course_id=course_id, user_id=user_id))
 
     @staticmethod
+    @main_bp.route('/drop_course/<course_id>/<user_id>')
+    def drop_course(course_id: str, user_id: str):
+        # Todo remove user_id from the course in db
+        return redirect(url_for('student.personal_bio', user_id=user_id))
+
+    @staticmethod
     @main_bp.route('/leave_feedback/<course_id>/<user_id>', methods=['GET', 'POST'])
     def leave_feedback(course_id: str, user_id: str):
         rating = request.json.get('rating', '')
