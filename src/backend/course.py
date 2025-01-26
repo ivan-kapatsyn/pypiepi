@@ -1,4 +1,5 @@
 from typing import Optional, List
+from datetime import datetime, timedelta
 
 from src.backend.qualification import Qualification
 from src.backend.room import Room
@@ -51,7 +52,6 @@ class Course:
         if Room.get_room_by_id(room_id) is None:
             raise Exception(f"Room {room_id} does not exist.")
 
-        # TODO change schedule logic
         if cls._is_duplicate(room_id, schedule):
             raise DuplicationError(f"A course in room '{room_id}' at schedule '{schedule}' already exists.")
 
@@ -134,14 +134,54 @@ class Course:
         db.delete_one("course", "course_id", self.course_id)
         logger.info(f"Course with ID '{self.course_id}' deleted successfully.")
 
-    @staticmethod
-    def _is_duplicate(room_id: str, schedule: str) -> bool:
+    @classmethod
+    def _is_duplicate(cls, room_id: str, schedule: str) -> bool:
         db = DataBaseUtil()
         courses = db.load_many("course")
-        for course in courses:
-            if course[4] == room_id and schedule == course[5]:
+
+        room_schedules = [
+            course[5] for course in courses if course[4] == room_id
+        ]
+        room_schedules.append(schedule)
+
+        if cls.__check_overlaps(room_schedules):
+            return True
+        return False
+
+    @classmethod
+    def __check_overlaps(cls, schedules: list[str]) -> bool:
+        parsed_schedules = [cls.__parse_range(s) for s in schedules]
+        parsed_schedules.sort(key=lambda x: x[0])
+
+        for i in range(len(parsed_schedules) - 1):
+            current_end = parsed_schedules[i][1]
+            next_start = parsed_schedules[i + 1][0]
+            if current_end > next_start:
                 return True
         return False
+
+    @staticmethod
+    def __parse_range(schedule: str):
+        """
+        Expected format: "Mon 9-12".
+        """
+        try:
+            day_map = {"Mon": 0, "Tue": 1, "Wed": 2, "Thu": 3, "Fri": 4, "Sat": 5, "Sun": 6}
+            day, time_range = schedule.split()
+            start_time, end_time = time_range.split('-')
+
+            reference_date = datetime(2023, 1, 2)  # Monday, January 2, 2023
+            day_offset = timedelta(days=day_map[day])
+
+            if not (0 <= int(start_time) < 24) or not (0 <= int(end_time) < 24):
+                raise ValueError(f"Invalid hour in schedule: {schedule}")
+
+            start_datetime = reference_date + day_offset + timedelta(hours=int(start_time))
+            end_datetime = reference_date + day_offset + timedelta(hours=int(end_time))
+
+            return start_datetime, end_datetime
+        except ValueError as e:
+            raise ValueError(f"Invalid schedule format: {schedule}. Error: {e}")
 
     @staticmethod
     def _find_course_by_id(course_id: str) -> Optional[List]:
