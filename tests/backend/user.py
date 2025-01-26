@@ -53,5 +53,27 @@ class TestUserDatabase(unittest.TestCase):
         updated_user = User.get_user_by_id("0fd78ece486e8df4")
         self.assertNotEqual(initial_status, updated_user.remember_me)
 
+    def test_update_user_values_success(self):
+        user = User.get_user_by_id("4cb33c4df7a6ad3d")
+        updates = {"first_name": "test", "last_name": "name", "bio": "Test bio.", "remember_me": False}
+
+        user.update_user_values(updates)
+        updated_user = User.get_user_by_id("4cb33c4df7a6ad3d")
+
+        self.assertEqual(updated_user.first_name, updates["first_name"])
+        self.assertEqual(updated_user.last_name, updates["last_name"])
+        self.assertEqual(updated_user.bio, updates["bio"])
+        self.assertEqual(updated_user.remember_me, updates["remember_me"])
+
+    def test_update_user_values_invalid_field(self):
+        user = User.get_user_by_id("4cb33c4df7a6ad3d")
+        updates = {"invalid_field": "value"}
+
+        user.update_user_values(updates)
+        updated_user = User.get_user_by_id("4cb33c4df7a6ad3d")
+
+        self.assertEqual(user.__dict__, updated_user.__dict__)
+
+
 if __name__ == "__main__":
     unittest.main()

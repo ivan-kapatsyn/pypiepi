@@ -1,13 +1,6 @@
-# TODO remove later, for testing
-""" User Passwords
-arthur.morgan: password123
-john.doe: newpassword
-jane.doe: mypassword
-john.marston: mypasswordisbetter
-mary.stuart: stupidpassword
-"""
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Tuple
 from secrets import token_hex
+from json import dumps
 
 from src.utils.data_base_util import DataBaseUtil
 from src.utils.password_utils import PasswordUtils
@@ -19,6 +12,9 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 class User:
+    changeable_user_fields = {"password", "first_name", "last_name", "bio", "remember_me"}
+    changeable_type_fields = {}
+
     def __init__(self, user_id: str, username: str, password: str, first_name: str, last_name: str,
                 bio: str = None, remember_me: bool = False, user_type: str = None):
         self.user_id = user_id
@@ -143,9 +139,45 @@ class User:
         Args:
             updates (Dict[str, Any]): Dictionary of fields and values to update.
         """
+        updates = self.__validate_updates(updates)
+
+        user_field_updates, type_specific_updates = self.__split_updates(updates)
+        type_specific_updates = self._prepare_for_jsonb(type_specific_updates)
+
         db = DataBaseUtil()
-        db.update_one("users", "user_ID", self.user_id, updates)
+
+        if user_field_updates:
+            db.update_one("users", "user_ID", self.user_id, user_field_updates)
+
+        if type_specific_updates:
+            db.update_one(self.user_type, "user_ID", self.user_id, type_specific_updates)
+
         logger.info(f"Updated user data: {updates}")
+
+    def __validate_updates(self, updates: Dict[str, Any]) -> Dict[str, Any]:
+        allowed_fields = self.changeable_user_fields.union(self.changeable_type_fields)
+
+        validated_updates = {k: v for k, v in updates.items() if k in allowed_fields}
+
+        invalid_fields = set(updates) - set(validated_updates)
+        if invalid_fields:
+            logger.warning(f"Ignored invalid fields: {invalid_fields}.")
+
+        return validated_updates
+
+    def __split_updates(self, updates: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        type_fields = updates.keys() - self.changeable_user_fields
+
+        user_fields_updates = {k: updates[k] for k in self.changeable_user_fields if k in updates}
+        type_specific_updates = {k: updates[k] for k in type_fields}
+
+        return user_fields_updates, type_specific_updates
+
+    @staticmethod
+    def _prepare_for_jsonb(fields: dict) -> dict:
+        if "qualification" in fields:
+            fields["qualification"] = dumps(fields["qualification"])
+        return fields
 
     @staticmethod
     def _find_user_by_username(username: str) -> Optional[List]:
