@@ -105,28 +105,25 @@ class Course:
         """
         db = DataBaseUtil()
         try:
-            course_data = db.load_many("course")
-            courses = []
-            for course in course_data:
-                if user_id == course[1]:
-                    course_data = {
-                        "course_id": course[0],
-                        "user_id": course[1],
-                        "name": course[2],
-                        "qualification": Qualification(course[3]),
-                        "room": Room.get_room_by_id(course[4]),
-                        "schedule": course[5],
-                        "max_participants": course[6],
-                        "description": course[7],
-                        "announcements": Announcement.get_announcements_by_course_id(course[0])
-                    }
+            course_data = db.load_many("course", "user_id = %s", [user_id])
 
-                    courses.append(cls(**course_data))
-
-            return courses
+            return [
+                cls(
+                    course_id=course[0],
+                    user_id=course[1],
+                    name=course[2],
+                    qualification=Qualification(course[3]),
+                    room=Room.get_room_by_id(course[4]),
+                    schedule=course[5],
+                    max_participants=course[6],
+                    description=course[7],
+                    announcements=Announcement.get_announcements_by_course_id(course[0]),
+                )
+                for course in course_data
+            ]
 
         except Exception as e:
-            logger.error(f"Error retrieving courses for user ID '{user_id}': {e}")
+            print(f"Error retrieving courses for user_id {user_id}: {e}")
             return []
 
     def delete_course(self):
