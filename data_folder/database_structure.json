@@ -78,6 +78,7 @@
     {
       "table_name": "student_In_Course",
       "columns": [
+        {"column_name": "student_in_course_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
         {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES course(course_ID)" },
         {"column_name": "student_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES student(user_ID)" }
       ]
