@@ -13,9 +13,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 class Tutor(User):
+    changeable_type_fields = {"qualification"}
+
     def __init__(self, user_id: str, username: str, password: str,
                  first_name: str, last_name: str,
-                 remember_me: bool = False, bio: str = None, user_type: str = "Tutor",
+                 remember_me: bool = False, bio: str = None, user_type: str = "tutor",
                  qualifications: Optional[List[Qualification]] = None,
                  active_courses: Optional[List["Course"]] = None,
                  evaluations: Optional[List["Evaluation"]] = None):
@@ -70,12 +72,13 @@ class Tutor(User):
                 db.insert_one("tokens", {"token": new_token}, "token")
                 return new_token
 
-    @staticmethod
-    def _save_tutor(user_id: str, qualifications: List[Qualification]) -> None:
+    @classmethod
+    def _save_tutor(cls, user_id: str, qualifications: List[Qualification]) -> None:
         tutor_data = {
             "user_ID": user_id,
             "qualification": [qualification.name for qualification in qualifications],
         }
+        tutor_data = cls._prepare_for_jsonb(tutor_data)
         db = DataBaseUtil()
         db.insert_one("tutor", tutor_data, "user_ID")
 
