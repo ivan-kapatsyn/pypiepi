@@ -123,7 +123,7 @@ class Course:
             ]
 
         except Exception as e:
-            print(f"Error retrieving courses for user_id {user_id}: {e}")
+            logger.warning(f"Error retrieving courses for user_id {user_id}: {e}")
             return []
 
     def delete_course(self):
