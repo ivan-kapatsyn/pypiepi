@@ -59,7 +59,8 @@
     {
       "table_name": "Evaluation",
       "columns": [
-        {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY REFERENCES course(course_ID) ON DELETE CASCADE" },
+        {"column_name": "evaluation_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
+        {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES course(course_ID) ON DELETE CASCADE" },
         {"column_name": "author_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES student(user_ID)" },
         {"column_name": "created_at", "data_type": "TIMESTAMP", "constraints": "NOT NULL" },
         {"column_name": "feedback", "data_type": "VARCHAR(200)" },

@@ -3,6 +3,7 @@ from random import randint
 
 from src.backend.user import User
 from src.backend.course import Course
+from src.backend.evaluation import Evaluation
 from src.utils.data_base_util import DataBaseUtil
 from src.backend.qualification import Qualification
 from src.backend.exceptions import DuplicationError, WrongTokenError
@@ -20,11 +21,11 @@ class Tutor(User):
                  remember_me: bool = False, bio: str = None, user_type: str = "tutor",
                  qualifications: Optional[List[Qualification]] = None,
                  active_courses: Optional[List["Course"]] = None,
-                 evaluations: Optional[List["Evaluation"]] = None):
+                 evaluations: Optional[List[Evaluation]] = None):
         super().__init__(user_id, username, password, first_name, last_name, bio, remember_me, user_type)
         self.qualifications = qualifications or []
         self.active_courses = active_courses or []
-        self.evaluations = evaluations or []
+        self.evaluations = evaluations if evaluations is not None else self.__load_evaluations(user_id)
 
     @classmethod
     def register_new_user(cls, username: str, password: str, first_name: str, last_name: str,
@@ -73,6 +74,11 @@ class Tutor(User):
                 return new_token
 
     @classmethod
+    def __load_evaluations(cls, user_id) -> List[Evaluation]:
+        course_ids = [course.course_id for course in Course.get_courses_by_user_id(user_id)]
+        return Evaluation.get_evaluations_by_course_ids(course_ids)
+
+    @classmethod
     def _save_tutor(cls, user_id: str, qualifications: List[Qualification]) -> None:
         tutor_data = {
             "user_ID": user_id,
@@ -111,4 +117,4 @@ class Tutor(User):
             return {}
 
         return {"user_type": "Tutor", "qualifications": [Qualification(q) for q in tutor_data[1]],
-                "active_courses": Course.get_courses_by_user_id(user_id)}
+                "active_courses": Course.get_courses_by_user_id(user_id), "evaluations": cls.__load_evaluations(user_id)}

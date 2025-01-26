@@ -1,1 +1,4 @@
-course_id,author_id,created_at,feedback,grade
+evaluation_id,course_id,author_id,created_at,feedback,grade
+46733e77c313bf45,39104442b2660b56,f63b0b2f7c48c85f,2025-01-25 15:55:48.936467,"Cool!",7.4
+f01e256c1051e77a,dc295cc4dd09d5b1,430112d4d154a44f,2025-01-25 15:55:48.936467,"Not a very good course...",2.1
+15f1098660f55067,39104442b2660b56,39337032678769de,2025-01-25 15:55:48.936467,"The best course of my life.",10.0

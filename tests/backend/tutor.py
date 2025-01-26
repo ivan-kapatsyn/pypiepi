@@ -1,5 +1,4 @@
 import unittest
-from json import dumps
 from secrets import token_hex
 from src.backend.tutor import Tutor
 from src.backend.qualification import Qualification
@@ -61,6 +60,14 @@ class TestTutorDatabase(unittest.TestCase):
 
         tokens = Tutor._get_tokens()
         self.assertNotIn(token, tokens)
+
+    def test_get_user_by_id_success(self):
+        tutor = Tutor.get_user_by_id("b365cd8f07cd0520")
+
+        self.assertIsNotNone(tutor)
+        self.assertEqual(tutor.username, "john.marston")
+        self.assertEqual(tutor.qualifications[0].name, "computer science")
+        self.assertEqual(len(tutor.evaluations), 3)
 
     def test_find_tutor_by_user_id_success(self):
         tutor_id = "430112d4d154a44f"
