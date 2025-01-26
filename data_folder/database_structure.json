@@ -77,10 +77,10 @@
       ]
     },
     {
-      "table_name": "studentInCourse",
+      "table_name": "student_In_Course",
       "columns": [
         {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES course(course_ID)" },
-        {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES student(user_ID)" }
+        {"column_name": "student_ID", "data_type": "VARCHAR(16)", "constraints": "FOREIGN KEY REFERENCES student(user_ID)" }
       ]
     },
     {
