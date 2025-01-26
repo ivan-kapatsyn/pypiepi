@@ -20,11 +20,11 @@ class Tutor(User):
                  first_name: str, last_name: str,
                  remember_me: bool = False, bio: str = None, user_type: str = "tutor",
                  qualifications: Optional[List[Qualification]] = None,
-                 active_courses: Optional[List["Course"]] = None,
+                 active_courses: Optional[List[Course]] = None,
                  evaluations: Optional[List[Evaluation]] = None):
         super().__init__(user_id, username, password, first_name, last_name, bio, remember_me, user_type)
         self.qualifications = qualifications or []
-        self.active_courses = active_courses or []
+        self.active_courses = active_courses if active_courses is not None else Course.get_courses_by_user_id(user_id)
         self.evaluations = evaluations if evaluations is not None else self.__load_evaluations(user_id)
 
     @classmethod
