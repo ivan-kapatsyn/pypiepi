@@ -10,7 +10,7 @@
         {"column_name": "last_name", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
         {"column_name": "bio", "data_type": "VARCHAR(200)" },
         {"column_name": "remember_me", "data_type": "BOOLEAN", "constraints": "NOT NULL" },
-        {"column_name": "user_type", "data_type": "JSONB" }
+        {"column_name": "user_type", "data_type": "VARCHAR(200)" }
       ]
     },
     {
