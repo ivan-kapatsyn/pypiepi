@@ -19,7 +19,6 @@ class TutorRoutes:
     @main_bp.route('/<user_id>/personal_bio', methods=['GET', 'POST'])
     def personal_bio(user_id: str):
         tutor = Tutor.get_user_by_id(user_id)
-        course: Course = None
         courses = [{
             "name": course.name,
             "day": TutorRoutes.__get_day_from_schedule(course.schedule),
@@ -28,11 +27,12 @@ class TutorRoutes:
         }
             for course in tutor.active_courses]
         data = [
-            {"name": "Name", "value": tutor.username},
+            {"name": "Username", "value": tutor.username},
             {"name": "First Name", "value": tutor.first_name},
             {"name": "Last Name", "value": tutor.last_name},
             {"name": "Bio", "value": tutor.bio},
-            {"name": "Qualification", "value": tutor.qualifications},
+            {"name": "Qualification",
+             "value": '\n'.join([f'{i+1}) {qual.name}' for i, qual in enumerate(tutor.qualifications)])},
 
         ]
         average_rating, feedbacks = TutorRoutes.__construct_feedback_data(tutor.evaluations)
@@ -65,6 +65,8 @@ class TutorRoutes:
     def __construct_feedback_data(feedbacks: List[Evaluation]):
         result = []
         average = 0
+        if len(feedbacks) == 0:
+            return None, result
         for i, feedback in enumerate(feedbacks):
             author = User.get_user_by_id(feedback.author_id)
             result.append({
@@ -88,5 +90,10 @@ class TutorRoutes:
     @staticmethod
     def __get_start_time_from_schedule(schedule):
         time_window = schedule[3:]
-        start_time = time_window.split('-')[0]
+        start_time: str = time_window.split('-')[0]
+        start_time = start_time.strip()
+        if int(start_time) < 12 and int(start_time) > 8:
+            start_time += 'AM'
+        else:
+            start_time += 'PM'
         return start_time

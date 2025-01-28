@@ -197,11 +197,11 @@
         {% for day in days %}
         <td>
             {% for event in events %}
-            {% if event.day == day and event.time == time %}
-            <div onclick="window.location.href='{{ event.url }}'">
-                {{ event.name }}
-            </div>
-            {% endif %}
+                {% if event.day == day and event.time == time %}
+                <div onclick="window.location.href='{{ event.url }}'">
+                    {{ event.name }}
+                </div>
+                {% endif %}
             {% endfor %}
         </td>
         {% endfor %}
