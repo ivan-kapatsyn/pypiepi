@@ -12,13 +12,14 @@ class TestTutorDatabase(unittest.TestCase):
 
         user_id = Tutor.register_new_user(test_username,"newpassword",
                                            "Test","Tutor", token,
-                                           [Qualification("Math")])
+                                           [Qualification("Math"), Qualification("Physics")])
         self.assertIsNotNone(user_id)
 
         tutor = Tutor.get_user_by_id(user_id)
         self.assertIsNotNone(tutor)
         self.assertEqual(tutor.username, test_username)
         self.assertEqual(tutor.qualifications[0].name, "Math")
+        self.assertEqual(tutor.qualifications[1].name, "Physics")
 
         self.assertNotIn(token, Tutor._get_tokens())
 
@@ -60,6 +61,14 @@ class TestTutorDatabase(unittest.TestCase):
         tokens = Tutor._get_tokens()
         self.assertNotIn(token, tokens)
 
+    def test_get_user_by_id_success(self):
+        tutor = Tutor.get_user_by_id("b365cd8f07cd0520")
+
+        self.assertIsNotNone(tutor)
+        self.assertEqual(tutor.username, "john.marston")
+        self.assertEqual(tutor.qualifications[0].name, "computer science")
+        self.assertEqual(len(tutor.evaluations), 3)
+
     def test_find_tutor_by_user_id_success(self):
         tutor_id = "430112d4d154a44f"
         tutor_data = Tutor._find_tutor_by_user_id(tutor_id)
@@ -69,6 +78,30 @@ class TestTutorDatabase(unittest.TestCase):
     def test_find_tutor_by_user_id_not_found(self):
         tutor_data = Tutor._find_tutor_by_user_id("nonexistent_id")
         self.assertIsNone(tutor_data)
+
+    def test_update_tutor_values_success(self):
+        tutor = Tutor.get_user_by_id("14d099c161cf3bea")
+        updates = {"qualification": ["Test1", "Test2"]}
+
+        tutor.update_user_values(updates)
+        updated_tutor = Tutor.get_user_by_id("14d099c161cf3bea")
+
+        self.assertEqual(updated_tutor.qualifications[0].name, updates["qualification"][0])
+        self.assertEqual(updated_tutor.qualifications[1].name, updates["qualification"][1])
+        self.assertEqual(updated_tutor.first_name, tutor.first_name)
+
+    def test_update_user_and_tutor_fields(self):
+        tutor = Tutor.get_user_by_id("14d099c161cf3bea")
+        updates = {"first_name": "Test", "last_name": "Name", "qualification": ["Test3", "Test4"]}
+
+        tutor.update_user_values(updates)
+        updated_tutor = Tutor.get_user_by_id("14d099c161cf3bea")
+
+        self.assertEqual(updated_tutor.first_name, updates["first_name"])
+        self.assertEqual(updated_tutor.last_name, updates["last_name"])
+        self.assertEqual(updated_tutor.qualifications[0].name, updates["qualification"][0])
+        self.assertEqual(updated_tutor.qualifications[1].name, updates["qualification"][1])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -74,21 +74,17 @@ class Announcement:
         """
         db = DataBaseUtil()
         try:
-            announcements_data = db.load_many("announcement")
-            if not announcements_data:
-                return []
+            announcements_data = db.load_many("announcement", "course_id = %s", [course_id])
 
-            announcements = [
+            return [
                 Announcement(
                     announcement_id=data[0],
                     course_id=data[1],
                     date=datetime.fromisoformat(data[2]),
                     message=data[3]
                 )
-                for data in announcements_data if data[1] == course_id
+                for data in announcements_data
             ]
-
-            return announcements
 
         except Exception as e:
             logger.error(f"Error retrieving announcements for course ID '{course_id}': {e}")
