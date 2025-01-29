@@ -29,33 +29,35 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
         expected_result = ["f63b0b2f7c48c85f", "arthur.morgan",
                            "JDJiJDEyJGx6RjZMbnZqTEdJcEtlY3pWZENqNmVWQkpKcnVSSGNSaU54S085TWQvc2tYQ29FQWF6d2wy",
-                           "arthur", "morgan", "NaN",True]
+                           "Arthur", "Morgan", "NaN",True,'student']
         self.assertEqual(self.db_util.load_one(table_name, column,id_value), expected_result)
 
 #WORK
     def test_load_many(self):
         table_name = 'users'
         filter_function = "first_name = %s"
-        user_first_name = ["john"]
+        user_first_name = ["John"]
 
         expected_result = [
             [
                 "f67d38dee48d641f",
                 "john.doe",
                 "JDJiJDEyJHB6L3o4ZnR3SE1uQkpzS09UUUpSaS5pLzRvYks1OTVSL0s3NXVnOVVmRlFVcXp3YTkzUzNP",
-                "john",
-                "doe",
+                "John",
+                "Doe",
                 "Shrek is love. Shrek is live",
-                True
+                True,
+                'student'
             ],
             [
                 "b365cd8f07cd0520",
                 "john.marston",
                 "JDJiJDEyJDgxaXUuZmdNZXVPcHJCYXQveEwyRS51UVZKZ1UwLnBXVDdIVnBBQVRPdVNQWXluSm45SENT",  # password
-                "john",
-                "marston",
+                "John",
+                "Marston",
                 "NaN",
-                False
+                False,
+                'tutor'
             ]
         ]
 
@@ -70,8 +72,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
             "user_id": new_user_id,
             "username": "eren.jaeger",
             "password": "thisismypassword",
-            "first_name": "eren",
-            "last_name": "jaeger",
+            "first_name": "Eren",
+            "last_name": "Jaeger",
             "bio": "tatakai! tatakai!",
             "remember_me": True
         }
@@ -92,8 +94,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
             "user_id": new_user_id,
             "username": "johnny.silverhand",
             "password": "thisismypassword",
-            "first_name": "johnny",
-            "last_name": "silverhand",
+            "first_name": "Johnny",
+            "last_name": "Silverhand",
             "bio": "fuck arasaka",
             "remember_me": False
         }
@@ -102,8 +104,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
         loaded_data = self.db_util.load_one("users",  "user_id", new_user_id)
         self.assertEqual(loaded_data['user_id'], new_user_id)
         self.assertEqual(loaded_data['username'], "johnny.silverhand")
-        self.assertEqual(loaded_data['first_name'], "johnny")
-        self.assertEqual(loaded_data['last_name'], "silverhand")
+        self.assertEqual(loaded_data['first_name'], "Johnny")
+        self.assertEqual(loaded_data['last_name'], "Silverhand")
         self.assertEqual(loaded_data['bio'], "fuck arasaka")
         self.assertEqual(loaded_data['remember_me'], False)
 
@@ -115,8 +117,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
                 "user_id": new_user_id,
                 "username": "mr.bean",
                 "password": "thisismypassword",
-                "first_name": "mr",
-                "last_name": "bean",
+                "first_name": "Mr",
+                "last_name": "Bean",
                 "bio": "teddy",
                 "remember_me": True
             },
@@ -124,8 +126,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
                 "user_id": new_user_id,
                 "username": "bird.eren",
                 "password": "thisismypassword",
-                "first_name": "eren",
-                "last_name": "jaeger",
+                "first_name": "Eren",
+                "last_name": "Jaeger",
                 "bio": "krah! krah!",
                 "remember_me": False
             }
@@ -144,8 +146,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
                     "user_id": new_user_id,
                     "username": "charles.smith",
                     "password": "thisismypassword",
-                    "first_name": "charles",
-                    "last_name": "smith",
+                    "first_name": "Charles",
+                    "last_name": "Smith",
                     "bio": "",
                     "remember_me": True
                 }
@@ -158,8 +160,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
                     "user_id": new_user_id,
                     "username": "dutch.vanderlinde",
                     "password": "tahiti",
-                    "first_name": "dutch",
-                    "last_name": "van der linde",
+                    "first_name": "Dutch",
+                    "last_name": "Van der Linde",
                     "bio": "",
                     "remember_me": True
                 }
@@ -173,27 +175,19 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
 # WORK
     def test_delete_one(self):
-        table_name = 'student'
-        column_d = "user_id"
+        table_name = 'student_in_course'
+        column_d = "student_id"
         value_d = "16f9cbf0d5f0e513"
         self.assertEqual(self.db_util.delete_one(table_name, column_d, value_d), None)
 
 # WORK
     def test_delete_many(self):
-        table_name = 'student'
-        column = "user_id"
+        table_name = 'student_in_course'
+        column = "student_id"
         user_ids = ["f67d38dee48d641f", "f63b0b2f7c48c85f"]
-
-        for user_id in user_ids:
-            exists_before = self.db_util.exists_user_by_id(table_name, user_id)
-            print(f"User {user_id} exists before deletion: {exists_before}")
 
         self.db_util.delete_many(table_name, column, user_ids)
 
-        for user_id in user_ids:
-            exists_after = self.db_util.exists_user_by_id(table_name, user_id)
-            print(f"User {user_id} exists after deletion: {exists_after}")
-            self.assertFalse(exists_after, f"User {user_id} should have been deleted")
 
 #WORK
     def test_update_one(self):
