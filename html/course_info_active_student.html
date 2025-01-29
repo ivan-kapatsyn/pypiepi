@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Course info</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='course_info_non_active_student.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='course_info_active_student.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
@@ -50,9 +50,9 @@
             nameSpan.innerHTML = `<input id="edit-input" value="" style="width: 70%;">`;
 
             // Replace "Edit" button with "Ok" and "Cancel"
-            if (name === 'announcement') {
+            if (name === 'feedback') {
                 editButton.outerHTML = `
-                <button id="ok-button" onclick="makeAnAnnouncement()">Ok</button>
+                <button id="ok-button" onclick="leaveFeedback()">Ok</button>
                 <button id="cancel-button" onclick="cancelEdit('${currentValue}', '${name}')">Cancel</button>
             `;
             } else {
@@ -139,9 +139,9 @@
         document.addEventListener('DOMContentLoaded', applyRatingColors);
     </script>
     <script>
-        function registerForCourse() {
+        function dropCourse() {
             // Call the Flask endpoint with the new data
-            fetch("/student/register_for_course/{{ course_id }}/{{ user_id }}", {
+            fetch("/student/drop_course/{{ course_id }}/{{ user_id }}", {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -152,60 +152,37 @@
         }
     </script>
     <script>
-        function makeAnAnnouncement() {
-            // Call the Flask endpoint with the new data
-            const message = document.getElementById('edit-input').value;
-            fetch("/course/add_announcement/{{ course_id }}/", {
+        function showFeedbackForm() {
+            let feedbackDiv = document.getElementById('feedback-form');
+            document.getElementById('feedback-button').classList.add('hidden');
+            feedbackDiv.innerHTML = `
+                <input type="number" id="grade" placeholder="Enter Grade (1-10)" min="1" max="10" required style="width: 180px"><br>
+                <textarea id="message" placeholder="Enter your feedback message"></textarea><br>
+                <button onclick="submitFeedback()">Submit</button>
+            `;
+        }
+
+        function submitFeedback() {
+            let grade = document.getElementById('grade').value;
+            let message = document.getElementById('message').value;
+
+            fetch('/student/leave_feedback/{{ course_id }}/{{ user_id }}', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    'message': message
+                body: JSON.stringify({rating: grade, feedback: message}),
+                headers: {'Content-Type': 'application/json'}
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(`Feedback received! Grade: ${data.grade}, Message: ${data.message}`);
+                    document.getElementById('feedback-form').innerHTML = '';
+                    let parent = document.getElementById('comments-container');
+                    let new_feedback = document.createElement('span');
+                    new_feedback.innerHTML = `${parent.childElementCount/2 + 1}) ${data.name} at ${data.date} ${data.grade}: ${data.message}`;
+                    parent.appendChild(new_feedback);
+                    parent.appendChild(document.createElement('br'));
+                    document.getElementById('feedback-button').classList.remove('hidden');
                 })
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                if (response.status === 204) {
-                    return {'success': true}; // Handle empty responses
-                }
-
-                return response.json(); // Otherwise, parse JSON
-            }).then(data => {
-                if (data.success) {
-                    const container = document.getElementById('announcements_container');
-                    container.querySelector('#ok-button').outerHTML = `<button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>`;
-                    if (document.getElementById('cancel-button')) {
-                        document.getElementById('cancel-button').remove();
-                    }
-                    if (document.getElementById('edit-input')) {
-                        document.getElementById('edit-input').remove();
-                    }
-                    if (document.getElementById('data-announcement')) {
-                        document.getElementById('data-announcement').remove();
-                    }
-                    const editButton = document.getElementById('edit-button-announcement');
-                    editButton.outerHTML = `
-                        <span>- ${message}</span><br>
-                        <span id="data-announcement"></span>
-                        ${editButton.outerHTML}
-                    `;
-                } else {
-                    const container = document.getElementById('announcements_container');
-                    container.querySelector('#ok-button').outerHTML = `<button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>`;
-                    if (document.getElementById('cancel-button')) {
-                        document.getElementById('cancel-button').remove();
-                    }
-                    alert('Failed to update data!');
-
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Failed to update data!');
-            });
-
+                .catch(error => console.error('Error:', error));
         }
     </script>
 </head>
@@ -243,6 +220,15 @@
     </div>
     {% endfor %}
 </div>
+<h2>Listeners</h2>
+<div id="students_container">
+    {% for student in students_list %}
+    <div>
+        <span>{{ student.i }})  {{ student.first_name }} {{ student.last_name }}: </span>
+        <span style="font-style: italic">{{ student.study_program }}</span>
+    </div>
+    {% endfor %}
+</div>
 <h2>Rating</h2>
 <div>
     <h4>Average rating:</h4>
@@ -250,10 +236,20 @@
 </div>
 <div>
     <h4>Comments:</h4>
-    {% for feedback in feedback_list %}
-    <span>{{ feedback.i }}) {{ feedback.name }} at {{ feedback.date }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
+    <div id="comments-container">
+        {% for feedback in feedback_list %}
+        <span>{{ feedback.i }}) {{ feedback.name }} at {{ feedback.date }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
+        {% endfor %}
+    </div>
+    <button id="feedback-button" onclick="showFeedbackForm()">Leave a Feedback</button>
+    <div id="feedback-form"></div>
+</div>
+<h2>Announcements</h2>
+<div id="announcements_container">
+    {% for announcement in announcements %}
+    <span>- {{ announcement }}</span><br>
     {% endfor %}
 </div>
-<button onclick="registerForCourse()">Register for the course</button>
+<button onclick="dropCourse()">Drop the course</button>
 </body>
 </html>

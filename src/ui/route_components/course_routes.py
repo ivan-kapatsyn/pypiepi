@@ -57,38 +57,26 @@ class CoursesRoutes:
         user_type = 'Student'
         if user_type == 'Tutor':
             page = 'course_info_tutor.html'
-            return render_template(page, user_id=user_id,
-                                   course_id=course_id,
-                                   username=user.username,
-                                   remember_me=user.remember_me,
-                                   course_data=CoursesRoutes.__construct_course_data(course),
-                                   students_list=CoursesRoutes.__construct_student_data(student_list),
-                                   average_rating=CoursesRoutes.__get_average_evaluation(evaluations),
-                                   feedback_list=CoursesRoutes.__construct_feedback_data(evaluations),
-                                   announcements=course.announcements
-                                   )
         elif user_type == 'Student':
             #TODO Replace with if user_id in [x.user_id for x in course.student]:
-            active_student = False
-
+            active_student = True
             if active_student:
-                #Todo implement later
-                pass
+                page = 'course_info_active_student.html'
             else:
                 page = 'course_info_non_active_student.html'
-                return render_template(page, user_id=user_id,
-                                course_id=course_id,
-                                username=user.username,
-                                remember_me=user.remember_me,
-                                course_data=CoursesRoutes.__construct_course_data(course),
-                                students_list=CoursesRoutes.__construct_student_data(student_list),
-                                average_rating=CoursesRoutes.__get_average_evaluation(evaluations),
-                                feedback_list=CoursesRoutes.__construct_feedback_data(evaluations),
-                                announcements=course.announcements
-                                )
         else:
             # Todo implement later
-            pass
+            page = '...'
+        return render_template(page, user_id=user_id,
+                               course_id=course_id,
+                               username=user.username,
+                               remember_me=user.remember_me,
+                               course_data=CoursesRoutes.__construct_course_data(course),
+                               students_list=CoursesRoutes.__construct_student_data(student_list),
+                               average_rating=CoursesRoutes.__get_average_evaluation(evaluations),
+                               feedback_list=CoursesRoutes.__construct_feedback_data(evaluations),
+                               announcements=course.announcements
+                               )
 
     @staticmethod
     @main_bp.route('/delete_course/<course_id>/<user_id>')
