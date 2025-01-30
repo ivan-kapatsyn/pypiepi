@@ -59,7 +59,7 @@
         function saveData(name) {
             const newValue = document.getElementById('edit-input').value;
             // Call the Flask endpoint with the new data
-            fetch('/tutor/{{ user_id }}/update-data', {
+            fetch('/student/{{ user_id }}/update-data', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
