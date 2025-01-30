@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Office Building Plan</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f3f4f6;
+    }
+
+    .building {
+      display: grid;
+      grid-template-columns: repeat(4, 150px);
+      gap: 10px;
+      padding: 20px;
+      background-color: #ffffff;
+      border: 2px solid #d1d5db;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .room {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 150px;
+      height: 100px;
+      background-color: #60a5fa;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .room:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    .corridor {
+      grid-column: span 4;
+      height: 50px;
+      background-color: #d1d5db;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #374151;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="building">
+    <div class="room" onclick="tuts('Room 101')">Room 101</div>
+    <div class="room" onclick="tuts('Room 102')">Room 102</div>
+    <div class="room" onclick="tuts('Room 103')">Room 103</div>
+    <div class="room" onclick="tuts('Room 104')">Room 104</div>
+    <div class="corridor">Corridor</div>
+    <div class="room" onclick="tuts('Room 201')">Room 201</div>
+    <div class="room" onclick="tuts('Room 202')">Room 202</div>
+    <div class="room" onclick="tuts('Room 203')">Room 203</div>
+    <div class="room" onclick="tuts('Room 204')">Room 204</div>
+  </div>
+
+  <script>
+    function tuts(room) {
+      alert(`You clicked on ${room}`);
+    }
+  </script>
+</body>
+</html>

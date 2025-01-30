@@ -1,6 +1,11 @@
-from flask import Blueprint, render_template, request, jsonify
+from typing import List
 
+from flask import Blueprint, render_template, request, jsonify, url_for
+
+from src.backend.course import Course
+from src.backend.evaluation import Evaluation
 from src.backend.tutor import Tutor
+from src.backend.user import User
 
 
 class TutorRoutes:
@@ -14,31 +19,31 @@ class TutorRoutes:
     @main_bp.route('/<user_id>/personal_bio', methods=['GET', 'POST'])
     def personal_bio(user_id: str):
         tutor = Tutor.get_user_by_id(user_id)
-        courses = tutor.active_courses
-        # Todo get courses from tutor
-        courses = [
-            {"name": "Meeting", "day": "Monday", "time": "9AM", "url": f"/meeting"},
-            {"name": "Code Review", "day": "Tuesday", "time": "10AM", "url": "/code-review"},
-            {"name": "Standup", "day": "Wednesday", "time": "11AM", "url": "/standup"},
-            # Add more events as needed
-        ]
-        # Todo get data from dict(tutor)
+        courses = [{
+            "name": course.name,
+            "day": TutorRoutes.__get_day_from_schedule(course.schedule),
+            "time": TutorRoutes.__get_start_time_from_schedule(course.schedule),
+            "url": url_for('course.info', user_id=tutor.user_id, course_id=course.course_id)
+        }
+            for course in tutor.active_courses]
         data = [
-            {"name": "Name", "value": tutor.username},
+            {"name": "Username", "value": tutor.username},
             {"name": "First Name", "value": tutor.first_name},
+            {"name": "Last Name", "value": tutor.last_name},
+            {"name": "Bio", "value": tutor.bio},
+            {"name": "Qualification",
+             "value": '\n'.join([f'{i+1}) {qual.name}' for i, qual in enumerate(tutor.qualifications)])
+             },
 
         ]
-        average_rating, feedbacks = TutorRoutes.__construct_feedback_data([
-            (6.7, 'It was ok'),
-            (9.1, "I liked it")
-        ])
+        average_rating, feedbacks = TutorRoutes.__construct_feedback_data(tutor.evaluations)
         personal_bio_page = r'tutor_personal_info.html'
         return render_template(personal_bio_page, username=tutor.username,
-                               user_id=user_id, remember_me = tutor.remember_me,
+                               user_id=user_id, remember_me=tutor.remember_me,
                                data=data,
                                events=courses,
                                days=TutorRoutes.TIMETABLE_DAYS, times=TutorRoutes.TIMETABLE_TIME,
-                               average_rating=average_rating,feedback_list=feedbacks)
+                               average_rating=average_rating, feedback_list=feedbacks)
 
     @staticmethod
     @main_bp.route('/<user_id>/update-data', methods=['GET', 'POST'])
@@ -46,10 +51,20 @@ class TutorRoutes:
         try:
             success = True
             tutor = Tutor.get_user_by_id(user_id)
-            # Todo enable updating the user
             suggestion = request.json
-            info_to_update = suggestion["info_to_update"]
-            print(info_to_update)
+            info_to_update: dict = suggestion["info_to_update"]
+            if 'Qualification' in info_to_update.keys():
+                # Special case as qualification comes in the form of '1) ... 2) ...', so we need to break it down
+                value = info_to_update["Qualification"]
+                value = list(map(lambda x: x[:-2] if x[-1].isdigit() else x, value.split(') ')[1:]))
+                info_to_update["Qualification"] = value
+                del info_to_update["Qualification"]
+            key_list = info_to_update.keys()
+            temp = {}
+            for key in key_list:
+                temp[key.lower().replace(' ', '_')] = info_to_update[key]
+            info_to_update = temp
+            tutor.update_user_values(info_to_update)
 
         except Exception as e:
             success = False
@@ -59,16 +74,38 @@ class TutorRoutes:
             return jsonify(success=success), status
 
     @staticmethod
-    def __construct_feedback_data(feedbacks):
-        # Todo replace it when Student is implemented
+    def __construct_feedback_data(feedbacks: List[Evaluation]):
         result = []
         average = 0
+        if len(feedbacks) == 0:
+            return None, result
         for i, feedback in enumerate(feedbacks):
+            author = User.get_user_by_id(feedback.author_id)
             result.append({
                 'i': i + 1,
-                'rating': feedback[0],
-                'name': 'Anonymous',
-                'comment': feedback[1]
+                'rating': feedback.grade,
+                'name': author.first_name + ' ' + author.last_name,
+                'comment': feedback.feedback
             })
-            average += feedback[0]
-        return average/len(feedbacks), result
+            average += feedback.grade
+        return average / len(feedbacks), result
+
+    @staticmethod
+    def __get_day_from_schedule(schedule):
+        day_code = schedule[:3]
+        for x in TutorRoutes.TIMETABLE_DAYS:
+            if day_code in x:
+                return x
+
+        return None
+
+    @staticmethod
+    def __get_start_time_from_schedule(schedule):
+        time_window = schedule[3:]
+        start_time: str = time_window.split('-')[0]
+        start_time = start_time.strip()
+        if int(start_time) < 12 and int(start_time) > 8:
+            start_time += 'AM'
+        else:
+            start_time += 'PM'
+        return start_time

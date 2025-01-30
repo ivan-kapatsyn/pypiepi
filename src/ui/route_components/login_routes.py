@@ -12,7 +12,10 @@ class LoginRoutes:
     def process_suggestion():
         suggestion = request.json
 
-        redirect_url = url_for('tutor.personal_bio', user_id=suggestion['user_id'])
+        user = User.get_user_by_id(suggestion['user_id'])
+        user_type = user.user_type
+
+        redirect_url = url_for(f'{user_type}.personal_bio', user_id=suggestion['user_id'])
         return jsonify({'redirect': redirect_url})
 
     @staticmethod
