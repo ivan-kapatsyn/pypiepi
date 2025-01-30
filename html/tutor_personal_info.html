@@ -143,12 +143,9 @@
     </script>
 </head>
 <body>
-<header class="d-flex justify-content-center align-items-center p-3 bg-light border-bottom">
-    <!-- Logo -->
-    <div class="header-logo">
-        <img src="{{ url_for('static', filename='banner.png') }}" alt="Logo" style="height: 50px;">
-    </div>
-    <!-- Login Info Dropdown -->
+<header class="header">
+       <img src="{{ url_for('static', filename='banner.png') }}" class="header-image" alt="TutorMe">
+        <h1 class="header-text">TutorMe</h1>
     <div class="dropdown ms-auto">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -167,7 +164,7 @@
             </li>
         </ul>
     </div>
-</header>
+    </header>
 <h3>Personal Info</h3>
 <div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
     {% for item in data %}

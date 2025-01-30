@@ -47,12 +47,8 @@ class CoursesRoutes:
             User.get_user_by_id('903d839e277ca6b9'),
             User.get_user_by_id('99b92b9c4c483607')
         ]
-        evaluations = [
-            Evaluation(evaluation_id='1', author=User.get_user_by_id('a76d22eb46a882d2'), date=datetime.now(),
-                       numeric_evaluation=8, feedback='It was nice'),
-            Evaluation(evaluation_id='1', author=User.get_user_by_id('99b92b9c4c483607'), date=datetime.now() - timedelta(days=1.0),
-                       numeric_evaluation=6, feedback='It was ok')
-        ]
+        # Todo replace with course.evaluations
+        evaluations = Tutor.get_user_by_id(course.user_id).evaluations
         # Todo add user_type to the User
         user_type = 'Student'
         if user_type == 'Tutor':
@@ -124,6 +120,8 @@ class CoursesRoutes:
 
     @staticmethod
     def __get_average_evaluation(evaluation: List[Evaluation]):
+        if len(evaluation) == 0:
+            return None
         return sum([x.numeric_evaluation for x in evaluation]) / len(evaluation)
 
     @staticmethod
