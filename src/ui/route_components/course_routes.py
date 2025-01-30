@@ -47,11 +47,9 @@ class CoursesRoutes:
             User.get_user_by_id('903d839e277ca6b9'),
             User.get_user_by_id('99b92b9c4c483607')
         ]
-        # Todo replace with course.evaluations
-        evaluations = Tutor.get_user_by_id(course.user_id).evaluations
-        # Todo add user_type to the User
-        user_type = 'Student'
-        if user_type == 'Tutor':
+        evaluations = Evaluation.get_evaluations_by_course_ids([course_id])
+        user_type = user.user_type
+        if user_type == 'tutor':
             page = 'course_info_tutor.html'
         elif user_type == 'Student':
             #TODO Replace with if user_id in [x.user_id for x in course.student]:
@@ -61,7 +59,7 @@ class CoursesRoutes:
             else:
                 page = 'course_info_non_active_student.html'
         else:
-            # Todo implement later
+            # Todo implement Admin later
             page = '...'
         return render_template(page, user_id=user_id,
                                course_id=course_id,
@@ -122,17 +120,16 @@ class CoursesRoutes:
     def __get_average_evaluation(evaluation: List[Evaluation]):
         if len(evaluation) == 0:
             return None
-        return sum([x.numeric_evaluation for x in evaluation]) / len(evaluation)
+        return sum([x.grade for x in evaluation]) / len(evaluation)
 
     @staticmethod
     def __construct_feedback_data(feedbacks: List[Evaluation]):
-        # Todo replace it when Student is implemented
         result = []
         for i, feedback in enumerate(feedbacks):
             result.append({
                 'i': i + 1,
-                'rating': feedback.numeric_evaluation,
-                'name': feedback.author.first_name + ' ' + feedback.author.last_name,
+                'rating': feedback.grade,
+                'name': User.get_user_by_id(feedback.author_id).first_name + ' ' + User.get_user_by_id(feedback.author_id).last_name,
                 'date': feedback.date.strftime("%d.%m.%Y %H:%M:%S"),
                 'comment': feedback.feedback,
             })
