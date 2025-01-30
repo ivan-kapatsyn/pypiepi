@@ -103,7 +103,8 @@ class User:
             "first_name": user_data[3],
             "last_name": user_data[4],
             "bio": user_data[5],
-            "remember_me": user_data[6]
+            "remember_me": user_data[6],
+            "user_type": user_data[7]
         }
         user_data.update(cls._extend_fields_by_user_id(user_id))
 
@@ -199,14 +200,15 @@ class User:
 
     @staticmethod
     def _save_user(user_id: str, username: str, password: str, first_name: str, last_name: str,
-                   remember_me: bool = False) -> None:
+                   remember_me: bool = False, user_type: str = None) -> None:
         user_data = {
             "user_ID": user_id,
             "username": username,
             "password": password,
             "first_name": first_name,
             "last_name": last_name,
-            "remember_me": remember_me
+            "remember_me": remember_me,
+            "user_type": user_type
         }
         db = DataBaseUtil()
         db.insert_one("users", user_data, "user_ID")

@@ -57,7 +57,7 @@ class Tutor(User):
         cls._remove_token(token)
 
         user_id = cls._generate_unique_user_id()
-        cls._save_user(user_id, username, password, first_name, last_name, remember_me)
+        cls._save_user(user_id, username, password, first_name, last_name, remember_me, cls.__name__)
         cls._save_tutor(user_id, qualifications)
 
         logger.info(f"Tutor registered successfully with username: {username}")
@@ -116,5 +116,5 @@ class Tutor(User):
             logger.warning(f"No tutor data for user '{user_id}'.")
             return {}
 
-        return {"user_type": "Tutor", "qualifications": [Qualification(q) for q in tutor_data[1]],
+        return {"qualifications": [Qualification(q) for q in tutor_data[1]],
                 "active_courses": Course.get_courses_by_user_id(user_id), "evaluations": cls.__load_evaluations(user_id)}
