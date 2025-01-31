@@ -109,8 +109,14 @@
         }
     </script>
     <script>
-        function see_active_courses(userId) {
-            let url = "{{ url_for('student.active_courses', user_id = user_id) }}";
+        function see_active_courses(is_active) {
+            let url;
+            if (is_active) {
+                url = "{{ url_for('student.active_courses', user_id = user_id) }}";
+            }
+            else{
+                url = "{{ url_for('student.passive_courses', user_id = user_id) }}";
+            }
             fetch(url, {
                 method: 'GET',
                 headers: {
@@ -214,7 +220,8 @@
 
 <footer>
     <div>
-        <button id="See active courses" onclick="see_active_courses('{{ user_id }}')">See active courses</button>
+        <button id="See active courses" onclick="see_active_courses(true)">See active courses</button>
+        <button id="See passive courses" onclick="see_active_courses(false)">Register for a new course</button>
     </div>
 </footer>
 
