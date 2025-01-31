@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Office Building Plan</title>
   <style>
+    /* Styles for the entire body to center the content */
     body {
       display: flex;
       justify-content: center;
@@ -14,10 +15,12 @@
       background-color: #f3f4f6;
     }
 
+    /* Grid-based layout for a square structure */
     .building {
       display: grid;
-      grid-template-columns: repeat(4, 150px);
-      gap: 10px;
+      grid-template-columns: repeat(6, 150px);
+      grid-template-rows: repeat(6, 100px);
+      gap: 5px;
       padding: 20px;
       background-color: #ffffff;
       border: 2px solid #d1d5db;
@@ -25,12 +28,11 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
+    /* Styles for rooms */
     .room {
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 150px;
-      height: 100px;
       background-color: #60a5fa;
       color: #ffffff;
       font-size: 14px;
@@ -47,13 +49,12 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
     }
 
+    /* Styles for corridors */
     .corridor {
-      grid-column: span 4;
-      height: 50px;
-      background-color: #d1d5db;
       display: flex;
       justify-content: center;
       align-items: center;
+      background-color: #d1d5db;
       color: #374151;
       font-size: 14px;
       font-weight: bold;
@@ -63,15 +64,53 @@
 </head>
 <body>
   <div class="building">
+    <!-- Top row -->
     <div class="room" onclick="tuts('Room 101')">Room 101</div>
     <div class="room" onclick="tuts('Room 102')">Room 102</div>
     <div class="room" onclick="tuts('Room 103')">Room 103</div>
     <div class="room" onclick="tuts('Room 104')">Room 104</div>
-    <div class="corridor">Corridor</div>
+    <div class="room" onclick="tuts('Room 105')">Room 105</div>
+    <div class="room" onclick="tuts('Room 106')">Room 106</div>
+
+    <!-- Middle rows with inner rooms and corridors -->
     <div class="room" onclick="tuts('Room 201')">Room 201</div>
-    <div class="room" onclick="tuts('Room 202')">Room 202</div>
-    <div class="room" onclick="tuts('Room 203')">Room 203</div>
+    <div class="corridor">Corridor</div>
+    <div class="corridor">Corridor</div>
+    <div class="corridor">Corridor</div>
+    <div class="corridor">Corridor</div>
     <div class="room" onclick="tuts('Room 204')">Room 204</div>
+
+    <div class="room" onclick="tuts('Room 201')">Room 301</div>
+    <div class="corridor">Corridor</div>
+    <div class="room" onclick="tuts('Room 202')">Room 302</div>
+    <div class="room" onclick="tuts('Room 203')">Room 303</div>
+    <div class="corridor">Corridor</div>
+    <div class="room" onclick="tuts('Room 204')">Room 304</div>
+
+
+
+    <div class="room" onclick="tuts('Room 201')">Room 401</div>
+    <div class="corridor">Corridor</div>
+    <div class="room" onclick="tuts('Room 202')">Room 402</div>
+    <div class="room" onclick="tuts('Room 203')">Room 403</div>
+    <div class="corridor">Corridor</div>
+    <div class="room" onclick="tuts('Room 204')">Room 404</div>
+
+    <div class="room" onclick="tuts('Room 201')">Room 501</div>
+    <div class="corridor">Corridor</div>
+    <div class="corridor">Corridor</div>
+    <div class="corridor">Corridor</div>
+    <div class="corridor">Corridor</div>
+    <div class="room" onclick="tuts('Room 204')">Room 504</div>
+
+
+    <!-- Bottom row -->
+    <div class="room" onclick="tuts('Room 101')">Room 601</div>
+    <div class="room" onclick="tuts('Room 102')">Room 602</div>
+    <div class="room" onclick="tuts('Room 103')">Room 603</div>
+    <div class="room" onclick="tuts('Room 104')">Room 604</div>
+    <div class="room" onclick="tuts('Room 105')">Room 605</div>
+    <div class="room" onclick="tuts('Room 106')">Room 606</div>
   </div>
 
   <script>
