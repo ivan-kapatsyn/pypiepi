@@ -110,8 +110,8 @@
     </script>
     <script>
         function see_active_courses(userId) {
-            // TODO rename the endpoint
-            fetch('/course/new/' + userId, {
+            let url = "{{ url_for('student.active_courses', user_id = user_id) }}";
+            fetch(url, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -121,7 +121,7 @@
                     throw new Error('Network response was not ok');
                 }
 
-                window.location.href = '/course/new/' + userId;
+                window.location.href = url;
             });
 
         }

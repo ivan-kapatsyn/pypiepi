@@ -111,7 +111,7 @@ class StudentRoutes:
 
         search_query = request.args.get('search', '')
         courses = [course for course in courses if course.name.lower().startswith(search_query.lower())]
-        return StudentRoutes.__render_search_page(user_id, search_query, courses,True)
+        return StudentRoutes.__render_search_page(user_id, search_query, courses, True)
 
     @staticmethod
     @main_bp.route('/<user_id>/passive-courses', methods=['GET', 'POST'])
@@ -125,7 +125,7 @@ class StudentRoutes:
 
         search_query = request.args.get('search', '')
         courses = [course for course in courses if course.name.lower().startswith(search_query.lower())]
-        return StudentRoutes.__render_search_page(user_id,search_query, courses, False)
+        return StudentRoutes.__render_search_page(user_id, search_query, courses, False)
 
     @staticmethod
     def __render_search_page(user_id, search_query, courses, is_active):
