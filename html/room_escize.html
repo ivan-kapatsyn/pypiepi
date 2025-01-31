@@ -46,6 +46,82 @@
       position: relative;
     }
 
+    .big-room {
+      width: 105%;
+      height: 104%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #60a5fa;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .big-room-shifted-left {
+      left: -5%;
+      width: 105%;
+      height: 104%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #60a5fa;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .big-room-shifted-up {
+      top: -5%;
+      width: 105%;
+      height: 104%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #60a5fa;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .big-room-shifted-up-left {
+      left: -5%;
+      top: -5%;
+      width: 105%;
+      height: 104%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #60a5fa;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
     /* Pseudo-element to color SOME gaps between rooms */
     .gap {
       position: absolute;
@@ -74,7 +150,17 @@
       background-color: navajowhite;
     }
 
-    .room:nth-child(7)::after {
+    .big-room:nth-child(6)::after {
+      content: "";
+      width: 16px;
+      height: 100%;
+      position: absolute;
+      right: -16px;
+      /*top: -10%;*/
+      background-color: black;
+    }
+
+    .big-room-shifted-left:nth-child(7)::after {
       content: "";
       width: 16px;
       height: 120%;
@@ -84,7 +170,7 @@
       background-color: navajowhite;
     }
 
-    .room:nth-child(11)::after {
+    .big-room-shifted-up-left:nth-child(11)::after {
       content: "";
       width: 16px;
       height: 120%;
@@ -114,7 +200,7 @@
       background-color: navajowhite;
     }
 
-    .room:nth-child(10)::after {
+    .big-room-shifted-up:nth-child(10)::after {
       content: "";
       width: 120%;
       height: 16px;
@@ -122,6 +208,16 @@
       bottom: -16px;
       left: -10%;
       background-color: navajowhite;
+    }
+
+    .big-room-shifted-up:nth-child(10)::after {
+      content: "";
+      width: 16px;
+      height: 100%;
+      position: absolute;
+      right: -16px;
+      /*top: -10%;*/
+      background-color: black;
     }
 
     .room:nth-child(15)::after {
@@ -150,14 +246,14 @@
 
     <!-- Second row -->
     <div class="room" onclick="tuts('Room 201')">Room 201</div>
-    <div class="room" onclick="tuts('Room 202')">Room 202</div>
-    <div class="room" onclick="tuts('Room 203')">Room 203</div>
+    <div class="big-room" onclick="tuts('Room 202')">Room 202</div>
+    <div class="big-room-shifted-left" onclick="tuts('Room 203')">Room 203</div>
     <div class="room" onclick="tuts('Room 204')">Room 204</div>
 
     <!-- Third row -->
     <div class="room" onclick="tuts('Room 301')">Room 301</div>
-    <div class="room" onclick="tuts('Room 302')">Room 302</div>
-    <div class="room" onclick="tuts('Room 303')">Room 303</div>
+    <div class="big-room-shifted-up" onclick="tuts('Room 302')">Room 302</div>
+    <div class="big-room-shifted-up-left" onclick="tuts('Room 303')">Room 303</div>
     <div class="room" onclick="tuts('Room 304')">Room 304</div>
 
     <!-- Fourth row -->
