@@ -51,16 +51,18 @@ class CoursesRoutes:
         user_type = user.user_type
         if user_type == 'tutor':
             page = 'course_info_tutor.html'
-        elif user_type == 'Student':
+        elif user_type == 'student':
             #TODO Replace with if user_id in [x.user_id for x in course.student]:
             active_student = True
             if active_student:
                 page = 'course_info_active_student.html'
             else:
                 page = 'course_info_non_active_student.html'
-        else:
+        elif user_type == 'admin':
             # Todo implement Admin later
             page = '...'
+        else:
+            raise Exception(f'Unknown user type {user_type}')
         return render_template(page, user_id=user_id,
                                course_id=course_id,
                                username=user.username,
