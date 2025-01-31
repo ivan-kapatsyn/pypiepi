@@ -60,15 +60,16 @@ body {
     margin-right: 20px; /* Push the dropdown to the far right */
 }
 
+
 .create_new_course_container {
     background-color: #ffffff; /* White background for the box */
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
     padding: 30px; /* Padding inside the box */
     width: 100%;
-    max-width: 400px; /* Limit the width */
-    text-align: center; /* Center the text inside the container */
-    margin-top: 100px; /* Verhindert, dass der Container direkt an den Header anschlägt */
+    max-width: 600px; /* limit the width of container */
+    text-align: center; /* center the text inside the container */
+    margin-top: 100px; /* the container does not touch the header */
 }
 
 .create-course-button {
@@ -77,9 +78,14 @@ body {
     font-size: 18px;
     padding: 5px 10px;
     border-radius: 10px;
-    width: 50%; /* Button takes 80% of the container's width */
+    width: 50%; /* Button takes 50% of the container's width */
     cursor: pointer;
     display: flex;
     justify-content: center;
-    margin: 0 auto; /* Falls notwendig für zusätzliche Zentrierung (ist wohl nötig) */
+    margin: 0 auto; /* important for centering (idk why) */
+    margin-top: 20px; /* button has some space above */
+}
+
+.create-course-button:hover {
+    background-color: teal;
 }

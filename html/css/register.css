@@ -91,7 +91,7 @@ body {
     background-color: #0d94b0;
 }
 
-.qualifications_input{
+.qualifications_input{ /* the little input field for tutor */
     align-self: flex-start;
     margin-left: -20px;
 }
