@@ -72,9 +72,10 @@
 <br>
 <br>
 <br>
+<h2 class="text-center">Search {{ "active" if is_active else "potential"}} courses</h2>
 <!-- Search Bar -->
-<div class="container mt-lg-5">
-    <form method="GET" action="{{ url_for('student.active_courses', user_id=user_id) }}">
+<div class="container mt-lg-2">
+    <form method="GET" action="{{ url_for('student.active_courses', user_id=user_id) if is_active else url_for('student.passive_courses', user_id=user_id)}}">
         <div class="input-group">
             <input type="text" class="form-control" name="search" id="search"
                    placeholder="Search courses..." value="{{ search_query }}">
