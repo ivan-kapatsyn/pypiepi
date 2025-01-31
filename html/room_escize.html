@@ -18,14 +18,15 @@
     /* Grid-based layout for a square structure */
     .building {
       display: grid;
-      grid-template-columns: repeat(6, 150px);
-      grid-template-rows: repeat(6, 100px);
-      gap: 5px;
+      grid-template-columns: repeat(4, 150px);
+      grid-template-rows: repeat(4, 100px);
+      gap: 16px; /* Maintain gaps between rooms */
       padding: 20px;
       background-color: #ffffff;
       border: 2px solid #d1d5db;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
     }
 
     /* Styles for rooms */
@@ -42,23 +43,100 @@
       cursor: pointer;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
       transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    /* Pseudo-element to color SOME gaps between rooms */
+    .gap {
+      position: absolute;
+      background-color: rgba(255, 0, 0, 0.5); /* Red-colored gaps */
+      z-index: -1;
+    }
+
+    /* Horizontal gap example (between Room 102 & 103) */
+    .room:nth-child(5)::after {
+      content: "";
+      width: 16px;
+      height: 120%;
+      position: absolute;
+      right: -16px;
+      top: -10%;
+      background-color: navajowhite;
+    }
+
+    .room:nth-child(9)::after {
+      content: "";
+      width: 16px;
+      height: 120%;
+      position: absolute;
+      right: -16px;
+      top: -10%;
+      background-color: navajowhite;
+    }
+
+    .room:nth-child(7)::after {
+      content: "";
+      width: 16px;
+      height: 120%;
+      position: absolute;
+      right: -16px;
+      top: -10%;
+      background-color: navajowhite;
+    }
+
+    .room:nth-child(11)::after {
+      content: "";
+      width: 16px;
+      height: 120%;
+      position: absolute;
+      right: -16px;
+      top: -10%;
+      background-color: navajowhite;
+    }
+
+    .room:nth-child(2)::after {
+      content: "";
+      width: 120%;
+      height: 16px;
+      position: absolute;
+      bottom: -16px;
+      left: -10%;
+      background-color: navajowhite;
+    }
+
+    .room:nth-child(3)::after {
+      content: "";
+      width: 120%;
+      height: 16px;
+      position: absolute;
+      bottom: -16px;
+      left: -10%;
+      background-color: navajowhite;
+    }
+
+    .room:nth-child(10)::after {
+      content: "";
+      width: 120%;
+      height: 16px;
+      position: absolute;
+      bottom: -16px;
+      left: -10%;
+      background-color: navajowhite;
+    }
+
+    .room:nth-child(15)::after {
+      content: "";
+      width: 120%;
+      height: 16px;
+      position: absolute;
+      top: -16px;
+      left: -10%;
+      background-color: navajowhite;
     }
 
     .room:hover {
       transform: scale(1.05);
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-    }
-
-    /* Styles for corridors */
-    .corridor {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #d1d5db;
-      color: #374151;
-      font-size: 14px;
-      font-weight: bold;
-      border-radius: 8px;
     }
   </style>
 </head>
@@ -69,48 +147,24 @@
     <div class="room" onclick="tuts('Room 102')">Room 102</div>
     <div class="room" onclick="tuts('Room 103')">Room 103</div>
     <div class="room" onclick="tuts('Room 104')">Room 104</div>
-    <div class="room" onclick="tuts('Room 105')">Room 105</div>
-    <div class="room" onclick="tuts('Room 106')">Room 106</div>
 
-    <!-- Middle rows with inner rooms and corridors -->
+    <!-- Second row -->
     <div class="room" onclick="tuts('Room 201')">Room 201</div>
-    <div class="corridor">Corridor</div>
-    <div class="corridor">Corridor</div>
-    <div class="corridor">Corridor</div>
-    <div class="corridor">Corridor</div>
+    <div class="room" onclick="tuts('Room 202')">Room 202</div>
+    <div class="room" onclick="tuts('Room 203')">Room 203</div>
     <div class="room" onclick="tuts('Room 204')">Room 204</div>
 
-    <div class="room" onclick="tuts('Room 201')">Room 301</div>
-    <div class="corridor">Corridor</div>
-    <div class="room" onclick="tuts('Room 202')">Room 302</div>
-    <div class="room" onclick="tuts('Room 203')">Room 303</div>
-    <div class="corridor">Corridor</div>
-    <div class="room" onclick="tuts('Room 204')">Room 304</div>
+    <!-- Third row -->
+    <div class="room" onclick="tuts('Room 301')">Room 301</div>
+    <div class="room" onclick="tuts('Room 302')">Room 302</div>
+    <div class="room" onclick="tuts('Room 303')">Room 303</div>
+    <div class="room" onclick="tuts('Room 304')">Room 304</div>
 
-
-
-    <div class="room" onclick="tuts('Room 201')">Room 401</div>
-    <div class="corridor">Corridor</div>
-    <div class="room" onclick="tuts('Room 202')">Room 402</div>
-    <div class="room" onclick="tuts('Room 203')">Room 403</div>
-    <div class="corridor">Corridor</div>
-    <div class="room" onclick="tuts('Room 204')">Room 404</div>
-
-    <div class="room" onclick="tuts('Room 201')">Room 501</div>
-    <div class="corridor">Corridor</div>
-    <div class="corridor">Corridor</div>
-    <div class="corridor">Corridor</div>
-    <div class="corridor">Corridor</div>
-    <div class="room" onclick="tuts('Room 204')">Room 504</div>
-
-
-    <!-- Bottom row -->
-    <div class="room" onclick="tuts('Room 101')">Room 601</div>
-    <div class="room" onclick="tuts('Room 102')">Room 602</div>
-    <div class="room" onclick="tuts('Room 103')">Room 603</div>
-    <div class="room" onclick="tuts('Room 104')">Room 604</div>
-    <div class="room" onclick="tuts('Room 105')">Room 605</div>
-    <div class="room" onclick="tuts('Room 106')">Room 606</div>
+    <!-- Fourth row -->
+    <div class="room" onclick="tuts('Room 401')">Room 401</div>
+    <div class="room" onclick="tuts('Room 402')">Room 402</div>
+    <div class="room" onclick="tuts('Room 403')">Room 403</div>
+    <div class="room" onclick="tuts('Room 404')">Room 404</div>
   </div>
 
   <script>
