@@ -3,36 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='student_active_courses.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <title>Search Courses</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" defer></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Attach click event to rememberCheckbox
+            $('#rememberCheckbox').on('change', function () {
+                const isChecked = $(this).is(':checked'); // Check if the checkbox is checked
+                const userId = '{{ user_id }}'; // Replace with dynamic user ID if available
+
+                // AJAX request
+                $.ajax({
+                    url: `/user/${userId}/toggle_remember_me`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({remember_me: isChecked}),
+                    success: function (response) {
+                        console.log('Remember me toggled:', response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error toggling remember me:', status, error);
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        const logoutButton = document.querySelector('.logout');
+
+        logoutButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            alert('Redirecting to login page...');
+            window.location.href = 'login.html';
+        });
+    </script>
 </head>
 <body>
-
-    <!-- Search Bar -->
-    <div class="container mt-3">
-        <form method="GET" action="{{ url_for('student.active_courses', user_id=user_id) }}">
-            <div class="input-group">
-                <input type="text" class="form-control" name="search" id="search"
-                       placeholder="Search courses..." value="{{ search_query }}">
-                <button class="btn btn-primary" type="submit">Search</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Course List -->
-    <div class="container mt-3">
-        <div class="list-group">
-            {% for course in courses %}
-                <a href="{{ url_for('course.info', user_id=user_id, course_id=course.course_id) }}" class="list-group-item list-group-item-action">
-                    <strong>{{ course.name }}</strong> <br>
-                    Schedule: {{ course.schedule }} | Room: {{ course.room.name }}
-                </a>
-            {% else %}
-                <p class="text-muted">No courses found.</p>
-            {% endfor %}
+<header>
+    <!-- Logo -->
+    <div class="header">
+        <img src="{{ url_for('static', filename='banner.png') }}" class="header-image" alt="TutorMe">
+        <h1 class="header-text">TutorMe</h1>
+        <!-- Login Info Dropdown -->
+        <div class="dropdown ms-auto">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                Login Info
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><span class="dropdown-item">Username: {{ username }}</span></li>
+                <li>
+                    <label class="dropdown-item">
+                        <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
+                        remembered on this device
+                    </label>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/login/index">Logout</a>
+                </li>
+            </ul>
         </div>
     </div>
+</header>
+<br>
+<br>
+<br>
+<!-- Search Bar -->
+<div class="container mt-lg-5">
+    <form method="GET" action="{{ url_for('student.active_courses', user_id=user_id) }}">
+        <div class="input-group">
+            <input type="text" class="form-control" name="search" id="search"
+                   placeholder="Search courses..." value="{{ search_query }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+</div>
+
+<!-- Course List -->
+<div class="container mt-3">
+    <div class="list-group">
+        {% for course in courses %}
+        <a href="{{ url_for('course.info', user_id=user_id, course_id=course.course_id) }}"
+           class="list-group-item list-group-item-action">
+            <strong>{{ course.name }}</strong> <br>
+            Schedule: {{ course.schedule }} | Room: {{ course.room.name }}
+        </a>
+        {% else %}
+        <p class="text-muted">No courses found.</p>
+        {% endfor %}
+    </div>
+</div>
 
 </body>
 </html>

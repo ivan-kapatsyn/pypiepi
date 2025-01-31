@@ -114,7 +114,8 @@ class StudentRoutes:
         search_query = request.args.get('search', '')
         courses = [course for course in courses if course.name.lower().startswith(search_query.lower())]
         return render_template('student_active_courses.html', user_id=user_id, courses=courses,
-                               search_query=search_query)
+                               search_query=search_query, username=student.username,
+                               remember_me=student.remember_me, )
 
     @staticmethod
     def __get_day_from_schedule(schedule):
