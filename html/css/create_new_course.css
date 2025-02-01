@@ -72,6 +72,22 @@ body {
     margin-top: 100px; /* the container does not touch the header */
 }
 
+.schedule-text {
+
+}
+
+/* form-control is an extra class for qualifications input field */
+.form-control {
+    max-width: 200px;
+    margin: 0 auto; /* important for centering (idk why) */
+    margin-bottom: 10px;
+}
+
+#max-participants {
+    max-width: 100px;
+    margin: 0 auto;
+}
+
 .create-course-button {
     background-color: #45DABA;
     color: black;

@@ -74,7 +74,7 @@
         {{ form.hidden_tag() }}
         <div>
             {{ form.course_name.label }}<br>
-            {{ form.course_name(size=20) }}
+            {{ form.course_name(class="input-field", size=20, id="course-name") }}
         </div>
         <div class="form-group">
             {{ form.qualification.label }}<br>
@@ -85,15 +85,15 @@
         </div>
         <div>
             {{ form.room.label }}<br>
-            {{ form.room(size=32) }}
+            {{ form.room(class="input-field", size=32, id="room") }}
         </div>
         <div>
-            {{ form.schedule.label }}<br>
-            {{ form.schedule(size=32) }}
+            {{ form.schedule.label(class="schedule-text") }}<br>
+            {{ form.schedule(class="input-field", size=32, id="schedule") }}
         </div>
         <div>
             {{ form.max_participants.label }}<br>
-            {{ form.max_participants(class="participants-field", size=32, id="max-participants") }}
+            {{ form.max_participants(class="input-field", size=32, id="max-participants") }}
         </div>
         <div>
             {{ form.submit(class="create-course-button") }} <!-- button on its own -->
