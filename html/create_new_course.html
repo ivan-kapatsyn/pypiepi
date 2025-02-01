@@ -53,7 +53,7 @@
                 Login Info
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><span class="dropdown-item">Username: {{ username }}</span></li>
+                <li><span class="dropdown-item"><b>Username:</b> {{ username }}</span></li> <!-- the b makes the text bold -->
                 <li>
                     <label class="dropdown-item">
                         <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
@@ -61,7 +61,7 @@
                     </label>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="/login/index">Logout</a>
+                    <a class="dropdown-item" href="/login/index"><b>Logout</b></a> <!-- the b makes the text bold -->
                 </li>
             </ul>
         </div>
