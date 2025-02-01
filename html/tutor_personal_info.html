@@ -170,12 +170,13 @@
     <div class="left-column">
         <div class="personal-info-container">
             <h3>Personal Info</h3>
-            <div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
+            <div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 70%;">
                 {% for item in data %}
                 <div>
                     <span style="font-weight: bold;">{{ item.name }}:</span>
                     <span id="data-{{ item.name }}">{{ item.value }}</span>
                     <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
+
                 </div>
                 {% endfor %}
             </div>
@@ -234,15 +235,13 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="new-course-button">
+            <button id="new course" onclick="add_new_course('{{ user_id }}')">Add new course</button>
+        </div>
+
     </div>
 </div>
-
-
-<footer>
-    <div>
-        <button id="new course" onclick="add_new_course('{{ user_id }}')">Add new course</button>
-    </div>
-</footer>
 
 </body>
 </html>
