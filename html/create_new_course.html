@@ -41,60 +41,64 @@
     </script>
 </head>
 <body>
-<header class="d-flex justify-content-center align-items-center p-3 bg-light border-bottom">
+<header>
     <!-- Logo -->
-    <div class="header-logo">
-        <img src="{{ url_for('static', filename='banner.png') }}" alt="Logo" style="height: 50px;">
-    </div>
-    <!-- Login Info Dropdown -->
-    <div class="dropdown ms-auto">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-bs-toggle="dropdown" aria-expanded="false">
-            Login Info
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><span class="dropdown-item">Username: {{ username }}</span></li>
-            <li>
-                <label class="dropdown-item">
-                    <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
-                    remembered on this device
-                </label>
-            </li>
-            <li>
-                <a class="dropdown-item" href="/login/index">Logout</a>
-            </li>
-        </ul>
+    <div class="header">
+        <img src="{{ url_for('static', filename='banner.png') }}" class="header-image" alt="TutorMe">
+        <h1 class="header-text">TutorMe</h1>
+        <!-- Login Info Dropdown -->
+        <div class="dropdown ms-auto">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                Login Info
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><span class="dropdown-item"><b>Username:</b> {{ username }}</span></li> <!-- the b makes the text bold -->
+                <li>
+                    <label class="dropdown-item">
+                        <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
+                        remembered on this device
+                    </label>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/login/index"><b>Logout</b></a> <!-- the b makes the text bold -->
+                </li>
+            </ul>
+        </div>
     </div>
 </header>
-<h2>Create New Course</h2>
-<form method="POST">
-    {{ form.hidden_tag() }}
-    <div>
-        {{ form.course_name.label }}<br>
-        {{ form.course_name(size=20) }}
-    </div>
-    <div class="form-group">
-        {{ form.qualification.label }}<br>
-        {{ form.qualification(class="form-control") }}
-    </div>
-    <div>
-        Tutor: <span style="font-weight: bold"> {{ tutor_name }} {{ tutor_surname }}</span>
-    </div>
-    <div>
-        {{ form.room.label }}<br>
-        {{ form.room(size=32) }}
-    </div>
-    <div>
-        {{ form.schedule.label }}<br>
-        {{ form.schedule(size=32) }}
-    </div>
-    <div>
-        {{ form.max_participants.label }}<br>
-        {{ form.max_participants(size=32) }}
-    </div>
-    <div>
-        {{ form.submit() }}
-    </div>
-</form>
+
+<div class="create_new_course_container">
+    <h2>Create New Course</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.course_name.label }}<br>
+            {{ form.course_name(class="input-field", size=20, id="course-name") }}
+        </div>
+        <div class="form-group">
+            {{ form.qualification.label }}<br>
+            {{ form.qualification(class="form-control") }}
+        </div>
+        <div class="tutor-name">
+            Tutor: <span style="font-weight: bold"> {{ tutor_name }} {{ tutor_surname }}</span>
+        </div>
+        <div>
+            {{ form.room.label }}<br>
+            {{ form.room(class="input-field", size=32, id="room") }}
+        </div>
+        <div>
+            {{ form.schedule.label(class="schedule-text") }}<br>
+            {{ form.schedule(class="input-field", size=32, id="schedule") }}
+        </div>
+        <div>
+            {{ form.max_participants.label }}<br>
+            {{ form.max_participants(class="input-field", size=32, id="max-participants") }}
+        </div>
+        <div>
+            {{ form.submit(class="create-course-button") }} <!-- button on its own -->
+        </div>
+    </form>
+</div>
 </body>
 </html>

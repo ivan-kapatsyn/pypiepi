@@ -46,6 +46,10 @@ body {
     max-height: 100%;
     height: auto; /* Hält das Seitenverhältnis des Bildes bei */
     align-content: start;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 20px;
 
 }
 
@@ -87,7 +91,7 @@ body {
     background-color: #0d94b0;
 }
 
-.qualifications_input{
+.qualifications_input{ /* the little input field for tutor */
     align-self: flex-start;
     margin-left: -20px;
 }

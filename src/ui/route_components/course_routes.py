@@ -18,7 +18,7 @@ class CoursesRoutes:
     def create_new_course(user_id: str):
         tutor = Tutor.get_user_by_id(user_id)
         form = CourseCreationForm()
-        form.qualification.choices = [(value, value) for value in tutor.qualifications]
+        form.qualification.choices = [value.name for value in tutor.qualifications]
         if request.method == 'POST':
             if form.submit.data and form.validate_on_submit():
                 course_name = form.course_name.data
