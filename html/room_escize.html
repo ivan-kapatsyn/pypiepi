@@ -3,60 +3,143 @@
 <head>
   <meta charset="UTF-8">
   <title>Office Plan with Additional Rooms and Exit Sign</title>
+  <style>
+    /* Common styles for the SVG elements */
+    .outer-wall {
+      fill: none;
+      stroke: black;
+      stroke-width: 4;
+    }
+    .corridor {
+      fill: #ddd;
+      stroke: black;
+      stroke-width: 2;
+    }
+    .study-rooms {
+      fill: #cceeff;
+      stroke: black;
+      stroke-width: 2;
+    }
+    .lecture-halls {
+      fill: #e0ffe0;
+      stroke: black;
+      stroke-width: 2;
+    }
+    /* Text label style */
+    .rooms-text {
+      text-anchor: middle;
+      fill: black;
+      font-size: 16px;
+      dominant-baseline: middle;
+    }
+
+    text {
+      text-anchor: middle;
+      fill: forestgreen;
+      font-size: 32px;
+      dominant-baseline: middle;
+    }
+  </style>
 </head>
 <body>
-  <svg width="800" height="780" viewBox="0 -40 800 660" style="border:5px solid #000">
+  <svg width="600" height="600" viewBox="0 -40 800 660" style="border:5px solid #000">
     <!-- Main Building Outer Walls -->
-    <rect x="1.25%" y="7.58%" width="97.50%" height="106.06%" fill="none" stroke="black" stroke-width="4"/>
+    <rect class="outer-wall" x="1.25%" y="7.58%" width="97.50%" height="106.06%"/>
 
     <!-- Vertical Corridors -->
-    <rect x="21.88%" y="1.52%" width="2.50%" height="87.88%" fill="#ddd" stroke="black" stroke-width="2"/>
-    <rect x="45.00%" y="1.52%" width="10.00%" height="87.88%" fill="#ddd" stroke="black" stroke-width="2"/>
-    <rect x="75.63%" y="1.52%" width="2.50%" height="87.88%" fill="#ddd" stroke="black" stroke-width="2"/>
+    <rect class="corridor" x="21.88%" y="1.52%" width="2.50%" height="87.88%"/>
+    <rect class="corridor" x="45.00%" y="1.52%" width="10.00%" height="87.88%"/>
+    <rect class="corridor" x="75.63%" y="1.52%" width="2.50%" height="87.88%"/>
 
     <!-- Left Wing Offices -->
     <!-- Left Column: Offices 1,3,5,7,9 -->
-    <rect x="1.25%" y="1.52%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="1.25%" y="19.09%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="1.25%" y="36.67%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="1.25%" y="54.24%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="1.25%" y="71.82%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect class="study-rooms" x="1.25%" y="1.52%" width="20.63%" height="17.58%"/>
+    <text x="11.57%" y="10.31%" class="rooms-text">Office 1</text>
 
-    <!-- Right Column in Left Wing: Offices 2,4,6,8,10 with horizontal corridor between 4 and 6 -->
-    <rect x="24.38%" y="1.52%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="24.38%" y="18.49%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="24.38%" y="35.46%" width="20.63%" height="3.03%" fill="#ddd" stroke="black" stroke-width="2"/>
-    <rect x="24.38%" y="38.49%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="24.38%" y="55.46%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="24.38%" y="72.42%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect class="study-rooms" x="1.25%" y="19.09%" width="20.63%" height="17.58%"/>
+    <text x="11.57%" y="27.88%" class="rooms-text">Office 3</text>
+
+    <rect class="study-rooms" x="1.25%" y="36.67%" width="20.63%" height="17.58%"/>
+    <text x="11.57%" y="45.46%" class="rooms-text">Office 5</text>
+
+    <rect class="study-rooms" x="1.25%" y="54.24%" width="20.63%" height="17.58%"/>
+    <text x="11.57%" y="63.03%" class="rooms-text">Office 7</text>
+
+    <rect class="study-rooms" x="1.25%" y="71.82%" width="20.63%" height="17.58%"/>
+    <text x="11.57%" y="80.61%" class="rooms-text">Office 9</text>
+
+    <!-- Right Column in Left Wing: Offices 2,4,6,8,10 (with horizontal corridor between 4 and 6) -->
+    <rect class="study-rooms" x="24.38%" y="1.52%" width="20.63%" height="16.97%"/>
+    <text x="34.70%" y="10.00%" class="rooms-text">Office 2</text>
+
+    <rect class="study-rooms" x="24.38%" y="18.49%" width="20.63%" height="16.97%"/>
+    <text x="34.70%" y="26.98%" class="rooms-text">Office 4</text>
+
+    <rect class="corridor" x="24.38%" y="35.46%" width="20.63%" height="3.03%"/>
+
+    <rect class="study-rooms" x="24.38%" y="38.49%" width="20.63%" height="16.97%"/>
+    <text x="34.70%" y="46.98%" class="rooms-text">Office 6</text>
+
+    <rect class="study-rooms" x="24.38%" y="55.46%" width="20.63%" height="16.97%"/>
+    <text x="34.70%" y="63.95%" class="rooms-text">Office 8</text>
+
+    <rect class="study-rooms" x="24.38%" y="72.42%" width="20.63%" height="16.97%"/>
+    <text x="34.70%" y="80.91%" class="rooms-text">Office 10</text>
 
     <!-- Right Wing Offices -->
-    <!-- Left Column: Offices 11,13,15,17,19 with horizontal corridor between 13 and 15 -->
-    <rect x="55.00%" y="1.52%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="55.00%" y="18.49%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="55.00%" y="35.46%" width="20.63%" height="3.03%" fill="#ddd" stroke="black" stroke-width="2"/>
-    <rect x="55.00%" y="38.49%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="55.00%" y="55.46%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="55.00%" y="72.42%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <!-- Left Column: Offices 11,13,15,17,19 (with horizontal corridor between 13 and 15) -->
+    <rect class="study-rooms" x="55.00%" y="1.52%" width="20.63%" height="16.97%"/>
+    <text x="65.32%" y="10.00%" class="rooms-text">Office 11</text>
+
+    <rect class="study-rooms" x="55.00%" y="18.49%" width="20.63%" height="16.97%"/>
+    <text x="65.32%" y="26.98%" class="rooms-text">Office 13</text>
+
+    <rect class="corridor" x="55.00%" y="35.46%" width="20.63%" height="3.03%"/>
+
+    <rect class="study-rooms" x="55.00%" y="38.49%" width="20.63%" height="16.97%"/>
+    <text x="65.32%" y="46.98%" class="rooms-text">Office 15</text>
+
+    <rect class="study-rooms" x="55.00%" y="55.46%" width="20.63%" height="16.97%"/>
+    <text x="65.32%" y="63.95%" class="rooms-text">Office 17</text>
+
+    <rect class="study-rooms" x="55.00%" y="72.42%" width="20.63%" height="16.97%"/>
+    <text x="65.32%" y="80.91%" class="rooms-text">Office 19</text>
 
     <!-- Right Column in Right Wing: Offices 12,14,16,18,20 -->
-    <rect x="78.13%" y="1.52%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="78.13%" y="19.09%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="78.13%" y="36.67%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="78.13%" y="54.24%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
-    <rect x="78.13%" y="71.82%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect class="study-rooms" x="78.13%" y="1.52%" width="20.63%" height="17.58%"/>
+    <text x="88.45%" y="10.31%" class="rooms-text">Office 12</text>
+
+    <rect class="study-rooms" x="78.13%" y="19.09%" width="20.63%" height="17.58%"/>
+    <text x="88.45%" y="27.88%" class="rooms-text">Office 14</text>
+
+    <rect class="study-rooms" x="78.13%" y="36.67%" width="20.63%" height="17.58%"/>
+    <text x="88.45%" y="45.46%" class="rooms-text">Office 16</text>
+
+    <rect class="study-rooms" x="78.13%" y="54.24%" width="20.63%" height="17.58%"/>
+    <text x="88.45%" y="63.03%" class="rooms-text">Office 18</text>
+
+    <rect class="study-rooms" x="78.13%" y="71.82%" width="20.63%" height="17.58%"/>
+    <text x="88.45%" y="80.61%" class="rooms-text">Office 20</text>
 
     <!-- Top Additional Rooms -->
-    <rect x="1.25%" y="-13.64%" width="28.75%" height="15.15%" fill="#e0ffe0" stroke="black" stroke-width="2"/>
-    <rect x="30.00%" y="-13.64%" width="40.00%" height="15.15%" fill="#e0ffe0" stroke="black" stroke-width="2"/>
-    <rect x="70.00%" y="-13.64%" width="28.75%" height="15.15%" fill="#e0ffe0" stroke="black" stroke-width="2"/>
+    <rect class="lecture-halls" x="1.25%" y="-13.64%" width="28.75%" height="15.15%"/>
+    <text x="15.63%" y="-6.07%" class="rooms-text">Top Left Hall</text>
 
-    <!-- Bottom Additional Rooms (symmetrical to the upper side rooms, excluding the central room) -->
-    <rect x="1.25%" y="89.39%" width="28.75%" height="15.15%" fill="#e0ffe0" stroke="black" stroke-width="2"/>
-    <rect x="70.00%" y="89.39%" width="28.75%" height="15.15%" fill="#e0ffe0" stroke="black" stroke-width="2"/>
+    <rect class="lecture-halls" x="30.00%" y="-13.64%" width="40.00%" height="15.15%"/>
+    <text x="50.00%" y="-6.07%" class="rooms-text">Top Center Hall</text>
 
-    <!-- "Exit" Sign at the bottom of the central corridor -->
-    <text x="50%" y="94.70%" font-size="16" text-anchor="middle" fill="red">Exit</text>
+    <rect class="lecture-halls" x="70.00%" y="-13.64%" width="28.75%" height="15.15%"/>
+    <text x="84.38%" y="-6.07%" class="rooms-text">Top Right Hall</text>
+
+    <!-- Bottom Additional Rooms -->
+    <rect class="lecture-halls" x="1.25%" y="89.39%" width="28.75%" height="15.15%"/>
+    <text x="15.63%" y="96.97%" class="rooms-text">Bottom Left Hall</text>
+
+    <rect class="lecture-halls" x="70.00%" y="89.39%" width="28.75%" height="15.15%"/>
+    <text x="84.38%" y="96.97%" class="rooms-text">Bottom Right Hall</text>
+
+    <!-- "Exit" Sign -->
+    <text x="50%" y="85.72%">Exit</text>
   </svg>
 </body>
 </html>
