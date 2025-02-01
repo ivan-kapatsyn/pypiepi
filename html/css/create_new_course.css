@@ -70,6 +70,23 @@ body {
     max-width: 600px; /* limit the width of container */
     text-align: center; /* center the text inside the container */
     margin-top: 100px; /* the container does not touch the header */
+    display: flex;
+    flex-direction: column;    /* labels and input-fields are stacked vertically */
+    gap: 15px;                 /* gaps between elements and the title */
+}
+
+#course-name {
+    margin-bottom: 10px;
+}
+
+.tutor-name {
+    font-size: 20px;
+}
+
+#room {
+    max-width: 200px;
+    margin: 0 auto; /* important for centering (idk why) */
+    margin-bottom: 10px;
 }
 
 .schedule-text {
@@ -86,6 +103,7 @@ body {
 #max-participants {
     max-width: 100px;
     margin: 0 auto;
+    margin-bottom: 10px;
 }
 
 .create-course-button {
