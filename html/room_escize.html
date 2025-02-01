@@ -2,261 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Office Building Plan</title>
-  <style>
-    /* Styles for the entire body to center the content */
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      background-color: #f3f4f6;
-    }
-
-    /* Grid-based layout for a square structure */
-    .building {
-      display: grid;
-      grid-template-columns: repeat(4, 150px);
-      grid-template-rows: repeat(4, 100px);
-      gap: 16px; /* Maintain gaps between rooms */
-      padding: 20px;
-      background-color: #ffffff;
-      border: 2px solid #d1d5db;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      position: relative;
-    }
-
-    /* Styles for rooms */
-    .room {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #60a5fa;
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: bold;
-      text-align: center;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-      transition: transform 0.2s, box-shadow 0.2s;
-      position: relative;
-    }
-
-    .big-room {
-      width: 105%;
-      height: 104%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #60a5fa;
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: bold;
-      text-align: center;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-      transition: transform 0.2s, box-shadow 0.2s;
-      position: relative;
-    }
-
-    .big-room-shifted-left {
-      left: -5%;
-      width: 105%;
-      height: 104%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #60a5fa;
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: bold;
-      text-align: center;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-      transition: transform 0.2s, box-shadow 0.2s;
-      position: relative;
-    }
-
-    .big-room-shifted-up {
-      top: -5%;
-      width: 105%;
-      height: 104%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #60a5fa;
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: bold;
-      text-align: center;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-      transition: transform 0.2s, box-shadow 0.2s;
-      position: relative;
-    }
-
-    .big-room-shifted-up-left {
-      left: -5%;
-      top: -5%;
-      width: 105%;
-      height: 104%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #60a5fa;
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: bold;
-      text-align: center;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-      transition: transform 0.2s, box-shadow 0.2s;
-      position: relative;
-    }
-
-    /* Pseudo-element to color SOME gaps between rooms */
-    .gap {
-      position: absolute;
-      background-color: rgba(255, 0, 0, 0.5); /* Red-colored gaps */
-      z-index: -1;
-    }
-
-    /* Horizontal gap example (between Room 102 & 103) */
-    .room:nth-child(5)::after {
-      content: "";
-      width: 16px;
-      height: 120%;
-      position: absolute;
-      right: -16px;
-      top: -10%;
-      background-color: navajowhite;
-    }
-
-    .room:nth-child(9)::after {
-      content: "";
-      width: 16px;
-      height: 120%;
-      position: absolute;
-      right: -16px;
-      top: -10%;
-      background-color: navajowhite;
-    }
-
-    .big-room:nth-child(6)::after {
-      content: "";
-      width: 16px;
-      height: 100%;
-      position: absolute;
-      right: -16px;
-      /*top: -10%;*/
-      background-color: black;
-    }
-
-    .big-room-shifted-left:nth-child(7)::after {
-      content: "";
-      width: 16px;
-      height: 120%;
-      position: absolute;
-      right: -16px;
-      top: -10%;
-      background-color: navajowhite;
-    }
-
-    .big-room-shifted-up-left:nth-child(11)::after {
-      content: "";
-      width: 16px;
-      height: 120%;
-      position: absolute;
-      right: -16px;
-      top: -10%;
-      background-color: navajowhite;
-    }
-
-    .room:nth-child(2)::after {
-      content: "";
-      width: 120%;
-      height: 16px;
-      position: absolute;
-      bottom: -16px;
-      left: -10%;
-      background-color: navajowhite;
-    }
-
-    .room:nth-child(3)::after {
-      content: "";
-      width: 120%;
-      height: 16px;
-      position: absolute;
-      bottom: -16px;
-      left: -10%;
-      background-color: navajowhite;
-    }
-
-    .big-room-shifted-up:nth-child(10)::after {
-      content: "";
-      width: 120%;
-      height: 16px;
-      position: absolute;
-      bottom: -16px;
-      left: -10%;
-      background-color: navajowhite;
-    }
-
-    .room:nth-child(15)::after {
-      content: "";
-      width: 120%;
-      height: 16px;
-      position: absolute;
-      top: -16px;
-      left: -10%;
-      background-color: navajowhite;
-    }
-
-    .room:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-    }
-  </style>
+  <title>Office Plan with Additional Rooms and Exit Sign</title>
 </head>
 <body>
-  <div class="building">
-    <!-- Top row -->
-    <div class="room" onclick="tuts('Room 101')">Room 101</div>
-    <div class="room" onclick="tuts('Room 102')">Room 102</div>
-    <div class="room" onclick="tuts('Room 103')">Room 103</div>
-    <div class="room" onclick="tuts('Room 104')">Room 104</div>
+  <svg width="800" height="780" viewBox="0 -40 800 660" style="border:5px solid #000">
+    <!-- Main Building Outer Walls -->
+    <rect x="1.25%" y="7.58%" width="97.50%" height="106.06%" fill="none" stroke="black" stroke-width="4"/>
 
-    <!-- Second row -->
-    <div class="room" onclick="tuts('Room 201')">Room 201</div>
-    <div class="big-room" onclick="tuts('Room 202')">Room 202</div>
-    <div class="big-room-shifted-left" onclick="tuts('Room 203')">Room 203</div>
-    <div class="room" onclick="tuts('Room 204')">Room 204</div>
+    <!-- Vertical Corridors -->
+    <rect x="21.88%" y="1.52%" width="2.50%" height="87.88%" fill="#ddd" stroke="black" stroke-width="2"/>
+    <rect x="45.00%" y="1.52%" width="10.00%" height="87.88%" fill="#ddd" stroke="black" stroke-width="2"/>
+    <rect x="75.63%" y="1.52%" width="2.50%" height="87.88%" fill="#ddd" stroke="black" stroke-width="2"/>
 
-    <!-- Third row -->
-    <div class="room" onclick="tuts('Room 301')">Room 301</div>
-    <div class="big-room-shifted-up" onclick="tuts('Room 302')">Room 302</div>
-    <div class="big-room-shifted-up-left" onclick="tuts('Room 303')">Room 303</div>
-    <div class="room" onclick="tuts('Room 304')">Room 304</div>
+    <!-- Left Wing Offices -->
+    <!-- Left Column: Offices 1,3,5,7,9 -->
+    <rect x="1.25%" y="1.52%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="1.25%" y="19.09%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="1.25%" y="36.67%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="1.25%" y="54.24%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="1.25%" y="71.82%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
 
-    <!-- Fourth row -->
-    <div class="room" onclick="tuts('Room 401')">Room 401</div>
-    <div class="room" onclick="tuts('Room 402')">Room 402</div>
-    <div class="room" onclick="tuts('Room 403')">Room 403</div>
-    <div class="room" onclick="tuts('Room 404')">Room 404</div>
-  </div>
+    <!-- Right Column in Left Wing: Offices 2,4,6,8,10 with horizontal corridor between 4 and 6 -->
+    <rect x="24.38%" y="1.52%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="24.38%" y="18.49%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="24.38%" y="35.46%" width="20.63%" height="3.03%" fill="#ddd" stroke="black" stroke-width="2"/>
+    <rect x="24.38%" y="38.49%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="24.38%" y="55.46%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="24.38%" y="72.42%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
 
-  <script>
-    function tuts(room) {
-      alert(`You clicked on ${room}`);
-    }
-  </script>
+    <!-- Right Wing Offices -->
+    <!-- Left Column: Offices 11,13,15,17,19 with horizontal corridor between 13 and 15 -->
+    <rect x="55.00%" y="1.52%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="55.00%" y="18.49%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="55.00%" y="35.46%" width="20.63%" height="3.03%" fill="#ddd" stroke="black" stroke-width="2"/>
+    <rect x="55.00%" y="38.49%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="55.00%" y="55.46%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="55.00%" y="72.42%" width="20.63%" height="16.97%" fill="#cceeff" stroke="black" stroke-width="2"/>
+
+    <!-- Right Column in Right Wing: Offices 12,14,16,18,20 -->
+    <rect x="78.13%" y="1.52%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="78.13%" y="19.09%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="78.13%" y="36.67%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="78.13%" y="54.24%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
+    <rect x="78.13%" y="71.82%" width="20.63%" height="17.58%" fill="#cceeff" stroke="black" stroke-width="2"/>
+
+    <!-- Top Additional Rooms -->
+    <rect x="1.25%" y="-13.64%" width="28.75%" height="15.15%" fill="#e0ffe0" stroke="black" stroke-width="2"/>
+    <rect x="30.00%" y="-13.64%" width="40.00%" height="15.15%" fill="#e0ffe0" stroke="black" stroke-width="2"/>
+    <rect x="70.00%" y="-13.64%" width="28.75%" height="15.15%" fill="#e0ffe0" stroke="black" stroke-width="2"/>
+
+    <!-- Bottom Additional Rooms (symmetrical to the upper side rooms, excluding the central room) -->
+    <rect x="1.25%" y="89.39%" width="28.75%" height="15.15%" fill="#e0ffe0" stroke="black" stroke-width="2"/>
+    <rect x="70.00%" y="89.39%" width="28.75%" height="15.15%" fill="#e0ffe0" stroke="black" stroke-width="2"/>
+
+    <!-- "Exit" Sign at the bottom of the central corridor -->
+    <text x="50%" y="94.70%" font-size="16" text-anchor="middle" fill="red">Exit</text>
+  </svg>
 </body>
 </html>
