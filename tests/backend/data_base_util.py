@@ -1,4 +1,3 @@
-import os
 import unittest
 from pandas.core.interchange import column
 from src.utils.data_base_util import DataBaseUtil
