@@ -16,7 +16,7 @@ class TestCourse(unittest.TestCase):
             user_id="430112d4d154a44f",
             qualification=Qualification("Math"),
             room_id=test_room_id,
-            schedule="sample1",
+            schedule="Fri 12-14",
             max_participants=25
         )
 
@@ -24,7 +24,7 @@ class TestCourse(unittest.TestCase):
         self.assertIsNotNone(course)
         self.assertEqual(course.name, "Advanced Programming")
         self.assertEqual(course.room.room_id, test_room_id)
-        self.assertEqual(course.schedule, "sample1")
+        self.assertEqual(course.schedule, "Fri 12-14")
         self.assertEqual(course.max_participants, 25)
 
     def test_add_new_course_room_not_found(self):
@@ -34,7 +34,7 @@ class TestCourse(unittest.TestCase):
                 user_id="430112d4d154a44f",
                 qualification=Qualification("Math"),
                 room_id="nonexistent_room_id",
-                schedule="sample2",
+                schedule="Fri 12-14",
                 max_participants=25
             )
 
@@ -50,13 +50,45 @@ class TestCourse(unittest.TestCase):
                 max_participants=existing_course.max_participants
             )
 
+    def test_add_new_course_schedule_overlapping(self):
+        existing_course = Course.get_course_by_id("f61985b87284171a")
+        with self.assertRaises(DuplicationError):
+            Course.add_new_course(
+                name=existing_course.name,
+                user_id=existing_course.user_id,
+                qualification=existing_course.qualification,
+                room_id=existing_course.room.room_id,
+                schedule="Mon 8-10",
+                max_participants=existing_course.max_participants
+            )
+
+        with self.assertRaises(DuplicationError):
+            Course.add_new_course(
+                name=existing_course.name,
+                user_id=existing_course.user_id,
+                qualification=existing_course.qualification,
+                room_id=existing_course.room.room_id,
+                schedule="Mon 10-11",
+                max_participants=existing_course.max_participants
+            )
+
+        with self.assertRaises(DuplicationError):
+            Course.add_new_course(
+                name=existing_course.name,
+                user_id=existing_course.user_id,
+                qualification=existing_course.qualification,
+                room_id=existing_course.room.room_id,
+                schedule="Mon 7-14",
+                max_participants=existing_course.max_participants
+            )
+
     def test_get_course_by_id(self):
         course = Course.get_course_by_id("f61985b87284171a")
 
         self.assertIsNotNone(course)
         self.assertEqual(course.course_id, "f61985b87284171a")
         self.assertEqual(course.name, "Math couse for begginers")
-        self.assertEqual(course.schedule, "Mon9-12")
+        self.assertEqual(course.schedule, "Mon 9-12")
         self.assertEqual(course.max_participants, 25)
 
     def test_delete_course(self):
@@ -65,7 +97,7 @@ class TestCourse(unittest.TestCase):
             user_id="430112d4d154a44f",
             qualification=Qualification("Math"),
             room_id="0fc47a8b9acc2ab3",
-            schedule="sample5",
+            schedule="Thu 12-14",
             max_participants=25
         )
 
@@ -86,7 +118,6 @@ class TestCourse(unittest.TestCase):
     def test_get_courses_by_user_id_no_courses(self):
         courses = Course.get_courses_by_user_id("non_existent_user")
         self.assertEqual(len(courses), 0)
-
 
 
 if __name__ == "__main__":

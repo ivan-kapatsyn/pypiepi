@@ -12,6 +12,6 @@ class CourseCreationForm(FlaskForm):
     max_participants = IntegerField('Total number of students', validators=[
         DataRequired(),
         NumberRange(min=5, message="There should be more than 5 students."),
-        NumberRange(max=30, message="There should be less than 30 students in the class.")
+        NumberRange(max=40, message="There should be less than 30 students in the class.")
     ])
     submit = SubmitField('Create')

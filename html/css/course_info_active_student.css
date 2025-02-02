@@ -1,13 +1,15 @@
-/* Basic styling */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f5f5f5;
-    display: flex;
-    justify-content: center; /* Center all content horizontally */
-    align-items: center; /* Center all content vertically */
-    height: 100vh; /* Full height of the viewport */
+    height: 100vh; /* Höhe des Viewports */
+    display: flex; /* Aktiviert Flexbox */
+    flex-direction: column; /* Setzt Flex-Elemente untereinander */
+    justify-content: flex-start; /* Stellt sicher, dass der Header oben bleibt */
+    align-items: center; /* Zentriert vertikal */
+    height: 100vh; /* Höhe des Viewports */
+
 }
 
 /* Banner-Stil */
@@ -30,7 +32,6 @@ body {
     display: flex; /* Aktiviert Flexbox */
     align-items: center; /* Vertikal zentrieren */
     justify-content: space-between; /* Text zentrieren und Bild nach links */
-
 }
 
 /* Optional: Effekt bei Hover */
@@ -45,10 +46,6 @@ body {
     max-height: 100%;
     height: auto; /* Hält das Seitenverhältnis des Bildes bei */
     align-content: start;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 20px;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 20px;
 
 }
 
@@ -57,20 +54,21 @@ body {
     text-align: center; /* Text im Container zentrieren */
 }
 
+.dropdown {
+    margin-left: auto; /* Push the dropdown to the far right */
+}
+
 /* Eingabefelder mit abgerundeten Ecken */
 .input-field {
     border-radius: 10px; /* Abgerundete Ecken für die Textboxen */
     padding: 10px; /* Etwas Padding für den Inhalt */
     border: 1px solid #ccc; /* Einfache Randlinie */
     width: 100%; /* Breite auf 100% setzen (falls gewünscht) */
+    height: 30px;
     box-sizing: border-box; /* Box-Modell anpassen */
 }
 
-
-
-
-/* Container for the entire login block (including the button) */
-.login-container {
+.register-container {
     background-color: #ffffff; /* White background for the box */
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
@@ -78,75 +76,58 @@ body {
     width: 100%;
     max-width: 400px; /* Limit the width */
     text-align: center; /* Center the text inside the container */
+    margin-top: 100px; /* Verhindert, dass der Container direkt an den Header anschlägt */
 }
 
-/* Heading */
-h1 {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 20px; /* Space below the heading */
+.user-type-select-button {
+    background-color: #14B8D5;
+    color: black;
+    border-radius: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
-/* Form fields */
+.user-type-select-button:hover {
+    background-color: #0d94b0;
+}
+
+.qualifications_input{
+    align-self: flex-start;
+    margin-left: -20px;
+}
+
+.create-button {
+    background-color: #45DABA;
+    color: black;
+    font-size: 18px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    width: 80%; /* Button takes 80% of the container's width */
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto; /* Falls notwendig für zusätzliche Zentrierung (ist wohl nötig) */
+}
+
+.create-button:hover {
+    background-color: teal;
+}
+
 form div {
     margin-bottom: 15px; /* Space between fields */
     text-align: left; /* Align text to the left */
 }
 
-/* Button styling for Login Button */
-.login-button {
-    background-color: #14B8D5; /* Your desired color for the Login Button */
-    color: black;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    padding: 15px 0; /* Vertical padding */
-    font-size: 18px;
-    border-radius: 5px; /* Rounded corners */
-    width: 80%; /* Button takes 80% of the container's width */
-    display: block; /* Block-level element */
-    margin-top: 20px; /* Space above the button */
-    margin-left: auto; /* Center horizontally */
-    margin-right: auto; /* Center horizontally */
+h1 {
+    color: #333;
 }
 
-.login-button:hover {
-    background-color: #0d94b0; /* Darker color on hover */
+
+
+#tutor-qualification-attribute-list .attribute-item {
+    margin-left: 20px; /* Adjust this value to control the shift */
 }
 
-/* Button styling for Register Button */
-.register-button {
-    background-color: #45DABA; /* Your desired color for the Register Button */
-    color: black;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    padding: 15px 0; /* Vertical padding */
-    font-size: 18px;
-    border-radius: 5px; /* Rounded corners */
-    width: 80%; /* Button takes 80% of the container's width */
-    display: block; /* Block-level element */
-    margin-top: 20px; /* Space above the button */
-    margin-left: auto; /* Center horizontally */
-    margin-right: auto; /* Center horizontally */
-}
-
-.register-button:hover {
-    background-color: mediumpurple; /* Darker color on hover */
-}
-
-/* Link for registration */
-.register-link {
-    margin-top: 10px; /* Space above the link */
-    font-size: 14px;
-    color: #007bff; /* Blue color */
-}
-
-.register-link a {
-    text-decoration: none; /* Remove underline */
-    color: inherit; /* Inherit color from the parent */
-}
-
-.register-link a:hover {
-    text-decoration: underline; /* Underline on hover */
+.hidden {
+    display: none;
 }

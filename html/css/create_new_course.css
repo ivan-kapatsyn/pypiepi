@@ -1,14 +1,136 @@
-.header-logo {
+/* Basic styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1; /* Allows the logo to occupy the center space */
+    justify-content: center; /* Center all content horizontally */
+    align-items: center; /* Center all content vertically */
+    height: 100vh; /* Full height of the viewport */
+}
+
+/* Banner-Stil */
+.header {
+    background-color: #cccccc; /* Banner-Farbe */
+    color: black;              /* Textfarbe */
+    text-align: center;        /* Text zentrieren */
+    padding: 2px 0;           /* Oben und unten etwas Abstand */
+    font-family: Arial, sans-serif; /* Schriftart */
+    font-size: 15px;           /* Textgröße */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Schattierung für ein weiches Aussehen */
+    position: fixed;           /* Fixiert den Banner oben */
+    top: 0;                    /* Setzt den Banner ganz nach oben */
+    left: 0;                   /* Setzt den Banner ganz nach links */
+    width: 100%;               /* Macht den Banner so breit wie der Bildschirm */
+    height: 10%;
+    z-index: 1000;             /* Stellt sicher, dass der Banner über anderen Elementen liegt */
+    border-bottom-left-radius: 15px;  /* Abrunden der unteren linken Ecke */
+    border-bottom-right-radius: 15px; /* Abrunden der unteren rechten Ecke */
+    display: flex; /* Aktiviert Flexbox */
+    align-items: center; /* Vertikal zentrieren */
+    justify-content: space-between; /* Text zentrieren und Bild nach links */
+
+}
+
+/* Optional: Effekt bei Hover */
+.header:hover {
+    background-color: mediumturquoise; /* Etwas dunkler bei Hover */
+    transition: background-color 0.3s ease; /* Sanfter Übergang */
+}
+
+
+.header-image {
+    max-width: 100%; /* Verhindert, dass das Bild größer als der Header wird */
+    max-height: 100%;
+    height: auto; /* Hält das Seitenverhältnis des Bildes bei */
+    align-content: start;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 20px;
+}
+
+.header-text {
+    flex-grow: 1; /* Hiermit wird der Text mittig ausgerichtet */
+    text-align: center; /* Text im Container zentrieren */
+
+
 }
 
 .dropdown {
-    margin-left: auto; /* Push the dropdown to the far right */
+    margin-right: 20px; /* Push the dropdown to the far right */
 }
 
-.header {
-    background-color: cadetblue;
+.create_new_course_container {
+    background-color: #ffffff; /* White background for the box */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    padding: 30px; /* Padding inside the box */
+    width: 100%;
+    max-width: 600px; /* limit the width of container */
+    text-align: center; /* center the text inside the container */
+    margin-top: 100px; /* the container does not touch the header */
+    display: flex;
+    flex-direction: column;    /* labels and input-fields are stacked vertically */
+    gap: 15px;                 /* gaps between elements and the title */
+    font-size: 16px;
+}
+
+.create_new_course_container h2 {
+    margin: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ccc; /* Dünne Linie */
+    box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.3); /* Leichter Schatten unter der Linie */
+
+}
+
+
+#course-name {
+    margin-bottom: 10px;
+}
+
+.tutor-name {
+    font-size: 20px;
+}
+
+#room {
+    max-width: 200px;
+    margin: 0 auto; /* important for centering (idk why) */
+    margin-bottom: 10px;
+}
+
+.schedule-text {
+
+}
+
+/* form-control is an extra class for qualifications input field */
+.form-control {
+    max-width: 200px;
+    margin: 0 auto; /* important for centering (idk why) */
+    margin-bottom: 10px;
+}
+
+#max-participants {
+    max-width: 100px;
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+
+.create-course-button {
+    background-color: #45DABA;
+    color: black;
+    font-size: 18px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: 50%; /* Button takes 50% of the container's width */
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto; /* important for centering (idk why) */
+    margin-top: 20px; /* button has some space above */
+}
+
+.create-course-button:hover {
+    background-color: teal;
 }

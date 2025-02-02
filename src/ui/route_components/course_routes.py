@@ -1,9 +1,10 @@
+from datetime import datetime, timedelta
+from typing import List
+
 from flask import Blueprint, Response, render_template, request, redirect, url_for
 
 from src.backend.course import Course
 from src.backend.evaluation import Evaluation
-from src.backend.qualification import Qualification
-from src.backend.room import Room
 from src.backend.tutor import Tutor
 from src.backend.user import User
 from src.ui.forms.create_new_course import CourseCreationForm
@@ -17,7 +18,7 @@ class CoursesRoutes:
     def create_new_course(user_id: str):
         tutor = Tutor.get_user_by_id(user_id)
         form = CourseCreationForm()
-        form.qualification.choices = [(value, value) for value in tutor.qualifications]
+        form.qualification.choices = [value.name for value in tutor.qualifications]
         if request.method == 'POST':
             if form.submit.data and form.validate_on_submit():
                 course_name = form.course_name.data
@@ -37,53 +38,44 @@ class CoursesRoutes:
 
     @staticmethod
     @main_bp.route('/info/<course_id>/<user_id>')
-    def info(user_id: str, course_id: int):
+    def info(user_id: str, course_id: str):
         user = User.get_user_by_id(user_id)
-        # Todo retrieve Course by Course.get_course_by_id()
-        course = Course(
-            name="Mafia 1",
-            qualification=Qualification("Math"),
-            max_participants=30,
-            tutor=user,  # We assume that we will log in from the tutors perspective
-            students=[
-                ("Lorenz", 'Applied Data Science'),
-                ("Sofia", 'Applied Informatics'),
-                ("Markus", 'Applied Data Science'),
-                ("Lilit", 'Applied Informatics')
-            ],
-            schedule=[
-                'Mon 9AM-10AM',
-                'Thu 9AM-10AM'
-            ],
-            location=Room('Prov.103'),
-            evaluation=Evaluation([(8.9, 'it was nice')]),  # Todo specify the structure of Evaluation
-            announcements=['Today the class is off']  # Todo add date to the announcement
-        )
-        # Todo add user_type to the User
-        user_type = 'Tutor'
-        if user_type == 'Tutor':
+        course = Course.get_course_by_id(course_id)
+        student_list = [
+            User.get_user_by_id('430112d4d154a44f'),
+            User.get_user_by_id('a76d22eb46a882d2'),
+            User.get_user_by_id('903d839e277ca6b9'),
+            User.get_user_by_id('99b92b9c4c483607')
+        ]
+        evaluations = Evaluation.get_evaluations_by_course_ids([course_id])
+        user_type = user.user_type
+        if user_type == 'tutor':
             page = 'course_info_tutor.html'
-            return render_template(page, user_id=user_id,
-                                   course_id=course_id,
-                                   username=user.username,
-                                   remember_me=user.remember_me,
-                                   course_data=CoursesRoutes.__construct_course_data(course),
-                                   students_list=CoursesRoutes.__construct_student_data(course.students),
-                                   average_rating=CoursesRoutes.__get_average_evaluation(course.evaluation.ratings),
-                                   feedback_list=CoursesRoutes.__construct_feedback_data(course.evaluation.ratings),
-                                   announcements=course.announcements
-                                   )
         elif user_type == 'Student':
-            # Todo implement later
-            pass
+            #TODO Replace with if user_id in [x.user_id for x in course.student]:
+            active_student = True
+            if active_student:
+                page = 'course_info_active_student.html'
+            else:
+                page = 'course_info_non_active_student.html'
         else:
-            # Todo implement later
-            pass
+            # Todo implement Admin later
+            page = '...'
+        return render_template(page, user_id=user_id,
+                               course_id=course_id,
+                               username=user.username,
+                               remember_me=user.remember_me,
+                               course_data=CoursesRoutes.__construct_course_data(course),
+                               students_list=CoursesRoutes.__construct_student_data(student_list),
+                               average_rating=CoursesRoutes.__get_average_evaluation(evaluations),
+                               feedback_list=CoursesRoutes.__construct_feedback_data(evaluations),
+                               announcements=course.announcements
+                               )
 
     @staticmethod
     @main_bp.route('/delete_course/<course_id>/<user_id>')
     def delete_course(course_id: str, user_id: str):
-        # Todo delete course in db
+        Course.get_course_by_id(course_id).delete_course()
         return redirect(url_for('tutor.personal_bio', user_id=user_id))
 
     @staticmethod
@@ -98,10 +90,12 @@ class CoursesRoutes:
         course_data = {
             'Course name': course.name,
             'Qualification': course.qualification.name,
-            'Tutor': course.tutor.first_name + ' ' + course.tutor.last_name,
-            'Room': course.location.name,
-            'Schedule': '\n'.join([f'{x.day} {x.start_time}' for x in course.schedule]),
+            'Tutor': Tutor.get_user_by_id(course.user_id).first_name + ' ' + Tutor.get_user_by_id(course.user_id).last_name,
+            'Room': course.room.name,
+            'Schedule': course.schedule,
             'Max participants': course.max_participants,
+            #Todo replace it with course.max_participants - len(course.students)
+            'Available seats': course.max_participants - 16
         }
         course_data = [{
             'name': key,
@@ -110,31 +104,33 @@ class CoursesRoutes:
         return course_data
 
     @staticmethod
-    def __construct_student_data(students):
+    def __construct_student_data(students: List[User]):
         # Todo replace it when Student is implemented
         result = []
         for i, student in enumerate(students):
             result.append({
                 'i': i + 1,
-                'first_name': student[0],
-                'last_name': 'Surname',
-                'study_program': student[1]
+                'first_name': student.first_name,
+                'last_name': student.last_name,
+                'study_program': "Some study program",
             })
         return result
 
     @staticmethod
-    def __get_average_evaluation(evaluation):
-        return sum([x[0] for x in evaluation]) / len(evaluation)
+    def __get_average_evaluation(evaluation: List[Evaluation]):
+        if len(evaluation) == 0:
+            return None
+        return sum([x.grade for x in evaluation]) / len(evaluation)
 
     @staticmethod
-    def __construct_feedback_data(feedbacks):
-        # Todo replace it when Student is implemented
+    def __construct_feedback_data(feedbacks: List[Evaluation]):
         result = []
         for i, feedback in enumerate(feedbacks):
             result.append({
                 'i': i + 1,
-                'rating': feedback[0],
-                'name': 'Anonymous',
-                'comment': feedback[1]
+                'rating': feedback.grade,
+                'name': User.get_user_by_id(feedback.author_id).first_name + ' ' + User.get_user_by_id(feedback.author_id).last_name,
+                'date': feedback.date.strftime("%d.%m.%Y %H:%M:%S"),
+                'comment': feedback.feedback,
             })
         return result
