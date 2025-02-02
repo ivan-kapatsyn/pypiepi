@@ -41,20 +41,14 @@ class CoursesRoutes:
     def info(user_id: str, course_id: str):
         user = User.get_user_by_id(user_id)
         course = Course.get_course_by_id(course_id)
-        student_list = [
-            User.get_user_by_id('430112d4d154a44f'),
-            User.get_user_by_id('a76d22eb46a882d2'),
-            User.get_user_by_id('903d839e277ca6b9'),
-            User.get_user_by_id('99b92b9c4c483607')
-        ]
+        # Todo replace with Student.get_user_by_id
+        student_list = [User.get_user_by_id(student_id) for student_id in course.student_ids]
         evaluations = Evaluation.get_evaluations_by_course_ids([course_id])
         user_type = user.user_type
         if user_type == 'tutor':
             page = 'course_info_tutor.html'
-        elif user_type == 'Student':
-            #TODO Replace with if user_id in [x.user_id for x in course.student]:
-            active_student = True
-            if active_student:
+        elif user_type == 'student':
+            if user_id in course.student_ids:
                 page = 'course_info_active_student.html'
             else:
                 page = 'course_info_non_active_student.html'
