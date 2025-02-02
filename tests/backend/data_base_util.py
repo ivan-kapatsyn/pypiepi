@@ -249,5 +249,14 @@ class DataBaseUtilTestCase(unittest.TestCase):
         self.assertEqual(exists, expected_exists, f"User {user_id_to_test} existence check failed")
 
 
+    def test_exist_user_id(self):
+        user_id_to_test = "202345671"
+        expected_exists = False
+        exists = self.db_util.exists_user_by_id("users", user_id_to_test)
+        print(f"User {user_id_to_test} exists: {exists}")
+
+        self.assertEqual(exists, expected_exists, f"User {user_id_to_test} existence check failed")
+
+
 if __name__ == '__main__':
     unittest.main()
