@@ -169,7 +169,7 @@
 <div class="main-container">
     <div class="left-column">
         <div class="personal-info-container">
-            <h3>Personal Info</h3>
+            <h3><b>Personal Info</b></h3>
             <div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 70%;">
                 {% for item in data %}
                 <div>
@@ -184,7 +184,7 @@
 
 
         <div class="rating-container">
-            <h3>Rating</h3>
+            <h3><b>Rating</b></h3>
             <div>
                 <h4>Average rating:</h4>
                 <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
@@ -193,7 +193,7 @@
 
 
         <div class="comments-container">
-            <h4>Comments:</h4>
+            <h4><b>Comments:</b></h4>
 
             {% for feedback in feedback_list %}
             <span>{{ feedback.i }}) {{ feedback.name }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
@@ -203,7 +203,7 @@
 
     <div class="right-column">
         <div class="schedule-container">
-            <h3>Schedule</h3>
+            <h3><b>Schedule</b></h3>
             <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
                 <thead>
                 <tr>
@@ -237,7 +237,7 @@
         </div>
 
         <div class="new-course-button">
-            <button id="new course" onclick="add_new_course('{{ user_id }}')">Add new course</button>
+            <button id="new-course" onclick="add_new_course('{{ user_id }}')">Add new course</button>
         </div>
 
     </div>
