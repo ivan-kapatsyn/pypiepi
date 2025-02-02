@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>Admin's working page</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='tutor_personal_info.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin_personal_info.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
@@ -109,37 +109,9 @@
         }
     </script>
     <script>
-        function add_new_course(userId) {
-            fetch('/course/new/' + userId, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                window.location.href = '/course/new/' + userId;
-            });
+        function visit_course(room_id) {
 
         }
-    </script>
-    <script>
-        function applyRatingColors() {
-            document.querySelectorAll('.rating').forEach(span => {
-                const rating = parseFloat(span.dataset.rating);
-                const normalized = rating / 10;
-                const red = Math.round((1 - normalized) * 255);
-                const green = Math.round(normalized * 255);
-                const color = `rgb(${red}, ${green}, 0)`;
-                span.style.color = color;
-                span.style.border = `2px solid ${color}`;
-            });
-        }
-
-        // Ensure DOM is loaded before calling the function
-        document.addEventListener('DOMContentLoaded', applyRatingColors);
     </script>
 </head>
 <body>
