@@ -212,17 +212,17 @@
     </script>
 </head>
 <body>
-<header class="d-flex justify-content-center align-items-center p-3 bg-light border-bottom">
-    <div class="header-logo">
-        <img src="{{ url_for('static', filename='banner.png') }}" alt="Logo" style="height: 50px;">
-    </div>
+
+<header class="header">
+    <img src="{{ url_for('static', filename='banner.png') }}" class="header-image" alt="TutorMe">
+    <h1 class="header-text">TutorMe</h1>
     <div class="dropdown ms-auto">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                 data-bs-toggle="dropdown" aria-expanded="false">
             Login Info
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><span class="dropdown-item">Username: {{ username }}</span></li>
+            <li><span class="dropdown-item"><b>Username:</b> {{ username }}</span></li>
             <li>
                 <label class="dropdown-item">
                     <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
@@ -230,49 +230,81 @@
                 </label>
             </li>
             <li>
-                <a class="dropdown-item" href="/login/index">Logout</a>
+                <a class="dropdown-item" href="/login/index"><b>Logout</b></a>
             </li>
         </ul>
     </div>
 </header>
-<h2>General Info</h2>
-<div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
-    {% for item in course_data %}
-    <div>
-        <span style="font-weight: bold;">{{ item.name }}:</span>
-        <span id="data-{{ item.name }}">{{ item.value }}</span>
-        <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
+
+<div class="main-container">
+
+    <div class="left-column">
+
+        <div class="info">
+            <h2><b>General Info</b></h2>
+            <div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
+                {% for item in course_data %}
+                <div>
+                    <span style="font-weight: bold;">{{ item.name }}:</span>
+                    <span id="data-{{ item.name }}">{{ item.value }}</span>
+                    <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="delete-button">
+            <button id="delete-course" onclick="deleteCourse()">Delete the course</button>
+        </div>
+
+
+        <div class="announcements">
+            <h2><b>Announcements</b></h2>
+            <div id="announcements_container">
+                {% for announcement in announcements %}
+                <span>- {{ announcement }}</span><br>
+                {% endfor %}
+                <span id="data-announcement"></span>
+                <button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>
+            </div>
+        </div>
     </div>
-    {% endfor %}
-</div>
-<h2>Listeners</h2>
-<div id="students_container">
-    {% for student in students_list %}
-    <div>
-        <span>{{ student.i }})  {{ student.first_name }} {{ student.last_name }}: </span>
-        <span style="font-style: italic">{{ student.study_program }}</span>
+
+
+    <div class="right-column">
+
+        <div class="listeners">
+            <h2><b>Listeners</b></h2>
+            <div id="students_container">
+                {% for student in students_list %}
+                <div>
+                    <span>{{ student.i }})  {{ student.first_name }} {{ student.last_name }}: </span>
+                    <span style="font-style: italic">{{ student.study_program }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="ratings">
+            <h2><b>Rating</b></h2>
+            <div>
+                <h4>Average rating:</h4>
+                <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
+            </div>
+        </div>
+
+        <div class="comments">
+            <div>
+                <h4><b>Comments:</b></h4><br>
+                {% for feedback in feedback_list %}
+                <span>{{ feedback.i }}) {{ feedback.name }} at {{ feedback.date }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-    {% endfor %}
+
+
 </div>
-<h2>Rating</h2>
-<div>
-    <h4>Average rating:</h4>
-    <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
-</div>
-<div>
-    <h4>Comments:</h4><br>
-    {% for feedback in feedback_list %}
-    <span>{{ feedback.i }}) {{ feedback.name }} at {{ feedback.date }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
-    {% endfor %}
-</div>
-<h2>Announcements</h2>
-<div id="announcements_container">
-    {% for announcement in announcements %}
-    <span>- {{ announcement }}</span><br>
-    {% endfor %}
-    <span id="data-announcement"></span>
-    <button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>
-</div>
-<button onclick="deleteCourse()">Delete the course</button>
+
 </body>
 </html>

@@ -4,7 +4,6 @@ body {
     flex-direction: column; /* elements stacked vertically */
     justify-content: flex-start; /* starts at the top */
     align-items: center; /* centers horizontally */
-    /* Entferne oder passe height: 100vh an, damit die Seite scrollt, wenn sie länger ist */
 }
 
 
@@ -37,7 +36,6 @@ body {
     transition: background-color 0.3s ease; /* Sanfter Übergang */
 }
 
-
 .header-image {
     max-width: 100%; /* Verhindert, dass das Bild größer als der Header wird */
     max-height: 100%;
@@ -59,7 +57,7 @@ body {
 }
 
 .main-container {
-  margin-top: calc(10% + 20px); /* 10% (Headerhöhe) plus 20px Abstand */
+  margin-top: calc(10% + 20px); /* 10% (Header hights??) plus 20px space */
   display: flex;
   justify-content: space-between;
   max-width: 1200px;
@@ -68,10 +66,9 @@ body {
   gap: 20px;
 }
 
-.left-column {
+.left-column { /* both columns have the same space */
     flex: 1;
     width: 800px
-
 }
 
 .personal-info-container {
@@ -117,7 +114,7 @@ body {
 
 }
 
-.right-column {
+.right-column { /* both columns have the same space */
     flex: 1;
     width: 800px;
 }
