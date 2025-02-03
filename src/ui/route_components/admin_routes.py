@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 
 from src.backend.course import Course
 from src.backend.user import User
@@ -24,14 +24,11 @@ class AdminRoutes:
             {"name": "Bio", "value": admin.bio},
             {"name": "Role", "value": "Senior Administrator"}
         ]
-
+        day = request.args.get('day', 'Mon')
+        hour = request.args.get('hour', '9')
         form = RoomOverview()
-        day ='Mon'
-        hour='9'
-        if request.method == 'POST':
-            if form.submit.data and form.validate_on_submit():
-                day = form.day.data
-                hour = form.hour.data
+        form.day.data = day
+        form.hour.data = hour
         room_data = AdminRoutes.__get_room_data(day, hour)
 
         personal_bio_page = r'admin_personal_info.html'
