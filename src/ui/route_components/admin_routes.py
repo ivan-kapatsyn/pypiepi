@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
 
+from src.backend.course import Course
 from src.backend.user import User
 from src.ui.forms.room_overview import RoomOverview
 
@@ -23,13 +24,25 @@ class AdminRoutes:
             {"name": "Bio", "value": admin.bio},
             {"name": "Role", "value": "Senior Administrator"}
         ]
+
         form = RoomOverview()
+        day ='Mon'
+        hour='9'
         if request.method == 'POST':
             if form.submit.data and form.validate_on_submit():
                 day = form.day.data
                 hour = form.hour.data
+        room_data = AdminRoutes.__get_room_data(day, hour)
 
         personal_bio_page = r'admin_personal_info.html'
         return render_template(personal_bio_page, username=admin.username,
                                user_id=user_id, remember_me=admin.remember_me,
                                data=data, form=form)
+
+    @classmethod
+    def __get_room_data(cls, day ='Mon', hour='9'):
+        courses = Course.get_courses_by_schedule(day, hour)
+        room_data = {
+            course.room.room_id: course.course_id for course in courses
+        }
+        return room_data

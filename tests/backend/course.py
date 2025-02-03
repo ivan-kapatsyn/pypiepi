@@ -119,6 +119,13 @@ class TestCourse(unittest.TestCase):
         courses = Course.get_courses_by_user_id("non_existent_user")
         self.assertEqual(len(courses), 0)
 
+    def test_get_courses_by_schedule(self):
+        course_list = Course.get_courses_by_schedule('Mon', '10')
+        self.assertIsNotNone(course_list)
+        self.assertGreater(len(course_list), 0)
+
+
+
 
 if __name__ == "__main__":
     unittest.main()
