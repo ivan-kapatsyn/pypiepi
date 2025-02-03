@@ -37,7 +37,7 @@ class AdminRoutes:
         personal_bio_page = r'admin_personal_info.html'
         return render_template(personal_bio_page, username=admin.username,
                                user_id=user_id, remember_me=admin.remember_me,
-                               data=data, form=form)
+                               data=data, form=form,room_data=room_data)
 
     @classmethod
     def __get_room_data(cls, day ='Mon', hour='9'):
