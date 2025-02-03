@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class Course:
     def __init__(self, course_id: str, user_id: str, name: str, qualification: Qualification,
                  room: Room, schedule: str, max_participants: int, description: Optional[str] = None,
-                 announcements: Optional[List[Announcement]] = None):
+                 announcements: Optional[List[Announcement]] = None, student_ids: Optional[List[str]] = None):
         self.course_id = course_id
         self.user_id = user_id
         self.name = name
@@ -28,6 +28,7 @@ class Course:
         self.max_participants = max_participants
         self.description = description or None
         self.announcements = announcements or []
+        self.student_ids = self.__load_students()
 
     @classmethod
     def add_new_course(cls, name: str, user_id: str, qualification: Qualification, room_id: str,
@@ -253,8 +254,15 @@ class Course:
             if course_id not in existing_ids:
                 return course_id
 
+
     @classmethod
     def __check_if_start_hour_inside_time_range(cls, start_hour, schedule):
         time_range = schedule[4:]
         start, end = time_range.split('-')
         return int(start) <= int(start_hour) < int(end)
+
+    def __load_students(self):
+        db = DataBaseUtil()
+        students_in_course = db.load_many('student_in_course', "course_id = %s", [self.course_id])
+        student_ids = [student[2] for student in students_in_course]
+        return student_ids

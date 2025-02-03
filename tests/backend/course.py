@@ -119,11 +119,18 @@ class TestCourse(unittest.TestCase):
         courses = Course.get_courses_by_user_id("non_existent_user")
         self.assertEqual(len(courses), 0)
 
+
     def test_get_courses_by_schedule(self):
         course_list = Course.get_courses_by_schedule('Mon', '10')
         self.assertIsNotNone(course_list)
         self.assertGreater(len(course_list), 0)
+        
 
+    def test_student_ids(self):
+        course_id = "f61985b87284171a"
+        course = Course.get_course_by_id(course_id)
+
+        self.assertGreater(len(course.student_ids), 10)
 
 
 

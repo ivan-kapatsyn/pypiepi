@@ -39,7 +39,7 @@ class StudentRoutes:
             numeric_evaluation=int(rating),
             feedback=feedback,
         )
-        #Todo save evaluation to the db
+        # Todo save evaluation to the db
         return jsonify({
             'name': evaluation.author.first_name + ' ' + evaluation.author.last_name,
             'date': evaluation.date.strftime("%d.%m.%Y %H:%M:%S"),
@@ -53,7 +53,7 @@ class StudentRoutes:
         # TODO Replace it with Student when it's ready
         student = User.get_user_by_id(user_id)
         active_courses: List[Course] = [
-            Course.get_course_by_id(course_id= 'dc295cc4dd09d5b1')
+            Course.get_course_by_id(course_id='dc295cc4dd09d5b1')
         ]
         courses = [{
             "name": course.name,
@@ -98,6 +98,42 @@ class StudentRoutes:
         finally:
             status = 204 if success else 500
             return jsonify(success=success), status
+
+    @staticmethod
+    @main_bp.route('/<user_id>/active-courses', methods=['GET', 'POST'])
+    def active_courses(user_id: str):
+        # Todo obtain courses by student.get_active_courses()
+        courses = [
+            Course.get_course_by_id(course_id='dc295cc4dd09d5b1'),
+            Course.get_course_by_id(course_id='39104442b2660b56'),
+            Course.get_course_by_id(course_id='f61985b87284171a'),
+        ]
+
+        search_query = request.args.get('search', '')
+        courses = [course for course in courses if course.name.lower().startswith(search_query.lower())]
+        return StudentRoutes.__render_search_page(user_id, search_query, courses, True)
+
+    @staticmethod
+    @main_bp.route('/<user_id>/passive-courses', methods=['GET', 'POST'])
+    def passive_courses(user_id: str):
+        # Todo obtain courses by student.get_active_courses()
+        courses = [
+            Course.get_course_by_id(course_id='dc295cc4dd09d5b1'),
+            Course.get_course_by_id(course_id='39104442b2660b56'),
+            Course.get_course_by_id(course_id='f61985b87284171a'),
+        ]
+
+        search_query = request.args.get('search', '')
+        courses = [course for course in courses if course.name.lower().startswith(search_query.lower())]
+        return StudentRoutes.__render_search_page(user_id, search_query, courses, False)
+
+    @staticmethod
+    def __render_search_page(user_id, search_query, courses, is_active):
+        # Todo Replace it with Student
+        student = User.get_user_by_id(user_id)
+        return render_template('student_search_courses.html', user_id=user_id, courses=courses,
+                               search_query=search_query, username=student.username,
+                               remember_me=student.remember_me, is_active=is_active)
 
     @staticmethod
     def __get_day_from_schedule(schedule):
