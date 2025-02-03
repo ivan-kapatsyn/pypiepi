@@ -59,9 +59,11 @@ class CoursesRoutes:
                 page = 'course_info_active_student.html'
             else:
                 page = 'course_info_non_active_student.html'
-        else:
+        elif user_type == 'admin':
             # Todo implement Admin later
             page = '...'
+        else:
+            raise Exception(f'Unknown user type {user_type}')
         return render_template(page, user_id=user_id,
                                course_id=course_id,
                                username=user.username,

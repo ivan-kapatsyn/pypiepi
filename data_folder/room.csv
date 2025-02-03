@@ -1,4 +1,22 @@
-room_ID,name
-e9c8f4da22c45c77,Room 01
-1e06e1ddca76f5d4,Room 02
-0fc47a8b9acc2ab3,Room 03
+name,room_id
+Lecture Hall 1,80c5bde9767737ee
+Lecture Hall 2,444ee2caac85f904
+Lecture Hall 3,a85270d34187066d
+Lecture Hall 4,55d30d8aa00471e1
+Maximum,5618d4f653538d49
+Study room 2,e9c8f4da22c45c77
+Study room 3,1e06e1ddca76f5d4
+Study room 4,0fc47a8b9acc2ab3
+Study room 5,cb352106bf060d03
+Study room 6,28ffe65dd0b5e27b
+Study room 7,8386436599a51b1b
+Study room 8,2596a3f336e2950f
+Study room 10,b4d52483356bf1a8
+Study room 11,f41f179a18621fd4
+Study room 13,af7831a7ff109f53
+Study room 14,1851ba91ccdfbc7f
+Study room 15,a3cfc82a59a8ea4b
+Study room 16,1f98cf81be72eb01
+Study room 17,9a54aa5ee1167151
+Study room 18,80b893bbfed5a908
+Study room 19,50ce7062018a8c65
