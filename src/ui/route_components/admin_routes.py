@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 
 from src.backend.user import User
+from src.ui.forms.room_overview import RoomOverview
 
 
 class AdminRoutes:
@@ -22,7 +23,13 @@ class AdminRoutes:
             {"name": "Bio", "value": admin.bio},
             {"name": "Role", "value": "Senior Administrator"}
         ]
+        form = RoomOverview()
+        if request.method == 'POST':
+            if form.submit.data and form.validate_on_submit():
+                day = form.day.data
+                hour = form.hour.data
+
         personal_bio_page = r'admin_personal_info.html'
         return render_template(personal_bio_page, username=admin.username,
                                user_id=user_id, remember_me=admin.remember_me,
-                               data=data)
+                               data=data, form=form)
