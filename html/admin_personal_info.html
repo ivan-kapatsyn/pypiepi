@@ -164,16 +164,16 @@
 <h3>Room overview</h3>
 <form method="GET" action="{{ url_for('admin.personal_bio', user_id=user_id) }}">
     <div>
-        {{ form.day.label }}<br>
-        {{ form.day() }}
+        {{ room_form.day.label }}<br>
+        {{ room_form.day() }}
     </div>
     <div>
-        {{ form.hour.label }}<br>
-        {{ form.hour() }}
+        {{ room_form.hour.label }}<br>
+        {{ room_form.hour() }}
     </div>
     <div>
         <!-- Hinzufügen der Klasse 'login-button' für den Login-Button -->
-        {{ form.submit() }}
+        {{ room_form.submit() }}
     </div>
 </form>
 <svg width="600" height="600" viewBox="0 -40 800 660" style="border:5px solid #000">
@@ -325,6 +325,21 @@
         });
     });
 </script>
+<h3>Generate new token</h3>
+<form id="generate-token-form" method="POST" action="{{ url_for('admin.save_token', user_id = user_id) }}">
+    {{ token_form.hidden_tag() }}
+    <div>
+        {{ token_form.user_type.label }}<br>
+        {{ token_form.user_type() }}
+    </div>
+    <div>
+        {{ token_form.token.label }}<br>
+        {{ token_form.token(size=32) }}
+    </div>
+    <div>
+        {{ token_form.submit() }}
+    </div>
+</form>
 
 
 </body>
