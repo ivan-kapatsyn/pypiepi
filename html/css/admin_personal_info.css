@@ -11,20 +11,32 @@
     stroke-width: 2;
 }
 
-.study-rooms {
-    fill: #cceeff;
-    stroke: black;
-    stroke-width: 2;
-}
-
 .wc {
     fill: floralwhite;
     stroke: black;
     stroke-width: 2;
 }
 
+.study-rooms {
+    fill: #cceeff;
+    stroke: black;
+    stroke-width: 2;
+}
+
+.study-rooms-colored{
+    fill: #72c9ff;
+    stroke: black;
+    stroke-width: 2;
+}
+
 .lecture-halls {
     fill: #e0ffe0;
+    stroke: black;
+    stroke-width: 2;
+}
+
+.lecture-halls-colored{
+    fill: #80ff80;
     stroke: black;
     stroke-width: 2;
 }

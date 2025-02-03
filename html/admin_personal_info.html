@@ -116,7 +116,8 @@
     <script>
         function loadRoom(room_id) {
             const room = document.getElementById(room_id);
-            if (!room) return;
+            const roomData = {{ room_data | tojson }};
+            if (!room || !roomData.hasOwnProperty(room_id)) return;
 
             if (room.classList.contains('study-rooms')) {
                 room.classList.remove('study-rooms');
