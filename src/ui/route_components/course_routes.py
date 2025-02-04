@@ -60,8 +60,7 @@ class CoursesRoutes:
             else:
                 page = 'course_info_non_active_student.html'
         elif user_type == 'admin':
-            # Todo implement Admin later
-            page = '...'
+            page = 'course_info_admin.html'
         else:
             raise Exception(f'Unknown user type {user_type}')
         return render_template(page, user_id=user_id,
@@ -107,13 +106,13 @@ class CoursesRoutes:
 
     @staticmethod
     def __construct_student_data(students: List[User]):
-        # Todo replace it when Student is implemented
         result = []
         for i, student in enumerate(students):
             result.append({
                 'i': i + 1,
                 'first_name': student.first_name,
                 'last_name': student.last_name,
+                # Todo replace it with student.study_program or similar
                 'study_program': "Some study program",
             })
         return result
