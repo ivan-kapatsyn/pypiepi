@@ -87,9 +87,17 @@ body {
     padding: 30px; /* Padding inside the box */
     width: 100%;
     text-align: center; /* center the text inside the container */
-
     margin-bottom: 30px; /* so the button has some space underneath */
+}
 
+.info h2 {
+    border-bottom: 2px #2dcdbb; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #1eb5d1; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 6px; /* Platz zwischen Inhalt und Linie */
+}
+
+#data-container {
+    margin-top: 30px; /* space between label text and box in container */
 }
 
 #delete-course {
@@ -105,13 +113,16 @@ body {
    /* margin-top: 20px; /* button has some space above */ /* don`t ned it this time, because added margin bottom in info container */
 }
 
-
 #delete-course:hover {
     background-color: #0d94b0;
 }
 
-.right-column {
+.listeners { /* had to make margin for space between the three elements */
+    margin-bottom: 15px;
+}
 
+.rating {
+    margin-bottom: 15px;
 }
 
 .rating {
@@ -124,4 +135,10 @@ body {
     border-radius: 5px; /* Makes it a circle */
     font-weight: bold;
     font-size: 18px;
+}
+
+.comments h4 {
+    border-bottom: 2px #2dcdbb; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #1eb5d1; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 6px; /* space between label text and line */
 }
