@@ -51,6 +51,7 @@ class StudentRoutes:
     def personal_bio(user_id: str):
         # TODO Replace it with Student when it's ready
         student = User.get_user_by_id(user_id)
+        # Todo Replace it with student.find_active_courses() or similar
         active_courses: List[Course] = [
             Course.get_course_by_id(course_id='dc295cc4dd09d5b1')
         ]
