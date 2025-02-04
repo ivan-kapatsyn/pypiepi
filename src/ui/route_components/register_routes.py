@@ -24,7 +24,12 @@ class RegisterRoutes:
             additional_info = {}
 
             if user_type == 'student':
-                additional_info['student_info'] = request.form.get('student_info')
+                try:
+                    additional_info['token'] = int(request.form.get('student_info_1'))
+                except ValueError as e:
+                    flash(str(e), 'danger')
+                    return render_template(register_page, form=form, error_message="Token has to be a number")
+                additional_info['study_program'] = request.form.get('student_info_2')
                 data = {**data, **additional_info}
                 # TODO add Student.register_new_user()
                 user_id = 1
