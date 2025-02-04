@@ -54,9 +54,12 @@ class RegisterRoutes:
                     flash(str(e), 'danger')
                     return render_template(register_page, form=form, error_message=str(e))
             elif user_type == 'admin':
-                additional_info['admin_info_1'] = request.form.get('admin_info_1')
-                additional_info['admin_info_2'] = request.form.get('admin_info_2')
-                additional_info['admin_info_3'] = request.form.get('admin_info_3')
+                try:
+                    additional_info['token'] = int(request.form.get('admin_info_1'))
+                except ValueError as e:
+                    flash(str(e), 'danger')
+                    return render_template(register_page, form=form, error_message="Token has to be a number")
+                additional_info['role'] = request.form.get('admin_info_2')
                 data = {**data, **additional_info}
                 # TODO add Admin.register_new_user()
                 user_id = 1
