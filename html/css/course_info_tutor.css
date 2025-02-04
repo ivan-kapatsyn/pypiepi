@@ -59,23 +59,41 @@ body {
 .main-container {
   margin-top: calc(10% + 20px); /* 10% (Header hights??) plus 20px space */
   display: flex;
-  justify-content: space-between;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  gap: 20px;
+  /* justify-content: space-between; */
+  /* max-width: 3000px; */
+  gap: 120px;
 }
 
 
+.info {
+    background-color: #ffffff; /* White background for the box */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    padding: 30px; /* Padding inside the box */
+    width: 100%;
+    text-align: center; /* center the text inside the container */
 
-.left-column { /* both columns have the same space */
-    flex: 1;
-    width: 800px
+    margin-bottom: 30px; /* so the button has some space underneath */
+
+}
+
+#delete-course {
+    background-color: #14b8d5;
+    color: black;
+    font-size: 18px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: 50%; /* Button takes 50% of the container's width */
+    display: flex;
+    justify-content: center;
+    margin: 0 auto; /* important for centering (idk why) */
+    margin-top: 20px; /* button has some space above */
 }
 
 
-
-
+#delete-course:hover {
+    background-color: #0d94b0;
+}
 
 
 .rating {
