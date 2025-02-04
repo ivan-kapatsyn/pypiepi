@@ -190,7 +190,13 @@
     <tbody>
     {% for time in times %}
     <tr>
-        <td>{{ time }}</td>
+        <td>
+            {% if time > 12 %}
+                <div>{{ (time - 12) ~ 'PM' }}</div>
+            {% else %}
+                <div>{{ time ~ 'AM' }}</div>
+            {% endif %}
+        </td>
         {% for day in days %}
         <td>
             {% set ns = namespace(event_found=False) %}
