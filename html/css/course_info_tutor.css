@@ -54,7 +54,22 @@ body {
     margin-right: 20px; /* Push the dropdown to the far right */
 }
 
+#edit-button-announcement {
+    background-color: #45daba;
+    color: black;
+    font-size: 15px;
+    padding: 5px 10px; /* padding in the button itself */
+    border-radius: 10px;
+    width: 75%; /* Button takes 50% of the container's width */
+    display: flex;
+    justify-content: start;
+    margin: 0 auto; /* important for centering (idk why) */
+    margin-top: 20px; /* button has some space above */
+}
 
+#edit-button-announcement:hover {
+    background-color: #35A4C6FF;
+}
 
 .main-container {
   margin-top: calc(10% + 20px); /* 10% (Header hights??) plus 20px space */
@@ -87,7 +102,7 @@ body {
     display: flex;
     justify-content: center;
     margin: 0 auto; /* important for centering (idk why) */
-    margin-top: 20px; /* button has some space above */
+   /* margin-top: 20px; /* button has some space above */ /* don`t ned it this time, because added margin bottom in info container */
 }
 
 
@@ -95,6 +110,9 @@ body {
     background-color: #0d94b0;
 }
 
+.right-column {
+
+}
 
 .rating {
     display: inline-block;
