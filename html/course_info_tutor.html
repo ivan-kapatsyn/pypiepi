@@ -240,7 +240,6 @@
 
     <div class="left-column">
 
-
         <div class="announcements">
             <h2><b>Announcements</b></h2>
             <div id="announcements_container">
@@ -249,6 +248,25 @@
                 {% endfor %}
                 <span id="data-announcement"></span>
                 <button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>
+            </div>
+        </div>
+        <br>
+        <div class="ratings">
+            <h2><b>Rating</b></h2>
+            <div>
+                <h4>Average rating:</h4>
+                <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
+            </div>
+        </div>
+
+        <div class="comments">
+            <div>
+                <h4><b>Comments:</b></h4><br>
+                {% for feedback in feedback_list %}
+                <span>{{ feedback.i }}) {{ feedback.name }} at {{ feedback.date }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
+                {% else %}
+                <p class="text-muted">There is no comments for this course.</p>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -276,7 +294,6 @@
 
 
     <div class="right-column">
-
         <div class="listeners">
             <h2><b>Listeners</b></h2>
             <div id="students_container">
@@ -285,25 +302,6 @@
                     <span>{{ student.i }})  {{ student.first_name }} {{ student.last_name }}: </span>
                     <span style="font-style: italic">{{ student.study_program }}</span>
                 </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="ratings">
-            <h2><b>Rating</b></h2>
-            <div>
-                <h4>Average rating:</h4>
-                <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
-            </div>
-        </div>
-
-        <div class="comments">
-            <div>
-                <h4><b>Comments:</b></h4><br>
-                {% for feedback in feedback_list %}
-                <span>{{ feedback.i }}) {{ feedback.name }} at {{ feedback.date }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
-                {% else %}
-                <p class="text-muted">There is no comments for this course.</p>
                 {% endfor %}
             </div>
         </div>
