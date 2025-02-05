@@ -57,7 +57,7 @@ body {
 }
 
 .main-container {
-  margin-top: calc(10% + 20px); /* 10% (Header hights??) plus 20px space */
+  margin-top: calc(10% + 20px); /* 10% (Header heights??) plus 20px space */
   display: flex;
   justify-content: space-between;
   max-width: 1200px;
