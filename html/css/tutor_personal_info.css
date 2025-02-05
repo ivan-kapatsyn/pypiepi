@@ -129,7 +129,7 @@ body {
 /* both the table header and the table data are the same size */
 .schedule-container th,
 .schedule-container td {
-    width: 20%; /* Für 5 gleich große Spalten */
+    width: 20%; /* for 5 column of the same size */
     text-align: center;
     border-radius: 5px;
 }
