@@ -165,7 +165,6 @@
         </ul>
     </div>
 </header>
-
 <div class="main-container">
     <div class="left-column">
         <div class="personal-info-container">
@@ -218,19 +217,41 @@
                 <tbody>
                 {% for time in times %}
                 <tr>
-                    <td>{{ time }}</td>
-                    {% for day in days %}
-                    <td>
-                        {% for event in events %}
-                        {% if event.day == day and event.time == time %}
-                        <div onclick="window.location.href='{{ event.url }}'">
+        <td>
+            {% if time > 12 %}
+                <div>{{ (time - 12) ~ 'PM' }}</div>
+            {% else %}
+                <div>{{ time ~ 'AM' }}</div>
+            {% endif %}
+        </td>
+        {% for day in days %}
+        <td>
+            {% set ns = namespace(event_found=False) %}
+            {% for event in events %}
+                {% if not ns.event_found %}
+                    {% if event.day == day and event.start_time == time %}
+                        <div onclick="window.location.href='{{ event.url }}'" style="background-color: #0d94b0">
                             {{ event.name }}
                         </div>
+                        {% set ns.event_found = True %}
+                    {% else %}
+                        {% if event.day == day and (event.start_time|int) < (time|int) and (event.end_time|int) > (time|int) %}
+                            <div onclick="window.location.href='{{ event.url }}'" style="background-color: #0d94b0;color: #0d94b0">
+                                tut
+                            </div>
+                            {% set ns.event_found = True %}
                         {% endif %}
-                        {% endfor %}
-                    </td>
-                    {% endfor %}
-                </tr>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            {% if not ns.event_found %}
+                <div style="color: #cccccc;background-color: #cccccc">
+                    ne tut
+                </div>
+            {% endif %}
+        </td>
+        {% endfor %}
+    </tr>
                 {% endfor %}
                 </tbody>
             </table>
@@ -239,7 +260,6 @@
         <div class="new-course-button">
             <button id="new-course" onclick="add_new_course('{{ user_id }}')">Add new course</button>
         </div>
-
     </div>
 </div>
 
