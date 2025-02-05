@@ -119,6 +119,30 @@ body {
     width: 800px;
 }
 
+
+
+.schedule-container table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+/* both the table header and the table data are the same size */
+.schedule-container th,
+.schedule-container td {
+    width: 20%; /* Für 5 gleich große Spalten */
+    text-align: center;
+    border-radius: 5px;
+}
+
+/* the highlighted hours in schedule */
+.event-cell {
+    color: black;
+    cursor: pointer;
+}
+
+
+
+
 /* I had to use the id because with the class it did not work */
 #new-course {
     background-color: #45DABA;
