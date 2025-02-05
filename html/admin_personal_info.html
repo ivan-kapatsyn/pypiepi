@@ -110,7 +110,9 @@
     </script>
     <script>
         function visit_course(room_id) {
-            prompt("You clicked " + room_id + " to visit the course!")
+            const roomData = {{ room_data | tojson }};
+            if(!roomData.hasOwnProperty(room_id)) return;
+            window.location.href = '/course/info/' + roomData[room_id] + '/{{ user_id }}';
         }
     </script>
     <script>

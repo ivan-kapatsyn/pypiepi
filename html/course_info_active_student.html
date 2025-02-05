@@ -248,6 +248,8 @@
 <div id="announcements_container">
     {% for announcement in announcements %}
     <span>- {{ announcement }}</span><br>
+    {% else %}
+    <p class="text-muted">There is no announcement for this course.</p>
     {% endfor %}
 </div>
 <button onclick="dropCourse()">Drop the course</button>
