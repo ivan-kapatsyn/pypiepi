@@ -152,7 +152,7 @@
             Login Info
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><span class="dropdown-item">Username: {{ username }}</span></li>
+            <li><span class="dropdown-item"><b>Username:</b> {{ username }}</span></li>
             <li>
                 <label class="dropdown-item">
                     <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
@@ -160,36 +160,63 @@
                 </label>
             </li>
             <li>
-                <a class="dropdown-item" href="/login/index">Logout</a>
+                <a class="dropdown-item" href="/login/index"><b>Logout</b></a>
             </li>
         </ul>
     </div>
 </header>
-<h3>Personal Info</h3>
-<div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
-    {% for item in data %}
-    <div>
-        <span style="font-weight: bold;">{{ item.name }}:</span>
-        <span id="data-{{ item.name }}">{{ item.value }}</span>
-        <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
+<div class="main-container">
+    <div class="left-column">
+        <div class="personal-info-container">
+            <h3><b>Personal Info</b></h3>
+            <div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 70%;">
+                {% for item in data %}
+                <div>
+                    <span style="font-weight: bold;">{{ item.name }}:</span>
+                    <span id="data-{{ item.name }}">{{ item.value }}</span>
+                    <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
+
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+        <div class="rating-container">
+            <h3><b>Rating</b></h3>
+            <div>
+                <h4>Average rating:</h4>
+                <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
+            </div>
+        </div>
+
+
+        <div class="comments-container">
+            <h4><b>Comments:</b></h4>
+
+            {% for feedback in feedback_list %}
+            <span>{{ feedback.i }}) {{ feedback.name }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
+            {% endfor %}
+        </div>
     </div>
-    {% endfor %}
-</div>
-<h3>Schedule</h3>
-<table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
-    <thead>
-    <tr>
-        <th>Time</th>
-        <th>Monday</th>
-        <th>Tuesday</th>
-        <th>Wednesday</th>
-        <th>Thursday</th>
-        <th>Friday</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for time in times %}
-    <tr>
+
+    <div class="right-column">
+        <div class="schedule-container">
+            <h3><b>Schedule</b></h3>
+            <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
+                <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for time in times %}
+                <tr>
         <td>
             {% if time > 12 %}
                 <div>{{ (time - 12) ~ 'PM' }}</div>
@@ -225,26 +252,16 @@
         </td>
         {% endfor %}
     </tr>
-    {% endfor %}
-    </tbody>
-</table>
-<h3>Rating</h3>
-<div>
-    <h4>Average rating:</h4>
-    <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
-</div>
-<div>
-    <h4>Comments:</h4>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-    {% for feedback in feedback_list %}
-    <span>{{ feedback.i }}) {{ feedback.name }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
-    {% endfor %}
-</div>
-<footer>
-    <div>
-        <button id="new course" onclick="add_new_course('{{ user_id }}')">Add new course</button>
+        <div class="new-course-button">
+            <button id="new-course" onclick="add_new_course('{{ user_id }}')">Add new course</button>
+        </div>
     </div>
-</footer>
+</div>
 
 </body>
 </html>
