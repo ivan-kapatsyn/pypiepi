@@ -1,20 +1,28 @@
+/* basic styling */
+body {
+    display: flex;
+    flex-direction: column; /* elements stacked vertically */
+    justify-content: flex-start; /* starts at the top */
+    align-items: center; /* centers horizontally */
+}
 
-/* Banner-Stil */
+
+/* header style */
 .header {
     background-color: #cccccc; /* Banner-Farbe */
-    color: black;              /* Textfarbe */
-    text-align: center;        /* Text zentrieren */
-    padding: 2px 0;           /* Oben und unten etwas Abstand */
+    color: black; /* Textfarbe */
+    text-align: center; /* Text zentrieren */
+    padding: 2px 0; /* Oben und unten etwas Abstand */
     font-family: Arial, sans-serif; /* Schriftart */
-    font-size: 15px;           /* Textgröße */
+    font-size: 15px; /* Textgröße */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Schattierung für ein weiches Aussehen */
-    position: fixed;           /* Fixiert den Banner oben */
-    top: 0;                    /* Setzt den Banner ganz nach oben */
-    left: 0;                   /* Setzt den Banner ganz nach links */
-    width: 100%;               /* Macht den Banner so breit wie der Bildschirm */
+    position: fixed; /* Fixiert den Banner oben */
+    top: 0; /* Setzt den Banner ganz nach oben */
+    left: 0; /* Setzt den Banner ganz nach links */
+    width: 100%; /* Macht den Banner so breit wie der Bildschirm */
     height: 10%;
-    z-index: 1000;             /* Stellt sicher, dass der Banner über anderen Elementen liegt */
-    border-bottom-left-radius: 15px;  /* Abrunden der unteren linken Ecke */
+    z-index: 1000; /* Stellt sicher, dass der Banner über anderen Elementen liegt */
+    border-bottom-left-radius: 15px; /* Abrunden der unteren linken Ecke */
     border-bottom-right-radius: 15px; /* Abrunden der unteren rechten Ecke */
     display: flex; /* Aktiviert Flexbox */
     align-items: center; /* Vertikal zentrieren */
@@ -22,19 +30,21 @@
 
 }
 
-/* Optional: Effekt bei Hover */
+/* effect for hover */
 .header:hover {
     background-color: mediumturquoise; /* Etwas dunkler bei Hover */
     transition: background-color 0.3s ease; /* Sanfter Übergang */
 }
-
 
 .header-image {
     max-width: 100%; /* Verhindert, dass das Bild größer als der Header wird */
     max-height: 100%;
     height: auto; /* Hält das Seitenverhältnis des Bildes bei */
     align-content: start;
-
+    border-top-left-radius: 0px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 20px;
 }
 
 .header-text {
@@ -43,17 +53,113 @@
 }
 
 .dropdown {
-    margin-left: auto; /* Push the dropdown to the far right */
+    margin-right: 20px; /* Push the dropdown to the far right */
 }
 
-.rating {
-    display: inline-block;
-    padding: 10px;
-    width: 50px;
-    height: 50px;
-    text-align: center;
-    line-height: 30px; /* Center text vertically */
-    border-radius: 5px; /* Makes it a circle */
-    font-weight: bold;
+
+
+.main-container {
+  margin-top: calc(10% + 20px); /* 10% (Header heights??) plus 20px space */
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  gap: 100px;
+}
+
+.left-column {
+    flex: 1;
+    width: auto;
+}
+
+.personal-info-container {
+    background-color: #ffffff; /* White background for the box */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    padding: 30px; /* Padding inside the box */
+    width: 500px;
+    text-align: center; /* center the text inside the container */
+    display: flex;
+    flex-direction: column;    /* labels and input-fields are stacked vertically */
+    gap: 15px;                 /* gaps between elements and the title */
+    font-size: 16px;
+    align-items: center;    /* Zentriert horizontal */
+    margin-bottom: 10px;
+}
+
+.personal-info-container h3 {
+    border-bottom: 2px #2dcdbb; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #1eb5d1; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 6px; /* Platz zwischen Inhalt und Linie */
+}
+
+#data-container {
+    height: 200px;
+    display: flex;
+    flex-direction: column;    /* labels and input-fields are stacked vertically */
+    gap: 8px;                 /* gaps between elements and the title */
+}
+
+#see-active-courses {
+    background-color: #45DABA;
+    color: black;
     font-size: 18px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: 40%; /* Button takes 40% of the container's width */
+    display: flex;
+    justify-content: center;
+    margin: 0 auto; /* important for centering (idk why) */
+    margin-top: 20px; /* button has some space above */
+}
+
+#see-active-courses:hover {
+    background-color: #35a4c6;
+}
+
+.right-column {
+    flex: 1;
+    width: auto;
+}
+
+/* so that the schedule does not take up so much space */
+.schedule-container {
+    width: 600px;
+}
+
+.schedule-container table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+/* both the table header and the table data are the same size */
+.schedule-container th,
+.schedule-container td {
+    width: 20%; /* for 5 column of the same size */
+    text-align: center;
+    border-radius: 5px;
+}
+
+/* the highlighted hours in schedule */
+.event-cell {
+    color: black;
+    cursor: pointer;
+}
+
+#see-passive-courses {
+    background-color: #14b8d5;
+    color: black;
+    font-size: 18px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: 40%; /* Button takes 40% of the container's width */
+    display: flex;
+    justify-content: center;
+    margin: 0 auto; /* important for centering (idk why) */
+    margin-top: 20px; /* button has some space above */
+}
+
+#see-passive-courses:hover {
+    background-color: #0d94b0;
 }

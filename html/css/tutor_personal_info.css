@@ -57,7 +57,7 @@ body {
 }
 
 .main-container {
-  margin-top: calc(10% + 20px); /* 10% (Header hights??) plus 20px space */
+  margin-top: calc(10% + 20px); /* 10% (Header heights??) plus 20px space */
   display: flex;
   justify-content: space-between;
   max-width: 1200px;
@@ -118,6 +118,30 @@ body {
     flex: 1;
     width: 800px;
 }
+
+
+
+.schedule-container table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+/* both the table header and the table data are the same size */
+.schedule-container th,
+.schedule-container td {
+    width: 20%; /* for 5 column of the same size */
+    text-align: center;
+    border-radius: 5px;
+}
+
+/* the highlighted hours in schedule */
+.event-cell {
+    color: black;
+    cursor: pointer;
+}
+
+
+
 
 /* I had to use the id because with the class it did not work */
 #new-course {
