@@ -36,6 +36,13 @@
       ]
     },
     {
+      "table_name": "admin",
+      "columns": [
+        {"column_name": "admin_id", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY REFERENCES users(user_ID) ON DELETE CASCADE" },
+        {"column_name": "role", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" }
+      ]
+    },
+    {
       "table_name": "course",
       "columns": [
         {"column_name": "course_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY" },
