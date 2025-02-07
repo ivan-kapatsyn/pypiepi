@@ -77,7 +77,7 @@ class DataBaseUtil:
             obj["password"] = PasswordUtils.hash_password(obj["password"])
 
         if "registered_at" in obj and not obj["registered_at"]:
-            obj["registered_at"] = datetime.now().strftime('%d-%m-%Y')
+            obj["registered_at"] = datetime.now().strftime('%Y-%m-%d')
 
 
         columns = ', '.join(obj.keys())
