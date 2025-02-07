@@ -1,6 +1,5 @@
 import unittest
 from datetime import datetime, date
-
 from pandas.core.interchange import column
 from src.utils.data_base_util import DataBaseUtil
 from src.utils.env_variable_util import EnvVariableUtil
