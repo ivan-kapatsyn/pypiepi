@@ -5,7 +5,6 @@ from src.backend.course import Course
 from src.backend.room import Room
 from src.backend.exceptions import DuplicationError
 
-
 class TestCourse(unittest.TestCase):
 
     def test_add_new_course_success(self):

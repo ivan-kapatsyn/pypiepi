@@ -75,6 +75,9 @@ class DataBaseUtil:
         if "password" in obj:
             obj["password"] = PasswordUtils.hash_password(obj["password"])
 
+        if "registered_at" not in obj or not obj["registered_at"]:
+            obj["registered_at"] = datetime.utcnow().date()  # Speichert nur das Datum
+
         columns = ', '.join(obj.keys())
         values_placeholder = ', '.join(['%s'] * len(obj))
         query = f'INSERT INTO {table_name} ({columns}) VALUES ({values_placeholder});'
