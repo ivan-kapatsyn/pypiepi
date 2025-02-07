@@ -14,7 +14,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
     def test_initialise(self):
         self.db_util.initialise()
 
-#WORKS
+#WORK
     def test_if_exist(self):
         table_name = 'users'
         self.assertEqual(self.db_util._check_if_table_exists(
