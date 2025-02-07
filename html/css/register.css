@@ -79,6 +79,12 @@ body {
     margin-top: 100px; /* Verhindert, dass der Container direkt an den Header anschlägt */
 }
 
+.register-container h1 {
+    border-bottom: 2px #2dcdbb; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #1eb5d1; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 6px; /* Platz zwischen Inhalt und Linie */
+}
+
 .user-type-select-button {
     background-color: #14B8D5;
     color: black;

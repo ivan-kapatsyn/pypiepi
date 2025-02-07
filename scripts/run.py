@@ -3,6 +3,7 @@ import webbrowser
 
 from flask import Flask
 
+from src.ui.route_components.admin_routes import AdminRoutes
 from src.ui.route_components.course_routes import CoursesRoutes
 from src.ui.route_components.login_routes import LoginRoutes
 from src.ui.route_components.register_routes import RegisterRoutes
@@ -18,11 +19,12 @@ def create_app():
                 static_folder=PathUtil.get_static_path())
     app.config.from_object('src.ui.configs.configs.Config')
 
-    routes = [LoginRoutes,RegisterRoutes,TutorRoutes,UserRoutes,CoursesRoutes,StudentRoutes]
+    routes = [LoginRoutes, RegisterRoutes, TutorRoutes, UserRoutes, CoursesRoutes, StudentRoutes, AdminRoutes]
     for route in routes:
         app.register_blueprint(route.main_bp)
 
     return app
+
 
 def open_browser():
     webbrowser.open_new("http://127.0.0.1:5000/login/index")

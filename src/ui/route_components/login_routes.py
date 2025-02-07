@@ -41,7 +41,7 @@ class LoginRoutes:
                 password = form.password.data
                 user = User.authenticate(username, password)
                 if user is not None:
-                    return redirect(url_for('tutor.personal_bio', user_id=user.user_id))
+                    return redirect(url_for(f'{user.user_type}.personal_bio', user_id=user.user_id))
                 else:
                     flash('Invalid username or password', 'danger')
             if form.register_new_user.data:

@@ -80,8 +80,8 @@ body {
 .create_new_course_container h2 {
     margin: 0;
     padding-bottom: 10px;
-    border-bottom: 2px solid #ccc; /* Dünne Linie */
-    box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.3); /* Leichter Schatten unter der Linie */
+    border-bottom: 2px solid #2dcdbb; /* Dünne Linie */
+    box-shadow: 0 4px 4px -4px rgb(30, 181, 209); /* Leichter Schatten unter der Linie */
 
 }
 
@@ -132,5 +132,5 @@ body {
 }
 
 .create-course-button:hover {
-    background-color: teal;
+    background-color: #35a4c6;
 }
