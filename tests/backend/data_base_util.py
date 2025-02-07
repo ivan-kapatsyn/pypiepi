@@ -1,4 +1,6 @@
 import unittest
+from datetime import datetime, date
+
 from pandas.core.interchange import column
 from src.utils.data_base_util import DataBaseUtil
 from src.utils.env_variable_util import EnvVariableUtil
@@ -28,7 +30,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
         expected_result = ["f63b0b2f7c48c85f", "arthur.morgan",
                            "JDJiJDEyJGx6RjZMbnZqTEdJcEtlY3pWZENqNmVWQkpKcnVSSGNSaU54S085TWQvc2tYQ29FQWF6d2wy",
-                           "Arthur", "Morgan", "NaN",True,'student']
+                           "Arthur", "Morgan","NaN",True,'student',date(2024, 1, 15)]
         self.assertEqual(self.db_util.load_one(table_name, column,id_value), expected_result)
 
 #WORK
@@ -46,7 +48,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
                 "Doe",
                 "Shrek is love. Shrek is live",
                 True,
-                'student'
+                'student',
+                date(2024,1,15)
             ],
             [
                 "b365cd8f07cd0520",
@@ -56,7 +59,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
                 "Marston",
                 "NaN",
                 False,
-                'tutor'
+                'tutor',
+                date(2024,11,15)
             ]
         ]
 
@@ -74,7 +78,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
             "first_name": "Eren",
             "last_name": "Jaeger",
             "bio": "tatakai! tatakai!",
-            "remember_me": True
+            "remember_me": True,
+            "user_type": "student"
         }
 
         self.db_util.insert_one("users", obj1, column="user_id", dublicate=True)
@@ -96,7 +101,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
             "first_name": "Johnny",
             "last_name": "Silverhand",
             "bio": "fuck arasaka",
-            "remember_me": False
+            "remember_me": False,
+            "user_type": "student"
         }
 
         self.db_util.insert_one("users", obj_user, column="user_id", dublicate=True)
@@ -119,7 +125,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
                 "first_name": "Mr",
                 "last_name": "Bean",
                 "bio": "teddy",
-                "remember_me": True
+                "remember_me": True,
+                "user_type": "student"
             },
             {
                 "user_id": new_user_id,
@@ -128,7 +135,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
                 "first_name": "Eren",
                 "last_name": "Jaeger",
                 "bio": "krah! krah!",
-                "remember_me": False
+                "remember_me": False,
+                "user_type": "student"
             }
         ]
         self.db_util.insert_many("users", objects, column="user_id", dublicate=True)
@@ -148,7 +156,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
                     "first_name": "Charles",
                     "last_name": "Smith",
                     "bio": "",
-                    "remember_me": True
+                    "remember_me": True,
+                    "user_type": "student"
                 }
         self.db_util.insert_one('users', obj, 'user_id', dublicate=True)
 
@@ -162,7 +171,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
                     "first_name": "Dutch",
                     "last_name": "Van der Linde",
                     "bio": "",
-                    "remember_me": True
+                    "remember_me": True,
+                    "user_type": "student"
                 }
         self.db_util.insert_one('users', obj, 'user_id', dublicate=False)
 
