@@ -6,7 +6,7 @@ from src.backend.announcement import Announcement
 class TestAnnouncement(unittest.TestCase):
 
     def test_add_new_announcement_success(self):
-        course_id = "f61985b87284171a"
+        course_id = "b365cd8f07cd0520"
         message = "New course material is available."
         announcement_id = Announcement.add_new_announcement(course_id, message)
 
@@ -24,7 +24,7 @@ class TestAnnouncement(unittest.TestCase):
         self.assertIsNone(announcement)
 
     def test_get_announcements_by_course_id(self):
-        course_id = "39104442b2660b56"
+        course_id = "f61985b87284171a"
         announcements = Announcement.get_announcements_by_course_id(course_id)
 
         self.assertEqual(len(announcements), 2)

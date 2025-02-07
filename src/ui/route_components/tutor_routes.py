@@ -10,8 +10,7 @@ from src.backend.user import User
 
 class TutorRoutes:
     TIMETABLE_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    TIMETABLE_TIME = [f"{hour}AM" if hour < 12 else (f"{hour - 12}PM" if hour > 12 else "12PM") for hour in
-                      range(9, 19)]
+    TIMETABLE_TIME = [i for i in range(9, 19)]
 
     main_bp = Blueprint('tutor', __name__, url_prefix='/tutor')
 
@@ -22,7 +21,8 @@ class TutorRoutes:
         courses = [{
             "name": course.name,
             "day": TutorRoutes.__get_day_from_schedule(course.schedule),
-            "time": TutorRoutes.__get_start_time_from_schedule(course.schedule),
+            "start_time": TutorRoutes.__get_start_time_from_schedule(course.schedule),
+            "end_time": TutorRoutes.__get_end_time_from_schedule(course.schedule),
             "url": url_for('course.info', user_id=tutor.user_id, course_id=course.course_id)
         }
             for course in tutor.active_courses]
@@ -104,8 +104,11 @@ class TutorRoutes:
         time_window = schedule[3:]
         start_time: str = time_window.split('-')[0]
         start_time = start_time.strip()
-        if int(start_time) < 12 and int(start_time) > 8:
-            start_time += 'AM'
-        else:
-            start_time += 'PM'
-        return start_time
+        return int(start_time)
+
+    @staticmethod
+    def __get_end_time_from_schedule(schedule):
+        time_window = schedule[3:]
+        end_time: str = time_window.split('-')[1]
+        end_time = end_time.strip()
+        return int(end_time)

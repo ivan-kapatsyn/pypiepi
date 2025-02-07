@@ -14,6 +14,7 @@ from src.utils.env_variable_util import EnvVariableUtil
 from src.utils.path_util import PathUtil
 import os
 import csv
+from datetime import datetime
 
 
 # -----------------------------------
@@ -75,8 +76,9 @@ class DataBaseUtil:
         if "password" in obj:
             obj["password"] = PasswordUtils.hash_password(obj["password"])
 
-        if "registered_at" not in obj or not obj["registered_at"]:
-            obj["registered_at"] = datetime.utcnow().date()  # Speichert nur das Datum
+        if "registered_at" in obj and not obj["registered_at"]:
+            obj["registered_at"] = datetime.now().strftime('%d-%m-%Y')
+
 
         columns = ', '.join(obj.keys())
         values_placeholder = ', '.join(['%s'] * len(obj))

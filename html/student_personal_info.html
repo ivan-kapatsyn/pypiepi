@@ -109,9 +109,14 @@
         }
     </script>
     <script>
-        function see_active_courses(userId) {
-            // TODO rename the endpoint
-            fetch('/course/new/' + userId, {
+        function see_active_courses(is_active) {
+            let url;
+            if (is_active) {
+                url = "{{ url_for('student.active_courses', user_id = user_id) }}";
+            } else {
+                url = "{{ url_for('student.passive_courses', user_id = user_id) }}";
+            }
+            fetch(url, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -121,7 +126,7 @@
                     throw new Error('Network response was not ok');
                 }
 
-                window.location.href = '/course/new/' + userId;
+                window.location.href = url;
             });
 
         }
@@ -144,79 +149,123 @@
     </script>
 </head>
 <body>
-<header>
-    <!-- Logo -->
-    <div class="header">
-        <img src="{{ url_for('static', filename='banner.png') }}" class="header-image" alt="TutorMe">
-        <h1 class="header-text">TutorMe</h1>
-        <!-- Login Info Dropdown -->
-        <div class="dropdown ms-auto">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                Login Info
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><span class="dropdown-item">Username: {{ username }}</span></li>
-                <li>
-                    <label class="dropdown-item">
-                        <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
-                        remembered on this device
-                    </label>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="/login/index">Logout</a>
-                </li>
-            </ul>
-        </div>
+
+<header class="header">
+    <img src="{{ url_for('static', filename='banner.png') }}" class="header-image" alt="TutorMe">
+    <h1 class="header-text">TutorMe</h1>
+    <div class="dropdown ms-auto">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-bs-toggle="dropdown" aria-expanded="false">
+            Login Info
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><span class="dropdown-item"><b>Username:</b> {{ username }}</span></li>
+            <li>
+                <label class="dropdown-item">
+                    <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
+                    remembered on this device
+                </label>
+            </li>
+            <li>
+                <a class="dropdown-item" href="/login/index"><b>Logout</b></a>
+            </li>
+        </ul>
     </div>
 </header>
 
-<h3>Personal Info</h3>
-<div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
-    {% for item in data %}
-    <div>
-        <span style="font-weight: bold;">{{ item.name }}:</span>
-        <span id="data-{{ item.name }}">{{ item.value }}</span>
-        <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
-    </div>
-    {% endfor %}
-</div>
-<h3>Schedule</h3>
-<table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
-    <thead>
-    <tr>
-        <th>Time</th>
-        <th>Monday</th>
-        <th>Tuesday</th>
-        <th>Wednesday</th>
-        <th>Thursday</th>
-        <th>Friday</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for time in times %}
-    <tr>
-        <td>{{ time }}</td>
-        {% for day in days %}
-        <td>
-            {% for event in events %}
-            {% if event.day == day and event.time == time %}
-            <div onclick="window.location.href='{{ event.url }}'">
-                {{ event.name }}
+
+<div class="main-container">
+    <div class="left-column">
+        <div class="personal-info-container">
+            <h3><b>Personal Info</b></h3>
+            <div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
+                {% for item in data %}
+                <div>
+                    <span style="font-weight: bold;">{{ item.name }}:</span>
+                    <span id="data-{{ item.name }}">{{ item.value }}</span>
+                    <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
+                </div>
+                {% endfor %}
             </div>
-            {% endif %}
-            {% endfor %}
-        </td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        </div>
+
+        <div>
+            <button id="see-active-courses" onclick="see_active_courses(true)">See active courses</button>
+        </div>
+
+    </div>
+
+    <div class="left-column">
+        <div class="schedule-container">
+            <h3><b>Schedule</b></h3>
+            <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
+                <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for time in times %}
+                <tr>
+                    <td>
+                        {% if time > 12 %}
+                        <div>{{ (time - 12) ~ 'PM' }}</div>
+                        {% else %}
+                        <div>{{ time ~ 'AM' }}</div>
+                        {% endif %}
+                    </td>
+                    {% for day in days %}
+                    <td>
+                        {% set ns = namespace(event_found=False) %}
+                        {% for event in events %}
+                        {% if not ns.event_found %}
+                        {% if event.day == day and event.start_time == time %}
+                        <div class="event-cell" onclick="window.location.href='{{ event.url }}'"
+                             style="background-color: #5bc7dd">
+                            {{ event.name }}
+                        </div>
+                        {% set ns.event_found = True %}
+                        {% else %}
+                        {% if event.day == day and (event.start_time|int) < (time|int) and (event.end_time|int) >
+                        (time|int)
+                        %}
+                        <div class="event-cell" onclick="window.location.href='{{ event.url }}'"
+                             style="background-color: #5bc7dd;color: #5bc7dd">
+                            tut
+                        </div>
+                        {% set ns.event_found = True %}
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
+                        {% endfor %}
+                        {% if not ns.event_found %}
+                        <div style="color: #cccccc;background-color: #cccccc">
+                            ne tut
+                        </div>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <button id="see-passive-courses" onclick="see_active_courses(false)">Register for a new course</button>
+        </div>
+    </div>
+</div>
+
 
 <footer>
-    <div>
-        <button id="See active courses" onclick="see_active_courses('{{ user_id }}')">See active courses</button>
-    </div>
+
+
 </footer>
 
 </body>
