@@ -1,64 +1,64 @@
-username,password,first_name,last_name,bio,remember_me,user_type,user_id
-darth.vader,JDJiJDEyJHlCeG8xeE1uTExzMVlrczBtUkRkNE9lUUhIM0IxYi5zbEhyOTVEeGVrbWdlTDBoeVBha01X,Darth,Vader,I am your father.,TRUE,student,4cb33c4df7a6ad3d
-frodo.baggins,JDJiJDEyJFI1Y2ZlNGUzc0ZCMENFZ01EcVRIT2U4eE5JeE1jOHZkQzQxaEVGMG1QZ1lLSmptejZGMjYy,Frodo,Baggins,One ring to rule them all.,TRUE,student,99b92b9c4c483607
-katniss.everdeen,JDJiJDEyJEFtTGRuNzJpTjJrdlVIQVZsRjhtZ09yTzRzTE0ydkthb1RpODRpOG1RVHNyUDBaRnVaUEku,Katniss,Everdeen,May the odds be ever in your favor.,TRUE,student,77032360e19b5c5d
-harry.potter,JDJiJDEyJDJEcm9lb0VjRzQzNWp2ZnNKMDJCZnVpQUdHcElVWDVHZ2Qyb0ZSTGdnQ1dib21iT2pKVldh,Harry,Potter,The Boy Who Lived.,FALSE,student,e3931e02fc68d82d
-tony.montana,JDJiJDEyJFVPL1gvcmRZOFdZbVpoTDJvVS5oNGVZN2djOWYxSnNScC5vclBhcmlkM2hPMG9BL0lhWnFT,Tony,Montana,Say hello to my little friend!,FALSE,student,da9572d6f327dacc
-vito.corleone,JDJiJDEyJEMzcktxQjF2LlJCdXhQbjhDZkNMLy5QTjFIbnl6SXJjeS9RSFd0WnR3NS45MFg4ZEI1ZFZ1,Vito,Corleone,I'm gonna make him an offer he can't refuse.,TRUE,student,5c522dea727d73ff
-mario.mario,JDJiJDEyJG1ZZkRiUU82dXNlMHJ1aGQwakhvT2VsdXgydnVrbGpUcldjMjR2RmZFSUhsYjk2b2xZR0tP,Mario,Mario,"It's-a me, Mario!",TRUE,student,34bd8ab074e7b98a
-lara.croft,JDJiJDEyJGJ2bjRtLjVaU3E3a3g4ZHZIdGQ4aS50RVNyQ2tzSDR4V3NjS2d3emxYNHlhUmhWZ2RjVVFt,Lara,Croft,Adventurer. Archaeologist. Icon.,TRUE,student,b53ea15d2bf8cddf
-jack.sparrow,JDJiJDEyJFBLcTlnSzBlMjFhWmkycEVuQi95TWVWY2U1Z0huUHNvUnhZdkx3LjJmQWdTU3dKQ3dkTzJ1,Jack,Sparrow,Why is the rum always gone?,FALSE,student,b793a74d2b46a9e2
-michael.scott,JDJiJDEyJDNaVGZxWGNHL0VlRUNUalcxUkNQcE94Wmk3ZWU2b2J2OG1yY01laGVxOHdKbi4vSEtMOXpl,Michael,Scott,World's Best Boss.,TRUE,student,acba40bab03a4ffa
-elizabeth.bennet,JDJiJDEyJFFuMnYuV3ZySktEdVphdXRlelY5OWVyRFI4ZG1sSy9pelZHaEVueEkvOWQ2YkdIaW5nV1dt,Elizabeth,Bennet,"Obstinate, headstrong girl!",FALSE,student,759574f70a587583
-bruce.wayne,JDJiJDEyJGcyeklBRmN2dGt4WVdVdUJmVUFJM09VQXBxbmouMjVwLmNQLzZMelhSRmdsbjBpUUlHL09P,Bruce,Wayne,I am vengeance. I am the night.,TRUE,student,2d1315b59416e860
-spock.vulcan,JDJiJDEyJDRneVFDVndJb3lDclk3V2J2eGxqdmVDdzhEZ2Q3YUxVOEtiVUhsQWtNYmhrUnZmNG5kWkdt,Spock,Vulcan,Live long and prosper.,TRUE,student,4637d59c67fa381d
-homer.simpson,JDJiJDEyJFVkTmIwYXExa0NROThrUkRjaFBFMy40U3lITkg1MFZlaksuSWdCdDBqSkNSLnlycEtxWm02,Homer,Simpson,Mmm... donuts.,FALSE,student,48c8f81933b65fec
-james.bond,JDJiJDEyJDNSSENiZHAyTXZuajBkLmhFR0tyc09ReWowYS5RZkU4OGF0a2FLV2VyVGRSeFd2QTRRLlY2,James,Bond,The name's Bond. James Bond.,TRUE,student,a3b48d08bc213e18
-elsa.arendelle,JDJiJDEyJE5aa3JjMDdwWmFqc0NQRWxwS0xzRHUybmlENm9UQmJaaHRVSTNvZVJuWEVObGtzNktjdzI2,Elsa,Arendelle,"Let it go, let it go.",TRUE,student,e95ebbd781fabcf6
-gandalf.grey,JDJiJDEyJEYxNk8zMVZyaTZ5SVo3SGlyVFdkay56MkF4SnN3em5YQXo5MGpQY25GRUUxek5uTkFDWGV1,Gandalf,Grey,A wizard is never late.,TRUE,student,d61fd8fe5c991ee6
-bilbo.baggins,JDJiJDEyJG1lSUxwRDhmdTVlVFNVeXVHbTdzMHVEZzFzYzRkcVUxMlljM3F3V0pRT3ZQS2pKdDREeml5,Bilbo,Baggins,I'm going on an adventure!,FALSE,student,098596e62af1dd37
-wade.wilson,JDJiJDEyJENwb1VuREdhSXUxZmtMTFR1cGxhNU9LMHU0OS55NVc4aFpLN0FRbEpCeTM4dklYWlg0NEgu,Wade,Wilson,Maximum effort.,FALSE,student,03e31f7b56484c52
-natasha.romanoff,JDJiJDEyJG9PeGJqY25kMkJzMzJRTEdGV0o2cHVFV1M2b01LQjNjeXlYQ2p3RzAyOFd0UFBQOW0yYjFP,Natasha,Romanoff,I've got red in my ledger.,TRUE,student,c90b4854962bdf21
-peter.parker,JDJiJDEyJC9xek5UcXpuaWRKdXNIZk9aLzVwdHVseFhwUlB2bWZjSnZZUjlMc25sMTJqU2VyYklFV0dH,Peter,Parker,With great power comes great responsibility.,TRUE,student,2900febd15740bcd
-steve.rogers,JDJiJDEyJGthZi82amNOQzV0ODJrWjN4TE5LUnViSXpBVEdQRGdYOEprN3gwb3dGM3d3TlZsUGgxcTI2,Steve,Rogers,I can do this all day.,TRUE,student,17a2fa4e2eb77044
-thor.odinson,JDJiJDEyJGllWk1VN1ZnN1VCeUNVSWNnRjdOMnU3dWhPcFVvbnRZT3JuYnpaZG42Lk4zU2IvalpIQzM2,Thor,Odinson,God of Thunder.,TRUE,student,251889e87627aad1
-bruce.banner,JDJiJDEyJEdCVzFwejJnOFh5RlIzUnIxVC9VVmVkNlRtamRjaHhWVlVLS3dxL1lNYU1ET21yY05ZaGxX,Bruce,Banner,"That's my secret, Cap. I'm always angry.",FALSE,student,03bcb22cc65703df
-diana.prince,JDJiJDEyJDZnWnBrdjQ2ZlpjVGdjNGJMTFZRQ2VWeS56d0hHbHB3L1NBU2l4Wk5BZmI3MndNSm5tbFk2,Diana,Prince,I will fight for those who cannot fight for themselves.,TRUE,student,f3666c5231ecb4cf
-anakin.skywalker,JDJiJDEyJENHeWdnNFpWSjRGeHkvMVEvNjhDRC5FNzZ0Tmpja3BDRk9EbmM1emVQZHI1TnUzalp5UDlH,Anakin,Skywalker,This is where the fun begins.,FALSE,student,1343e8c76c454d69
-marty.mcfly,JDJiJDEyJE0vbHRXRThMbGhWQnJKSkJUUFlmVU94d1dLc20uYklXTzdsY0tHT05mSVZzMzVCdDFCa2hp,Marty,Mcfly,Nobody calls me chicken!,TRUE,student,015b84362e18c823
-doc.brown,JDJiJDEyJE1PU1JuS3IvVkNsZm01SnNvV0FJRXVNYXJCTVlLLklGazg4a2xvdnluNXNIVFRTZlF0SGhH,Emmett,Brown,"Roads? Where we're going, we don't need roads.",TRUE,student,fc9ff6de8851b42d
-hannah.montana,JDJiJDEyJE42WkYzREtvLmFZRUgxVDhkWGM4eS5TQTNUU2ZpUlNwRmNwdXFDS1FISkFDRFhnRVk2VDY2,Hannah,Montana,Best of both worlds,FALSE,student,17889dcf49b917de
-jason.bourne,JDJiJDEyJGdCdDRicnl3a1hSeW1rY1ZVVmxqa09SUHB6V1ovOC5mYkpNcE0wMVpRQ3FuR2VTcDJtcjNl,Jason,Bourne,"I don't remember anything, but I know how to fight.",FALSE,student,437a5ec48076ed5f
-frank.castle,JDJiJDEyJGRJb2o5RGFWWk45emZwV1BabGV0SU9xdUd6cGNQaDJjU2xyRFBGTnFJdHV5dlRFaTZyd3c2,Frank,Castle,"One batch, two batch. Penny and dime.",FALSE,student,a5d4495a9a8de644
-neo.matrix,JDJiJDEyJEpjemd0aUN5ZFBJaXVwcUtlR1ZFLk9sWlM4SWdCeTVlc0NwN1I1NnUuOHRxTXpnWDBsdDZL,Neo,Matrix,I know kung fu.,TRUE,student,3d3a1ac4e4fca85e
-trinity.matrix,JDJiJDEyJDI4Lkh3OGFjZXVLbFhQTGhjcEFwRU8ydVdkdTFJemRndE8zMFR6aTI2MzRWLk5MdnpmTnVt,Trinity,Matrix,The Matrix cannot tell you who you are.,TRUE,student,aad1d485d5bf23b3
-arthur.dent,JDJiJDEyJHBiLm1zZzRSQi5PRXpieHJwcElabHVxNjF6dWdzSE9pcUhPbkFoNzZlNlVtN25PS1BUTGlD,Arthur,Dent,Don't panic. Always carry a towel.,FALSE,student,de3e7cf34fb8076d
-ford.prefect,JDJiJDEyJHRWRXpWU1g2dnRFZllmM3JJVWQwMmVEb2JuTmJKMDJsMkNZVlpQVng1UEJnMEF3YmF6V1BH,Ford,Prefect,Time is an illusion. Lunchtime doubly so.,TRUE,student,0647e9f7670b1b8f
-hannibal.lecter,JDJiJDEyJGlMeWMuTjRXcmE4T0t0TlU2cVhqeHVGTEZRcklYRzU0NTlnSzhCUC9LbDFGZExkL0FsUy8y,Hannibal,Lecter,"I do wish we could chat longer, but I'm having an old friend for dinner.",FALSE,student,46c544700961563f
-buffy.summers,JDJiJDEyJHpqREV6UVBEVHpHZEwvL2g5RUZScWVld3BlVDkuSktvdFVRRGUwRHNuS0gwWVhueElLWnJX,Buffy,Summers,"Into every generation, a Slayer is born.",TRUE,student,75ad982d83491de1
-dexter.morgan,JDJiJDEyJDkuUU1xeUhqRGZNZ1hnc05tUDI5UE83Vzh4Mmh3OXRhLnlNNC9nRGpSUUJOME1uQ3kyallp,Dexter,Morgan,Blood never lies.,FALSE,student,6a87b8e36947c92d
-meredith.grey,JDJiJDEyJFAzTlo4ZVo0QXlEZTVqVjkuNllnci42aERLUHdHN0VRSzBWQ05FSVlKdmZ1aW14L045anZx,Meredith,Grey,Pick me. Choose me. Love me.,TRUE,student,a533406c476523de
-gregory.house,JDJiJDEyJFZYSU1peTJ2UEliM3ZXWElMRTgySGVUZXRKbkdEeFlrSG56LnN2ODZmYW5lNm1vRUcvVmo2,Gregory,House,Everybody lies.,FALSE,student,1e9f3df82508d44c
-arthur.morgan,JDJiJDEyJGx6RjZMbnZqTEdJcEtlY3pWZENqNmVWQkpKcnVSSGNSaU54S085TWQvc2tYQ29FQWF6d2wy,Arthur,Morgan,,TRUE,student,f63b0b2f7c48c85f
-john.doe,JDJiJDEyJHB6L3o4ZnR3SE1uQkpzS09UUUpSaS5pLzRvYks1OTVSL0s3NXVnOVVmRlFVcXp3YTkzUzNP,John,Doe,Shrek is love. Shrek is live,TRUE,student,f67d38dee48d641f
-jane.doe,JDJiJDEyJDZjdmVtQUgzbzI1V3Z5U094Y2M5UXVGRDlXOURna0EybXBsbTVFYjEuVEQvNXNIWUZqcVlL,Jane,Doe,Professional construction enthusiast,FALSE,student,16f9cbf0d5f0e513
-john.marston,JDJiJDEyJDgxaXUuZmdNZXVPcHJCYXQveEwyRS51UVZKZ1UwLnBXVDdIVnBBQVRPdVNQWXluSm45SENT,John,Marston,,FALSE,tutor,b365cd8f07cd0520
-mary.stuart,JDJiJDEyJFl0UHVRZDRJVFg1ZnlxUDUuR2g2cmVzOTFSNDB4MC9OLmlkZ0ZlRXNZVFB0T1hsWjgwUHgu,Mary,Stuart,Am I a pretty girl?,TRUE,tutor,430112d4d154a44f
-walter.white,JDJiJDEyJENnL2ZvNldrWjNSdFRYM0xYdUY1MGVraTJidWJnVDVjaklFdUNTL0JYeVZsa1MvWnVlRWY2,Walter,White,Say my name.,TRUE,student,1c9b7a8801c65988
-luke.skywalker,JDJiJDEyJHdZdFVIb0VuNzBmSkppZXRLNG8uei5HZm1LWWR4emkyaXBOdEpZMFV2NjVuTndaNEpLYXZh,Luke,Skywalker,May the force be with you.,TRUE,student,0fd78ece486e8df4
-rick.grimes,JDJiJDEyJGhFRmZWaGg3aE50QXBCR2EuQlFrZGVuc21tWFNZeFIwN3Y4YUNwcU83ZndQUGN1SE9CcnhH,Rick,Grimes,We are the walking dead.,TRUE,student,903d839e277ca6b9
-jesse.pinkman,JDJiJDEyJEV4Vmh3dy9JY2dZVnRXd3ltQXpJRU90MFB4YjRRSTlDd3k1b0ZDUC9SLlNKckFMdHhOd1NP,Jesse,Pinkman,Yeah science!,FALSE,student,2da6756c9a30c038
-tony.stark,JDJiJDEyJEpvdUtqLmpWeS9QZ3FlSjcvYXJwMHVLYmsvWTViVC5nWjNWaUNHV3BIZXFFMWI4NkJaTlJH,Tony,Stark,"Genius, billionaire, playboy, philanthropist.",TRUE,student,968c68d2315a8b10
-barney.stinson,JDJiJDEyJENuUUtkSjhFME15S2pZZHYvV0phWC5hYm5sbXdibGh6bVV5TFp5RGxFUk11OGtXWGdValRD,Barney,Stinson,Suit up!,TRUE,student,a76d22eb46a882d2
-ted.mosby,JDJiJDEyJFg2cllpUlczV1lnMU5kcmFPUUZ0bS5zaGk5bnBkdUJLb0xWLmhxMi5GLk1lMnVQOGZ4R05x,Ted,Mosby,,TRUE,student,17c2828310d5b53f
-patrick.star,JDJiJDEyJHkuZWdKSVJyek81SDJVT0F4OUJqNU9BWEQ3bUZ6NkN5VUVoS0NqWEc1Q0ZZR1VzNnp3Vmd5,Patrick,Star,"No, this is Patrick!",FALSE,student,1fc8a832c8b0e7eb
-spongebob.squarepants,JDJiJDEyJFM5ZlQwbDVMRFBsNnQ1Q21aZlY3bHVMVEIzcThrRzVIeXFaSnF5YmhQbUl2eGdNVnNWSDIu,Spongebob,Squarepants,,TRUE,student,77c348da88fc545f
-luffy.monkey,JDJiJDEyJEtRM0JPMHhOdGxaRkdXdVhhTDdQemVFZUxPNHVYRjluZUNwaGdEeGo4SFl3MkQvanguUXdT,Luffy,D. Monkey,I’m gonna be the Pirate King!,TRUE,student,39337032678769de
-sheldon.cooper,JDJiJDEyJDdLZnRaejZFUUZSRVY3SnhVYzVRNy5zN1MxbHczUUljTFVJNTNERDNUMldwb0VsQjUzSGtD,Sheldon,Cooper,I'm not crazy. My mother had me tested.,TRUE,student,c86b672c1d8fd8ec
-leonard.hofstadter,JDJiJDEyJHRMdnhVQlhLWDREZmd3bDZFZVcwTC5DczZodGphSlExc2h5SVAxNVVTWlpMS1hUZ1kzRXJx,Leonard,Hofstadter,,FALSE,tutor,5018f42297a6c369
-maxine.musterfrau,JDJiJDEyJDAzUGlxQktENi9qVkZiMXp4V1RMai56TWowclguaEdCTHhRWFRldFQweFVCamxoeVdjY1JD,Maxine,Musterfrau,Is mayonnaise an instrument?,TRUE,tutor,96a5850368da614c
-sandy.cheeks,JDJiJDEyJGtJNUxtR2xqUUxzeDJDNzJQeFJsc3VPNWhGSjJWbVRHdUtsNTJRR1J0djNUZTdrN0M4dml5,Sandy,Cheeks,A squirrel in the sea!,TRUE,tutor,928930d566c50b2d
-max.mustermann,JDJiJDEyJFQ0VzcuVy8yWmJDbGVYOUFvOUxYWC4uSkZLajFROFNSbWlZRC94cUlDcFhnd3c5OFdkQUhD,Max,Mustermann,,TRUE,tutor,14d099c161cf3bea
-sam.winchester,JDJiJDEyJGZkZWs1Q0c2TldqMldNZkdzTjlTNHVWN1hJYW54dEF3WnF2Z0Fpc21tVG9IaHF0VXpkQzJT,Sam,Winchester,,TRUE,admin,e96ed2d9a962607b
-dean.winchester,JDJiJDEyJEgyYm1XbGRxLnE2SWphcUp5OUNKRXVXNGZPb0RQTVVHQTV6c3RwRGgzbHdqTG1UcG9URFJH,Sam,Winchester,,TRUE,admin,ad372a589afd3c76
-abed.nadir,JDJiJDEyJGdzaEFYRTJhOHFBcXhYTUZNUVlUUHVoQ1VMOVpQbFlCS1RsV2pQcy80b2lMcEU3MXNKbTA2,Abed,Nadir,Troy and Abed in the moooorning,FALSE,admin,da53cd90f4acaa9e
+username,password,first_name,last_name,bio,remember_me,user_type,registered_at,user_id
+darth.vader,JDJiJDEyJHlCeG8xeE1uTExzMVlrczBtUkRkNE9lUUhIM0IxYi5zbEhyOTVEeGVrbWdlTDBoeVBha01X,Darth,Vader,I am your father.,TRUE,student,2025-01-25,4cb33c4df7a6ad3d
+frodo.baggins,JDJiJDEyJFI1Y2ZlNGUzc0ZCMENFZ01EcVRIT2U4eE5JeE1jOHZkQzQxaEVGMG1QZ1lLSmptejZGMjYy,Frodo,Baggins,One ring to rule them all.,TRUE,student,2024-12-20,99b92b9c4c483607
+katniss.everdeen,JDJiJDEyJEFtTGRuNzJpTjJrdlVIQVZsRjhtZ09yTzRzTE0ydkthb1RpODRpOG1RVHNyUDBaRnVaUEku,Katniss,Everdeen,May the odds be ever in your favor.,TRUE,student,2024-12-25,77032360e19b5c5d
+harry.potter,JDJiJDEyJDJEcm9lb0VjRzQzNWp2ZnNKMDJCZnVpQUdHcElVWDVHZ2Qyb0ZSTGdnQ1dib21iT2pKVldh,Harry,Potter,The Boy Who Lived.,FALSE,student,2024-12-27,e3931e02fc68d82d
+tony.montana,JDJiJDEyJFVPL1gvcmRZOFdZbVpoTDJvVS5oNGVZN2djOWYxSnNScC5vclBhcmlkM2hPMG9BL0lhWnFT,Tony,Montana,Say hello to my little friend!,FALSE,student,2025-12-30,da9572d6f327dacc
+vito.corleone,JDJiJDEyJEMzcktxQjF2LlJCdXhQbjhDZkNMLy5QTjFIbnl6SXJjeS9RSFd0WnR3NS45MFg4ZEI1ZFZ1,Vito,Corleone,I'm gonna make him an offer he can't refuse.,TRUE,student,2025-12-31,5c522dea727d73ff
+mario.mario,JDJiJDEyJG1ZZkRiUU82dXNlMHJ1aGQwakhvT2VsdXgydnVrbGpUcldjMjR2RmZFSUhsYjk2b2xZR0tP,Mario,Mario,"It's-a me, Mario!",TRUE,student,2025-01-03,34bd8ab074e7b98a
+lara.croft,JDJiJDEyJGJ2bjRtLjVaU3E3a3g4ZHZIdGQ4aS50RVNyQ2tzSDR4V3NjS2d3emxYNHlhUmhWZ2RjVVFt,Lara,Croft,Adventurer. Archaeologist. Icon.,TRUE,student,2025-01-04,b53ea15d2bf8cddf
+jack.sparrow,JDJiJDEyJFBLcTlnSzBlMjFhWmkycEVuQi95TWVWY2U1Z0huUHNvUnhZdkx3LjJmQWdTU3dKQ3dkTzJ1,Jack,Sparrow,Why is the rum always gone?,FALSE,student,2025-01-04,b793a74d2b46a9e2
+michael.scott,JDJiJDEyJDNaVGZxWGNHL0VlRUNUalcxUkNQcE94Wmk3ZWU2b2J2OG1yY01laGVxOHdKbi4vSEtMOXpl,Michael,Scott,World's Best Boss.,TRUE,student,2025-01-04,acba40bab03a4ffa
+elizabeth.bennet,JDJiJDEyJFFuMnYuV3ZySktEdVphdXRlelY5OWVyRFI4ZG1sSy9pelZHaEVueEkvOWQ2YkdIaW5nV1dt,Elizabeth,Bennet,"Obstinate, headstrong girl!",FALSE,student,2025-01-04,759574f70a587583
+bruce.wayne,JDJiJDEyJGcyeklBRmN2dGt4WVdVdUJmVUFJM09VQXBxbmouMjVwLmNQLzZMelhSRmdsbjBpUUlHL09P,Bruce,Wayne,I am vengeance. I am the night.,TRUE,student,2025-01-06,2d1315b59416e860
+spock.vulcan,JDJiJDEyJDRneVFDVndJb3lDclk3V2J2eGxqdmVDdzhEZ2Q3YUxVOEtiVUhsQWtNYmhrUnZmNG5kWkdt,Spock,Vulcan,Live long and prosper.,TRUE,student,2025-01-06,4637d59c67fa381d
+homer.simpson,JDJiJDEyJFVkTmIwYXExa0NROThrUkRjaFBFMy40U3lITkg1MFZlaksuSWdCdDBqSkNSLnlycEtxWm02,Homer,Simpson,Mmm... donuts.,FALSE,student,2025-01-06,48c8f81933b65fec
+james.bond,JDJiJDEyJDNSSENiZHAyTXZuajBkLmhFR0tyc09ReWowYS5RZkU4OGF0a2FLV2VyVGRSeFd2QTRRLlY2,James,Bond,The name's Bond. James Bond.,TRUE,student,2025-01-06,a3b48d08bc213e18
+elsa.arendelle,JDJiJDEyJE5aa3JjMDdwWmFqc0NQRWxwS0xzRHUybmlENm9UQmJaaHRVSTNvZVJuWEVObGtzNktjdzI2,Elsa,Arendelle,"Let it go, let it go.",TRUE,student,2025-01-06,e95ebbd781fabcf6
+gandalf.grey,JDJiJDEyJEYxNk8zMVZyaTZ5SVo3SGlyVFdkay56MkF4SnN3em5YQXo5MGpQY25GRUUxek5uTkFDWGV1,Gandalf,Grey,A wizard is never late.,TRUE,student,2025-01-06,d61fd8fe5c991ee6
+bilbo.baggins,JDJiJDEyJG1lSUxwRDhmdTVlVFNVeXVHbTdzMHVEZzFzYzRkcVUxMlljM3F3V0pRT3ZQS2pKdDREeml5,Bilbo,Baggins,I'm going on an adventure!,FALSE,student,2025-01-06,098596e62af1dd37
+wade.wilson,JDJiJDEyJENwb1VuREdhSXUxZmtMTFR1cGxhNU9LMHU0OS55NVc4aFpLN0FRbEpCeTM4dklYWlg0NEgu,Wade,Wilson,Maximum effort.,FALSE,student,2025-01-14,03e31f7b56484c52
+natasha.romanoff,JDJiJDEyJG9PeGJqY25kMkJzMzJRTEdGV0o2cHVFV1M2b01LQjNjeXlYQ2p3RzAyOFd0UFBQOW0yYjFP,Natasha,Romanoff,I've got red in my ledger.,TRUE,student,2025-01-14,c90b4854962bdf21
+peter.parker,JDJiJDEyJC9xek5UcXpuaWRKdXNIZk9aLzVwdHVseFhwUlB2bWZjSnZZUjlMc25sMTJqU2VyYklFV0dH,Peter,Parker,With great power comes great responsibility.,TRUE,student,2025-01-14,2900febd15740bcd
+steve.rogers,JDJiJDEyJGthZi82amNOQzV0ODJrWjN4TE5LUnViSXpBVEdQRGdYOEprN3gwb3dGM3d3TlZsUGgxcTI2,Steve,Rogers,I can do this all day.,TRUE,student,2025-01-14,17a2fa4e2eb77044
+thor.odinson,JDJiJDEyJGllWk1VN1ZnN1VCeUNVSWNnRjdOMnU3dWhPcFVvbnRZT3JuYnpaZG42Lk4zU2IvalpIQzM2,Thor,Odinson,God of Thunder.,TRUE,student,2025-01-14,251889e87627aad1
+bruce.banner,JDJiJDEyJEdCVzFwejJnOFh5RlIzUnIxVC9VVmVkNlRtamRjaHhWVlVLS3dxL1lNYU1ET21yY05ZaGxX,Bruce,Banner,"That's my secret, Cap. I'm always angry.",FALSE,student,2025-01-14,03bcb22cc65703df
+diana.prince,JDJiJDEyJDZnWnBrdjQ2ZlpjVGdjNGJMTFZRQ2VWeS56d0hHbHB3L1NBU2l4Wk5BZmI3MndNSm5tbFk2,Diana,Prince,I will fight for those who cannot fight for themselves.,TRUE,student,2025-01-14,f3666c5231ecb4cf
+anakin.skywalker,JDJiJDEyJENHeWdnNFpWSjRGeHkvMVEvNjhDRC5FNzZ0Tmpja3BDRk9EbmM1emVQZHI1TnUzalp5UDlH,Anakin,Skywalker,This is where the fun begins.,FALSE,student,2025-01-20,1343e8c76c454d69
+marty.mcfly,JDJiJDEyJE0vbHRXRThMbGhWQnJKSkJUUFlmVU94d1dLc20uYklXTzdsY0tHT05mSVZzMzVCdDFCa2hp,Marty,Mcfly,Nobody calls me chicken!,TRUE,student,2025-01-20,015b84362e18c823
+doc.brown,JDJiJDEyJE1PU1JuS3IvVkNsZm01SnNvV0FJRXVNYXJCTVlLLklGazg4a2xvdnluNXNIVFRTZlF0SGhH,Emmett,Brown,"Roads? Where we're going, we don't need roads.",TRUE,student,2025-01-20,fc9ff6de8851b42d
+hannah.montana,JDJiJDEyJE42WkYzREtvLmFZRUgxVDhkWGM4eS5TQTNUU2ZpUlNwRmNwdXFDS1FISkFDRFhnRVk2VDY2,Hannah,Montana,Best of both worlds,FALSE,student,2025-01-20,17889dcf49b917de
+jason.bourne,JDJiJDEyJGdCdDRicnl3a1hSeW1rY1ZVVmxqa09SUHB6V1ovOC5mYkpNcE0wMVpRQ3FuR2VTcDJtcjNl,Jason,Bourne,"I don't remember anything, but I know how to fight.",FALSE,student,2025-01-20,437a5ec48076ed5f
+frank.castle,JDJiJDEyJGRJb2o5RGFWWk45emZwV1BabGV0SU9xdUd6cGNQaDJjU2xyRFBGTnFJdHV5dlRFaTZyd3c2,Frank,Castle,"One batch, two batch. Penny and dime.",FALSE,student,2025-01-28,a5d4495a9a8de644
+neo.matrix,JDJiJDEyJEpjemd0aUN5ZFBJaXVwcUtlR1ZFLk9sWlM4SWdCeTVlc0NwN1I1NnUuOHRxTXpnWDBsdDZL,Neo,Matrix,I know kung fu.,TRUE,student,2025-01-28,3d3a1ac4e4fca85e
+trinity.matrix,JDJiJDEyJDI4Lkh3OGFjZXVLbFhQTGhjcEFwRU8ydVdkdTFJemRndE8zMFR6aTI2MzRWLk5MdnpmTnVt,Trinity,Matrix,The Matrix cannot tell you who you are.,TRUE,student,2025-01-28,aad1d485d5bf23b3
+arthur.dent,JDJiJDEyJHBiLm1zZzRSQi5PRXpieHJwcElabHVxNjF6dWdzSE9pcUhPbkFoNzZlNlVtN25PS1BUTGlD,Arthur,Dent,Don't panic. Always carry a towel.,FALSE,student,2025-01-28,de3e7cf34fb8076d
+ford.prefect,JDJiJDEyJHRWRXpWU1g2dnRFZllmM3JJVWQwMmVEb2JuTmJKMDJsMkNZVlpQVng1UEJnMEF3YmF6V1BH,Ford,Prefect,Time is an illusion. Lunchtime doubly so.,TRUE,student,2025-01-28,0647e9f7670b1b8f
+hannibal.lecter,JDJiJDEyJGlMeWMuTjRXcmE4T0t0TlU2cVhqeHVGTEZRcklYRzU0NTlnSzhCUC9LbDFGZExkL0FsUy8y,Hannibal,Lecter,"I do wish we could chat longer, but I'm having an old friend for dinner.",FALSE,student,2025-02-04,46c544700961563f
+buffy.summers,JDJiJDEyJHpqREV6UVBEVHpHZEwvL2g5RUZScWVld3BlVDkuSktvdFVRRGUwRHNuS0gwWVhueElLWnJX,Buffy,Summers,"Into every generation, a Slayer is born.",TRUE,student,2025-02-04,75ad982d83491de1
+dexter.morgan,JDJiJDEyJDkuUU1xeUhqRGZNZ1hnc05tUDI5UE83Vzh4Mmh3OXRhLnlNNC9nRGpSUUJOME1uQ3kyallp,Dexter,Morgan,Blood never lies.,FALSE,student,2025-02-04,6a87b8e36947c92d
+meredith.grey,JDJiJDEyJFAzTlo4ZVo0QXlEZTVqVjkuNllnci42aERLUHdHN0VRSzBWQ05FSVlKdmZ1aW14L045anZx,Meredith,Grey,Pick me. Choose me. Love me.,TRUE,student,2025-02-04,a533406c476523de
+gregory.house,JDJiJDEyJFZYSU1peTJ2UEliM3ZXWElMRTgySGVUZXRKbkdEeFlrSG56LnN2ODZmYW5lNm1vRUcvVmo2,Gregory,House,Everybody lies.,FALSE,student,2025-02-04,1e9f3df82508d44c
+arthur.morgan,JDJiJDEyJGx6RjZMbnZqTEdJcEtlY3pWZENqNmVWQkpKcnVSSGNSaU54S085TWQvc2tYQ29FQWF6d2wy,Arthur,Morgan,,TRUE,student,2025-02-04,f63b0b2f7c48c85f
+john.doe,JDJiJDEyJHB6L3o4ZnR3SE1uQkpzS09UUUpSaS5pLzRvYks1OTVSL0s3NXVnOVVmRlFVcXp3YTkzUzNP,John,Doe,Shrek is love. Shrek is live,TRUE,student,2025-02-05,f67d38dee48d641f
+jane.doe,JDJiJDEyJDZjdmVtQUgzbzI1V3Z5U094Y2M5UXVGRDlXOURna0EybXBsbTVFYjEuVEQvNXNIWUZqcVlL,Jane,Doe,Professional construction enthusiast,FALSE,student,2025-02-05,16f9cbf0d5f0e513
+john.marston,JDJiJDEyJDgxaXUuZmdNZXVPcHJCYXQveEwyRS51UVZKZ1UwLnBXVDdIVnBBQVRPdVNQWXluSm45SENT,John,Marston,,FALSE,tutor,2025-02-05,b365cd8f07cd0520
+mary.stuart,JDJiJDEyJFl0UHVRZDRJVFg1ZnlxUDUuR2g2cmVzOTFSNDB4MC9OLmlkZ0ZlRXNZVFB0T1hsWjgwUHgu,Mary,Stuart,Am I a pretty girl?,TRUE,tutor,2025-02-05,430112d4d154a44f
+walter.white,JDJiJDEyJENnL2ZvNldrWjNSdFRYM0xYdUY1MGVraTJidWJnVDVjaklFdUNTL0JYeVZsa1MvWnVlRWY2,Walter,White,Say my name.,TRUE,student,2025-02-05,1c9b7a8801c65988
+luke.skywalker,JDJiJDEyJHdZdFVIb0VuNzBmSkppZXRLNG8uei5HZm1LWWR4emkyaXBOdEpZMFV2NjVuTndaNEpLYXZh,Luke,Skywalker,May the force be with you.,TRUE,student,2025-02-05,0fd78ece486e8df4
+rick.grimes,JDJiJDEyJGhFRmZWaGg3aE50QXBCR2EuQlFrZGVuc21tWFNZeFIwN3Y4YUNwcU83ZndQUGN1SE9CcnhH,Rick,Grimes,We are the walking dead.,TRUE,student,2025-02-05,903d839e277ca6b9
+jesse.pinkman,JDJiJDEyJEV4Vmh3dy9JY2dZVnRXd3ltQXpJRU90MFB4YjRRSTlDd3k1b0ZDUC9SLlNKckFMdHhOd1NP,Jesse,Pinkman,Yeah science!,FALSE,student,2025-02-06,2da6756c9a30c038
+tony.stark,JDJiJDEyJEpvdUtqLmpWeS9QZ3FlSjcvYXJwMHVLYmsvWTViVC5nWjNWaUNHV3BIZXFFMWI4NkJaTlJH,Tony,Stark,"Genius, billionaire, playboy, philanthropist.",TRUE,student,2025-02-06,968c68d2315a8b10
+barney.stinson,JDJiJDEyJENuUUtkSjhFME15S2pZZHYvV0phWC5hYm5sbXdibGh6bVV5TFp5RGxFUk11OGtXWGdValRD,Barney,Stinson,Suit up!,TRUE,student,2025-02-06,a76d22eb46a882d2
+ted.mosby,JDJiJDEyJFg2cllpUlczV1lnMU5kcmFPUUZ0bS5zaGk5bnBkdUJLb0xWLmhxMi5GLk1lMnVQOGZ4R05x,Ted,Mosby,,TRUE,student,2025-02-6,17c2828310d5b53f
+patrick.star,JDJiJDEyJHkuZWdKSVJyek81SDJVT0F4OUJqNU9BWEQ3bUZ6NkN5VUVoS0NqWEc1Q0ZZR1VzNnp3Vmd5,Patrick,Star,"No, this is Patrick!",FALSE,student,2025-02-06,1fc8a832c8b0e7eb
+spongebob.squarepants,JDJiJDEyJFM5ZlQwbDVMRFBsNnQ1Q21aZlY3bHVMVEIzcThrRzVIeXFaSnF5YmhQbUl2eGdNVnNWSDIu,Spongebob,Squarepants,,TRUE,student,2025-02-06,77c348da88fc545f
+luffy.monkey,JDJiJDEyJEtRM0JPMHhOdGxaRkdXdVhhTDdQemVFZUxPNHVYRjluZUNwaGdEeGo4SFl3MkQvanguUXdT,Luffy,D. Monkey,I’m gonna be the Pirate King!,TRUE,student,2025-02-06,39337032678769de
+sheldon.cooper,JDJiJDEyJDdLZnRaejZFUUZSRVY3SnhVYzVRNy5zN1MxbHczUUljTFVJNTNERDNUMldwb0VsQjUzSGtD,Sheldon,Cooper,I'm not crazy. My mother had me tested.,TRUE,student,2025-02-07,c86b672c1d8fd8ec
+leonard.hofstadter,JDJiJDEyJHRMdnhVQlhLWDREZmd3bDZFZVcwTC5DczZodGphSlExc2h5SVAxNVVTWlpMS1hUZ1kzRXJx,Leonard,Hofstadter,,FALSE,tutor,2025-02-07,5018f42297a6c369
+maxine.musterfrau,JDJiJDEyJDAzUGlxQktENi9qVkZiMXp4V1RMai56TWowclguaEdCTHhRWFRldFQweFVCamxoeVdjY1JD,Maxine,Musterfrau,Is mayonnaise an instrument?,TRUE,tutor,2025-02-07,96a5850368da614c
+sandy.cheeks,JDJiJDEyJGtJNUxtR2xqUUxzeDJDNzJQeFJsc3VPNWhGSjJWbVRHdUtsNTJRR1J0djNUZTdrN0M4dml5,Sandy,Cheeks,A squirrel in the sea!,TRUE,tutor,2025-02-07,928930d566c50b2d
+max.mustermann,JDJiJDEyJFQ0VzcuVy8yWmJDbGVYOUFvOUxYWC4uSkZLajFROFNSbWlZRC94cUlDcFhnd3c5OFdkQUhD,Max,Mustermann,,TRUE,tutor,2025-02-07,14d099c161cf3bea
+sam.winchester,JDJiJDEyJGZkZWs1Q0c2TldqMldNZkdzTjlTNHVWN1hJYW54dEF3WnF2Z0Fpc21tVG9IaHF0VXpkQzJT,Sam,Winchester,,TRUE,admin,2025-02-07,e96ed2d9a962607b
+dean.winchester,JDJiJDEyJEgyYm1XbGRxLnE2SWphcUp5OUNKRXVXNGZPb0RQTVVHQTV6c3RwRGgzbHdqTG1UcG9URFJH,Sam,Winchester,,TRUE,admin,2025-02-07,ad372a589afd3c76
+abed.nadir,JDJiJDEyJGdzaEFYRTJhOHFBcXhYTUZNUVlUUHVoQ1VMOVpQbFlCS1RsV2pQcy80b2lMcEU3MXNKbTA2,Abed,Nadir,Troy and Abed in the moooorning,FALSE,admin,2025-02-07,da53cd90f4acaa9e

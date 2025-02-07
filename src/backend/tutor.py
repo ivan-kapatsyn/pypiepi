@@ -1,5 +1,6 @@
 from typing import List, Optional, Dict
 from random import randint
+from datetime import datetime, date
 
 from src.backend.user import User
 from src.backend.course import Course
@@ -17,12 +18,12 @@ class Tutor(User):
     changeable_type_fields = {"qualification"}
 
     def __init__(self, user_id: str, username: str, password: str,
-                 first_name: str, last_name: str,
+                 first_name: str, last_name: str, registered_at: date,
                  remember_me: bool = False, bio: str = None, user_type: str = "tutor",
                  qualifications: Optional[List[Qualification]] = None,
                  active_courses: Optional[List[Course]] = None,
                  evaluations: Optional[List[Evaluation]] = None):
-        super().__init__(user_id, username, password, first_name, last_name, bio, remember_me, user_type)
+        super().__init__(user_id, username, password, first_name, last_name, registered_at, bio, remember_me, user_type)
         self.qualifications = qualifications or []
         self.active_courses = active_courses if active_courses is not None else Course.get_courses_by_user_id(user_id)
         self.evaluations = evaluations if evaluations is not None else self.__load_evaluations(user_id)
@@ -57,7 +58,8 @@ class Tutor(User):
         cls._remove_token(token)
 
         user_id = cls._generate_unique_user_id()
-        cls._save_user(user_id, username, password, first_name, last_name, remember_me, cls.__name__)
+        registered_at = datetime.now().date()
+        cls._save_user(user_id, username, password, first_name, last_name, registered_at, remember_me, cls.__name__)
         cls._save_tutor(user_id, qualifications)
 
         logger.info(f"Tutor registered successfully with username: {username}")

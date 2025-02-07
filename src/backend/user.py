@@ -1,6 +1,7 @@
 from typing import List, Optional, Dict, Any, Tuple
 from secrets import token_hex
 from json import dumps
+from datetime import datetime, date
 
 from src.utils.data_base_util import DataBaseUtil
 from src.utils.password_utils import PasswordUtils
@@ -15,13 +16,14 @@ class User:
     changeable_user_fields = {"password", "first_name", "last_name", "bio", "remember_me"}
     changeable_type_fields = {}
 
-    def __init__(self, user_id: str, username: str, password: str, first_name: str, last_name: str,
+    def __init__(self, user_id: str, username: str, password: str, first_name: str, last_name: str, registered_at: date,
                 bio: str = None, remember_me: bool = False, user_type: str = None):
         self.user_id = user_id
         self.username = username
         self.password = password
         self.first_name = first_name
         self.last_name = last_name
+        self.registered_at = registered_at
         self.bio = bio or None
         self.remember_me = remember_me
         self.user_type = user_type or None
@@ -43,7 +45,7 @@ class User:
             logger.warning(f"Authentication failed: User '{username}' not found.")
             return None
 
-        user = cls(*user_data)
+        user = cls.get_user_by_id(user_data[0])
         if not PasswordUtils.verify_password(password, user.password):
             logger.warning(f"Authentication failed: Incorrect password for user '{username}'.")
             return None
@@ -75,10 +77,11 @@ class User:
 
         hashed_password = PasswordUtils.hash_password(password)
         user_id = cls._generate_unique_user_id()
+        registered_at = datetime.now().date()
 
-        cls._save_user(user_id, username, password, first_name, last_name, remember_me)
+        cls._save_user(user_id, username, password, first_name, last_name, registered_at, remember_me)
         logger.info(f"User '{username}' registered successfully.")
-        return cls(user_id, username, hashed_password, first_name, last_name, remember_me=remember_me)
+        return cls(user_id, username, hashed_password, first_name, last_name, registered_at, remember_me=remember_me)
 
     @classmethod
     def get_user_by_id(cls, user_id: str) -> Optional["User"]:
@@ -104,7 +107,8 @@ class User:
             "last_name": user_data[4],
             "bio": user_data[5],
             "remember_me": user_data[6],
-            "user_type": user_data[7]
+            "user_type": user_data[7],
+            "registered_at": user_data[8]
         }
         user_data.update(cls._extend_fields_by_user_id(user_id))
 
@@ -199,7 +203,7 @@ class User:
         return data
 
     @staticmethod
-    def _save_user(user_id: str, username: str, password: str, first_name: str, last_name: str,
+    def _save_user(user_id: str, username: str, password: str, first_name: str, last_name: str, registered_at: date,
                    remember_me: bool = False, user_type: str = None) -> None:
         user_data = {
             "user_ID": user_id,
@@ -208,7 +212,8 @@ class User:
             "first_name": first_name,
             "last_name": last_name,
             "remember_me": remember_me,
-            "user_type": user_type
+            "user_type": user_type,
+            "registered_at": registered_at
         }
         db = DataBaseUtil()
         db.insert_one("users", user_data, "user_ID")
