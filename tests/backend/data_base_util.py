@@ -1,4 +1,6 @@
 import unittest
+from datetime import date
+
 from pandas.core.interchange import column
 from src.utils.data_base_util import DataBaseUtil
 from src.utils.env_variable_util import EnvVariableUtil
@@ -28,7 +30,7 @@ class DataBaseUtilTestCase(unittest.TestCase):
 
         expected_result = ["f63b0b2f7c48c85f", "arthur.morgan",
                            "JDJiJDEyJGx6RjZMbnZqTEdJcEtlY3pWZENqNmVWQkpKcnVSSGNSaU54S085TWQvc2tYQ29FQWF6d2wy",
-                           "Arthur", "Morgan", "NaN",True,'student']
+                           "Arthur", "Morgan", "NaN",True,'student',date(2025,1,13)]
         self.assertEqual(self.db_util.load_one(table_name, column,id_value), expected_result)
 
 #WORK
@@ -46,7 +48,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
                 "Doe",
                 "Shrek is love. Shrek is live",
                 True,
-                'student'
+                'student',
+                date(2025,1,13)
             ],
             [
                 "b365cd8f07cd0520",
@@ -56,7 +59,8 @@ class DataBaseUtilTestCase(unittest.TestCase):
                 "Marston",
                 "NaN",
                 False,
-                'tutor'
+                'tutor',
+                date(2025,1,13)
             ]
         ]
 
