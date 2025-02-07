@@ -6,7 +6,7 @@ from src.backend.announcement import Announcement
 class TestAnnouncement(unittest.TestCase):
 
     def test_add_new_announcement_success(self):
-        course_id = "b365cd8f07cd0520"
+        course_id = "dc295cc4dd09d5b1"
         message = "New course material is available."
         announcement_id = Announcement.add_new_announcement(course_id, message)
 
