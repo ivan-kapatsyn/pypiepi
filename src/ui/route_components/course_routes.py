@@ -3,6 +3,7 @@ from typing import List
 
 from flask import Blueprint, Response, render_template, request, redirect, url_for
 
+from src.backend.announcement import Announcement
 from src.backend.course import Course
 from src.backend.evaluation import Evaluation
 from src.backend.tutor import Tutor
@@ -23,12 +24,18 @@ class CoursesRoutes:
             if form.submit.data and form.validate_on_submit():
                 course_name = form.course_name.data
                 qualification = form.qualification.data
-
                 room = form.room.data
                 schedule = form.schedule.data
                 max_participants = form.max_participants.data
-                # Todo Add Course.add_new_course()
-                course_id = 1
+
+                course_id = Course.add_new_course(
+                    name=course_name,
+                    qualification=qualification,
+                    # Todo retrieve room_id by its name
+                    room_id="5618d4f653538d49",
+                    schedule=schedule,
+                    max_participants=max_participants
+                )
                 return redirect(url_for('course.info', user_id=tutor.user_id, course_id=course_id))
 
         page = r'create_new_course.html'
@@ -41,26 +48,21 @@ class CoursesRoutes:
     def info(user_id: str, course_id: str):
         user = User.get_user_by_id(user_id)
         course = Course.get_course_by_id(course_id)
-        student_list = [
-            User.get_user_by_id('430112d4d154a44f'),
-            User.get_user_by_id('a76d22eb46a882d2'),
-            User.get_user_by_id('903d839e277ca6b9'),
-            User.get_user_by_id('99b92b9c4c483607')
-        ]
+        # Todo replace with Student.get_user_by_id
+        student_list = [User.get_user_by_id(student_id) for student_id in course.student_ids]
         evaluations = Evaluation.get_evaluations_by_course_ids([course_id])
         user_type = user.user_type
         if user_type == 'tutor':
             page = 'course_info_tutor.html'
-        elif user_type == 'Student':
-            #TODO Replace with if user_id in [x.user_id for x in course.student]:
-            active_student = True
-            if active_student:
+        elif user_type == 'student':
+            if user_id in course.student_ids:
                 page = 'course_info_active_student.html'
             else:
                 page = 'course_info_non_active_student.html'
+        elif user_type == 'admin':
+            page = 'course_info_admin.html'
         else:
-            # Todo implement Admin later
-            page = '...'
+            raise Exception(f'Unknown user type {user_type}')
         return render_template(page, user_id=user_id,
                                course_id=course_id,
                                username=user.username,
@@ -81,8 +83,8 @@ class CoursesRoutes:
     @staticmethod
     @main_bp.route('/add_announcement/<course_id>/', methods=['POST'])
     def add_announcement(course_id: str):
-        # Todo an announcement in db by Course.get_course_by_id() and Course.update()
         message = request.json['message']
+        Announcement.add_new_announcement(course_id,message)
         return Response(status=204)
 
     @staticmethod
@@ -94,8 +96,7 @@ class CoursesRoutes:
             'Room': course.room.name,
             'Schedule': course.schedule,
             'Max participants': course.max_participants,
-            #Todo replace it with course.max_participants - len(course.students)
-            'Available seats': course.max_participants - 16
+            'Available seats': course.max_participants - len(course.student_ids)
         }
         course_data = [{
             'name': key,
@@ -105,13 +106,13 @@ class CoursesRoutes:
 
     @staticmethod
     def __construct_student_data(students: List[User]):
-        # Todo replace it when Student is implemented
         result = []
         for i, student in enumerate(students):
             result.append({
                 'i': i + 1,
                 'first_name': student.first_name,
                 'last_name': student.last_name,
+                # Todo replace it with student.study_program or similar
                 'study_program': "Some study program",
             })
         return result

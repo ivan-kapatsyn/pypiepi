@@ -8,7 +8,7 @@ class CourseCreationForm(FlaskForm):
     course_name = StringField('Course Name', validators=[DataRequired()])
     qualification = SelectField('Qualification', validators=[DataRequired()], choices=[])
     room = StringField('Room', validators=[DataRequired()])
-    schedule = TextAreaField('Schedule (the format is "Mon 9AM". If you want to add more hours add them in a separate line)', validators=[DataRequired()])
+    schedule = TextAreaField('Schedule', validators=[DataRequired()])
     max_participants = IntegerField('Total number of students', validators=[
         DataRequired(),
         NumberRange(min=5, message="There should be more than 5 students."),

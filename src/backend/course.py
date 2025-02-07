@@ -10,6 +10,7 @@ from secrets import token_hex
 
 # Configure logging
 import logging
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 class Course:
     def __init__(self, course_id: str, user_id: str, name: str, qualification: Qualification,
                  room: Room, schedule: str, max_participants: int, description: Optional[str] = None,
-                 announcements: Optional[List[Announcement]] = None):
+                 announcements: Optional[List[Announcement]] = None, student_ids: Optional[List[str]] = None):
         self.course_id = course_id
         self.user_id = user_id
         self.name = name
@@ -27,6 +28,7 @@ class Course:
         self.max_participants = max_participants
         self.description = description or None
         self.announcements = announcements or []
+        self.student_ids = self.__load_students()
 
     @classmethod
     def add_new_course(cls, name: str, user_id: str, qualification: Qualification, room_id: str,
@@ -126,6 +128,43 @@ class Course:
             logger.warning(f"Error retrieving courses for user_id {user_id}: {e}")
             return []
 
+    @classmethod
+    def get_courses_by_schedule(cls, day: str, start_hour: str) -> List["Course"]:
+        """
+        Retrieves all courses associated with a given schedule.
+
+        Args:
+            :param start_hour: A starting hour for the courses.
+            :param day: A day code of the schedule (e.g. Mon)
+
+        Returns:
+            List[Course]: A list of `Course` objects corresponding to the courses, where the schedule day coincide
+            and start hour is inside the time range
+
+        """
+        db = DataBaseUtil()
+        try:
+            course_data = db.load_many("course", "schedule LIKE %s", [f'{day}%'])
+
+            return [
+                cls(
+                    course_id=course[0],
+                    user_id=course[1],
+                    name=course[2],
+                    qualification=Qualification(course[3]),
+                    room=Room.get_room_by_id(course[4]),
+                    schedule=course[5],
+                    max_participants=course[6],
+                    description=course[7],
+                    announcements=Announcement.get_announcements_by_course_id(course[0]),
+                )
+                for course in course_data if cls.__check_if_start_hour_inside_time_range(start_hour, course[5])
+            ]
+
+        except Exception as e:
+            logger.error(f"Error retrieving courses for schedule {day}, {start_hour}. The reason is {e}")
+            return []
+
     def delete_course(self):
         """
         Deletes the course from the system.
@@ -195,13 +234,13 @@ class Course:
     @staticmethod
     def _save_course(course_id, user_id, name, qualification, room_id, schedule, max_participants):
         course_data = {
-                "course_ID": course_id,
-                "user_ID": user_id,
-                "name": name,
-                "qualifications": qualification.name,
-                "room_ID": room_id,
-                "schedule": schedule,
-                "max_participants": max_participants
+            "course_ID": course_id,
+            "user_ID": user_id,
+            "name": name,
+            "qualifications": qualification.name,
+            "room_ID": room_id,
+            "schedule": schedule,
+            "max_participants": max_participants
         }
         db = DataBaseUtil()
         db.insert_one("course", course_data, "course_ID")
@@ -214,3 +253,16 @@ class Course:
             course_id = token_hex(8)
             if course_id not in existing_ids:
                 return course_id
+
+
+    @classmethod
+    def __check_if_start_hour_inside_time_range(cls, start_hour, schedule):
+        time_range = schedule[4:]
+        start, end = time_range.split('-')
+        return int(start) <= int(start_hour) < int(end)
+
+    def __load_students(self):
+        db = DataBaseUtil()
+        students_in_course = db.load_many('student_in_course', "course_id = %s", [self.course_id])
+        student_ids = [student[2] for student in students_in_course]
+        return student_ids

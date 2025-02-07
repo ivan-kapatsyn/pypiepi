@@ -13,7 +13,8 @@
 
             // Group fields by user type
             const studentFields = [
-                document.getElementById("student-field")
+                document.getElementById("student-field_1"),
+                document.getElementById("student-field_2")
             ];
             const tutorFields = [
                 document.getElementById("tutor-field-1"),
@@ -21,8 +22,7 @@
             ];
             const adminFields = [
                 document.getElementById("admin-field-1"),
-                document.getElementById("admin-field-2"),
-                document.getElementById("admin-field-3")
+                document.getElementById("admin-field-2")
             ];
 
             // Combine all fields into one list
@@ -109,9 +109,13 @@
 
             <!-- Dynamic Fields -->
             <!-- Student Fields (Sichtbar beim Laden) -->
-            <div id="student-field" style="display: block;">
-                <label for="student-info">Enrollment number:</label>
-                <input type="text" name="student_info" id="student-info">
+            <div id="student-field_1" style="display: block;">
+                <label for="student-info_1">Enrollment number:</label>
+                <input type="text" name="student_info_1" id="student-info_1">
+            </div>
+            <div id="student-field_2" style="display: block;">
+                <label for="student-info_2">Study program:</label>
+                <input type="text" name="student_info_2" id="student-info_2">
             </div>
 
             <!-- Tutor Fields (Versteckt beim Laden) -->
@@ -137,12 +141,8 @@
                 <input type="text" name="admin_info_1" id="admin-info-1">
             </div>
             <div id="admin-field-2" style="display: none;">
-                <label for="admin-info-2">Start date:</label>
+                <label for="admin-info-2">Role in TutorMe:</label>
                 <input type="text" name="admin_info_2" id="admin-info-2">
-            </div>
-            <div id="admin-field-3" style="display: none;">
-                <label for="admin-info-3">Role in TutorMe:</label>
-                <input type="text" name="admin_info_3" id="admin-info-3">
             </div>
 
             <div>

@@ -1,0 +1,26 @@
+.header-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1; /* Allows the logo to occupy the center space */
+}
+
+.dropdown {
+    margin-left: auto; /* Push the dropdown to the far right */
+}
+
+.header {
+    background-color: cadetblue;
+}
+
+.rating {
+    display: inline-block;
+    padding: 10px;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 30px; /* Center text vertically */
+    border-radius: 5px; /* Makes it a circle */
+    font-weight: bold;
+    font-size: 18px;
+}

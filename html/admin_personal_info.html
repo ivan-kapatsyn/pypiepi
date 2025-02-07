@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin's working page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin_personal_info.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script>
+        $(document).ready(function () {
+            // Attach click event to rememberCheckbox
+            $('#rememberCheckbox').on('change', function () {
+                const isChecked = $(this).is(':checked'); // Check if the checkbox is checked
+                const userId = '{{ user_id }}'; // Replace with dynamic user ID if available
+
+                // AJAX request
+                $.ajax({
+                    url: `/user/${userId}/toggle_remember_me`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({remember_me: isChecked}),
+                    success: function (response) {
+                        console.log('Remember me toggled:', response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error toggling remember me:', status, error);
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        const logoutButton = document.querySelector('.logout');
+
+        logoutButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            alert('Redirecting to login page...');
+            window.location.href = 'login.html';
+        });
+    </script>
+    <script>
+        function enableEdit(name) {
+            const container = document.getElementById('data-container');
+            const nameSpan = document.getElementById('data-' + name);
+            const editButton = document.getElementById('edit-button-' + name);
+
+            // Replace name with an input field
+            const currentValue = nameSpan.innerText;
+            nameSpan.innerHTML = `<input id="edit-input" value="${currentValue}" style="width: 70%;">`;
+
+            // Replace "Edit" button with "Ok" and "Cancel"
+            editButton.outerHTML = `
+            <button id="ok-button" onclick="saveData('${name}')">Ok</button>
+            <button id="cancel-button" onclick="cancelEdit('${currentValue}', '${name}')">Cancel</button>
+        `;
+        }
+
+        function saveData(name) {
+            const newValue = document.getElementById('edit-input').value;
+            // Call the Flask endpoint with the new data
+            fetch('/tutor/{{ user_id }}/update-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({info_to_update: {[name]: newValue}}),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    if (response.status === 204) {
+                        return {'success': true}; // Handle empty responses
+                    }
+
+                    return response.json(); // Otherwise, parse JSON
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Update the UI
+                        document.getElementById('data-' + name).innerText = newValue;
+                        resetButtons();
+                    } else {
+                        alert('Failed to update data!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to update data!');
+                });
+        }
+
+        function cancelEdit(originalValue, name) {
+            // Restore the original value and reset the UI
+            document.getElementById('data-' + name).innerText = originalValue;
+            resetButtons(name);
+        }
+
+        function resetButtons(name) {
+            // Replace "Ok" and "Cancel" with the "Edit" button
+            const container = document.getElementById('data-container');
+            const editButtonHtml = `<button id="edit-button-${name}" onclick="enableEdit('${name}')">Edit</button>`;
+            container.querySelector('#ok-button').outerHTML = editButtonHtml;
+            if (document.getElementById('cancel-button')) {
+                document.getElementById('cancel-button').remove();
+            }
+        }
+    </script>
+    <script>
+        function visit_course(room_id) {
+            const roomData = {{ room_data | tojson }};
+            if(!roomData.hasOwnProperty(room_id)) return;
+            window.location.href = '/course/info/' + roomData[room_id] + '/{{ user_id }}';
+        }
+    </script>
+    <script>
+        function loadRoom(room_id) {
+            const room = document.getElementById(room_id);
+            if (!room) return;
+
+            if (room.classList.contains('study-rooms')) {
+                room.classList.remove('study-rooms');
+                room.classList.add('study-rooms-colored');
+            } else if (room.classList.contains('lecture-halls')) {
+                room.classList.remove('lecture-halls');
+                room.classList.add('lecture-halls-colored');
+            }
+        }
+    </script>
+</head>
+<body>
+<header class="header">
+    <img src="{{ url_for('static', filename='banner.png') }}" class="header-image" alt="TutorMe">
+    <h1 class="header-text">TutorMe</h1>
+    <div class="dropdown ms-auto">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-bs-toggle="dropdown" aria-expanded="false">
+            Login Info
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><span class="dropdown-item">Username: {{ username }}</span></li>
+            <li>
+                <label class="dropdown-item">
+                    <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
+                    remembered on this device
+                </label>
+            </li>
+            <li>
+                <a class="dropdown-item" href="/login/index">Logout</a>
+            </li>
+        </ul>
+    </div>
+</header>
+<h3>Personal Info</h3>
+<div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
+    {% for item in data %}
+    <div>
+        <span style="font-weight: bold;">{{ item.name }}:</span>
+        <span id="data-{{ item.name }}">{{ item.value }}</span>
+        <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
+    </div>
+    {% endfor %}
+</div>
+<h3>Room overview</h3>
+<form method="GET" action="{{ url_for('admin.personal_bio', user_id=user_id) }}">
+    <div>
+        {{ room_form.day.label }}<br>
+        {{ room_form.day() }}
+    </div>
+    <div>
+        {{ room_form.hour.label }}<br>
+        {{ room_form.hour() }}
+    </div>
+    <div>
+        <!-- Hinzufügen der Klasse 'login-button' für den Login-Button -->
+        {{ room_form.submit() }}
+    </div>
+</form>
+<svg width="600" height="600" viewBox="0 -40 800 660" style="border:5px solid #000">
+    <!-- Main Building Outer Walls -->
+    <rect class="outer-wall" x="1.25%" y="7.58%" width="97.50%" height="106.06%"/>
+
+    <!-- Vertical Corridors -->
+    <rect class="corridor" x="21.88%" y="1.52%" width="2.50%" height="87.88%"/>
+    <rect class="corridor" x="45.00%" y="1.52%" width="10.00%" height="87.88%"/>
+    <rect class="corridor" x="75.63%" y="1.52%" width="2.50%" height="87.88%"/>
+
+    <!-- Left Wing Study rooms -->
+    <!-- Left Column: Study rooms 1,3,5,7,9 -->
+    <rect class="wc" x="1.25%" y="1.52%" width="20.63%" height="17.58%"/>
+    <text x="11.57%" y="10.31%" class="rooms-text">WC Women</text>
+
+    <rect class="study-rooms" x="1.25%" y="19.09%" width="20.63%" height="17.58%"
+          onclick="visit_course('1e06e1ddca76f5d4')"
+          id="1e06e1ddca76f5d4"/>
+    <text x="11.57%" y="27.88%" class="rooms-text">Study room 3</text>
+
+    <rect class="study-rooms" x="1.25%" y="36.67%" width="20.63%" height="17.58%"
+          onclick="visit_course('cb352106bf060d03')"
+          id="cb352106bf060d03"/>
+    <text x="11.57%" y="45.46%" class="rooms-text">Study room 5</text>
+
+    <rect class="study-rooms" x="1.25%" y="54.24%" width="20.63%" height="17.58%"
+          onclick="visit_course('8386436599a51b1b')"
+          id="8386436599a51b1b"/>
+    <text x="11.57%" y="63.03%" class="rooms-text">Study room 7</text>
+
+    <rect class="wc" x="1.25%" y="71.82%" width="20.63%" height="17.58%"/>
+    <text x="11.57%" y="80.61%" class="rooms-text">WC Man</text>
+
+    <!-- Right Column in Left Wing: Study rooms 2,4,6,8,10 -->
+    <rect class="study-rooms" x="24.38%" y="1.52%" width="20.63%" height="16.97%"
+          onclick="visit_course('e9c8f4da22c45c77')"
+          id="e9c8f4da22c45c77"/>
+    <text x="34.70%" y="10.00%" class="rooms-text">Study room 2</text>
+
+    <rect class="study-rooms" x="24.38%" y="18.49%" width="20.63%" height="16.97%"
+          onclick="visit_course('0fc47a8b9acc2ab3')"
+          id="0fc47a8b9acc2ab3"/>
+    <text x="34.70%" y="26.98%" class="rooms-text">Study room 4</text>
+
+    <rect class="corridor" x="24.38%" y="35.46%" width="20.63%" height="3.03%"/>
+
+    <rect class="study-rooms" x="24.38%" y="38.49%" width="20.63%" height="16.97%"
+          onclick="visit_course('28ffe65dd0b5e27b')"
+          id="28ffe65dd0b5e27b"/>
+    <text x="34.70%" y="46.98%" class="rooms-text">Study room 6</text>
+
+    <rect class="study-rooms" x="24.38%" y="55.46%" width="20.63%" height="16.97%"
+          onclick="visit_course('2596a3f336e2950f')"
+          id="2596a3f336e2950f"/>
+    <text x="34.70%" y="63.95%" class="rooms-text">Study room 8</text>
+
+    <rect class="study-rooms" x="24.38%" y="72.42%" width="20.63%" height="16.97%"
+          onclick="visit_course('b4d52483356bf1a8')"
+          id="b4d52483356bf1a8"/>
+    <text x="34.70%" y="80.91%" class="rooms-text">Study room 10</text>
+
+    <!-- Right Wing Study rooms -->
+    <!-- Left Column: Study rooms 11,13,15,17,19 -->
+    <rect class="study-rooms" x="55.00%" y="1.52%" width="20.63%" height="16.97%"
+          onclick="visit_course('f41f179a18621fd4')"
+          id="f41f179a18621fd4"/>
+    <text x="65.32%" y="10.00%" class="rooms-text">Study room 11</text>
+
+    <rect class="study-rooms" x="55.00%" y="18.49%" width="20.63%" height="16.97%"
+          onclick="visit_course('af7831a7ff109f53')"
+          id="af7831a7ff109f53"/>
+    <text x="65.32%" y="26.98%" class="rooms-text">Study room 13</text>
+
+    <rect class="corridor" x="55.00%" y="35.46%" width="20.63%" height="3.03%"/>
+
+    <rect class="study-rooms" x="55.00%" y="38.49%" width="20.63%" height="16.97%"
+          onclick="visit_course('a3cfc82a59a8ea4b')"
+          id="a3cfc82a59a8ea4b"/>
+    <text x="65.32%" y="46.98%" class="rooms-text">Study room 15</text>
+
+    <rect class="study-rooms" x="55.00%" y="55.46%" width="20.63%" height="16.97%"
+          onclick="visit_course('9a54aa5ee1167151')"
+          id="9a54aa5ee1167151"/>
+    <text x="65.32%" y="63.95%" class="rooms-text">Study room 17</text>
+
+    <rect class="study-rooms" x="55.00%" y="72.42%" width="20.63%" height="16.97%"
+          onclick="visit_course('50ce7062018a8c65')"
+          id="50ce7062018a8c65"/>
+    <text x="65.32%" y="80.91%" class="rooms-text">Study room 19</text>
+
+    <!-- Right Column in Right Wing: Study rooms 12,14,16,18,20 -->
+    <rect class="wc" x="78.13%" y="1.52%" width="20.63%" height="17.58%"/>
+    <text x="88.45%" y="10.31%" class="rooms-text">WC Men</text>
+
+    <rect class="study-rooms" x="78.13%" y="19.09%" width="20.63%" height="17.58%"
+          onclick="visit_course('1851ba91ccdfbc7f')"
+          id="1851ba91ccdfbc7f"/>
+    <text x="88.45%" y="27.88%" class="rooms-text">Study room 14</text>
+
+    <rect class="study-rooms" x="78.13%" y="36.67%" width="20.63%" height="17.58%"
+          onclick="visit_course('1f98cf81be72eb01')"
+          id="1f98cf81be72eb01"/>
+    <text x="88.45%" y="45.46%" class="rooms-text">Study room 16</text>
+
+    <rect class="study-rooms" x="78.13%" y="54.24%" width="20.63%" height="17.58%"
+          onclick="visit_course('80b893bbfed5a908')"
+          id="80b893bbfed5a908"/>
+    <text x="88.45%" y="63.03%" class="rooms-text">Study room 18</text>
+
+    <rect class="wc" x="78.13%" y="71.82%" width="20.63%" height="17.58%"/>
+    <text x="88.45%" y="80.61%" class="rooms-text">WC Woman</text>
+
+    <!-- Top Additional Rooms -->
+    <rect class="lecture-halls" x="1.25%" y="-13.64%" width="28.75%" height="15.15%"
+          onclick="visit_course('80c5bde9767737ee')"
+          id="80c5bde9767737ee"/>
+    <text x="15.63%" y="-6.07%" class="rooms-text">Lecture Hall 1</text>
+
+    <rect class="lecture-halls" x="30.00%" y="-13.64%" width="40.00%" height="15.15%"
+          onclick="visit_course('5618d4f653538d49')"
+          id="5618d4f653538d49"/>
+    <text x="50.00%" y="-6.07%" class="rooms-text">Maximum</text>
+
+    <rect class="lecture-halls" x="70.00%" y="-13.64%" width="28.75%" height="15.15%"
+          onclick="visit_course('444ee2caac85f904')"
+          id="444ee2caac85f904"/>
+    <text x="84.38%" y="-6.07%" class="rooms-text">Lecture Hall 2</text>
+
+    <!-- Bottom Additional Rooms -->
+    <rect class="lecture-halls" x="1.25%" y="89.39%" width="28.75%" height="15.15%"
+          onclick="visit_course('a85270d34187066d')"
+          id="a85270d34187066d"/>
+    <text x="15.63%" y="96.97%" class="rooms-text">Lecture Hall 3</text>
+
+    <rect class="lecture-halls" x="70.00%" y="89.39%" width="28.75%" height="15.15%"
+          onclick="visit_course('55d30d8aa00471e1')"
+          id="55d30d8aa00471e1"/>
+    <text x="84.38%" y="96.97%" class="rooms-text">Lecture Hall 4</text>
+
+    <!-- "Exit" Sign -->
+    <text x="50%" y="85.72%">Exit</text>
+</svg>
+<script>
+    window.addEventListener('load', function () {
+        const roomData = {{ room_data | tojson }};
+        Object.keys(roomData).forEach(function (roomId) {
+            loadRoom(roomId);
+        });
+    });
+</script>
+<h3>Generate new token</h3>
+<form id="generate-token-form" method="POST" action="{{ url_for('admin.save_token', user_id = user_id) }}">
+    {{ token_form.hidden_tag() }}
+    <div>
+        {{ token_form.user_type.label }}<br>
+        {{ token_form.user_type() }}
+    </div>
+    <div>
+        {{ token_form.token.label }}<br>
+        {{ token_form.token(size=32) }}
+    </div>
+    <div>
+        {{ token_form.submit() }}
+    </div>
+</form>
+
+
+</body>
+</html>

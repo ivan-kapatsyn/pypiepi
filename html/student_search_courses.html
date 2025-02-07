@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>New Course</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='create_new_course.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='student_search_courses.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Search Courses</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
             // Attach click event to rememberCheckbox
@@ -53,7 +55,7 @@
                 Login Info
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><span class="dropdown-item"><b>Username:</b> {{ username }}</span></li> <!-- the b makes the text bold -->
+                <li><span class="dropdown-item">Username: {{ username }}</span></li>
                 <li>
                     <label class="dropdown-item">
                         <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
@@ -61,44 +63,41 @@
                     </label>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="/login/index"><b>Logout</b></a> <!-- the b makes the text bold -->
+                    <a class="dropdown-item" href="/login/index">Logout</a>
                 </li>
             </ul>
         </div>
     </div>
 </header>
-
-<div class="create_new_course_container">
-    <h2>Create New Course</h2>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.course_name.label }}<br>
-            {{ form.course_name(class="input-field", size=20, id="course-name") }}
-        </div>
-        <div class="form-group">
-            {{ form.qualification.label }}<br>
-            {{ form.qualification(class="form-control") }}
-        </div>
-        <div class="tutor-name">
-            Tutor: <span style="font-weight: bold"> {{ tutor_name }} {{ tutor_surname }}</span>
-        </div>
-        <div>
-            {{ form.room.label }}<br>
-            {{ form.room(class="input-field", size=32, id="room") }}
-        </div>
-        <div>
-            {{ form.schedule.label(class="schedule-text") }}<br>
-            {{ form.schedule(class="input-field", size=32, id="schedule", placeholder="the format is 'Mon 9-13'") }}
-        </div>
-        <div>
-            {{ form.max_participants.label }}<br>
-            {{ form.max_participants(class="input-field", size=32, id="max-participants") }}
-        </div>
-        <div>
-            {{ form.submit(class="create-course-button") }} <!-- button on its own -->
+<br>
+<br>
+<br>
+<h2 class="text-center">Search {{ "active" if is_active else "potential"}} courses</h2>
+<!-- Search Bar -->
+<div class="container mt-lg-2">
+    <form method="GET" action="{{ url_for('student.active_courses', user_id=user_id) if is_active else url_for('student.passive_courses', user_id=user_id)}}">
+        <div class="input-group">
+            <input type="text" class="form-control" name="search" id="search"
+                   placeholder="Search courses..." value="{{ search_query }}">
+            <button class="btn btn-primary" type="submit">Search</button>
         </div>
     </form>
 </div>
+
+<!-- Course List -->
+<div class="container mt-3">
+    <div class="list-group">
+        {% for course in courses %}
+        <a href="{{ url_for('course.info', user_id=user_id, course_id=course.course_id) }}"
+           class="list-group-item list-group-item-action">
+            <strong>{{ course.name }}</strong> <br>
+            Schedule: {{ course.schedule }} | Room: {{ course.room.name }}
+        </a>
+        {% else %}
+        <p class="text-muted">No courses found.</p>
+        {% endfor %}
+    </div>
+</div>
+
 </body>
 </html>
