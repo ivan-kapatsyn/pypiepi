@@ -143,5 +143,55 @@ class TestStudentDatabase(unittest.TestCase):
         with self.assertRaises(ValueError):
             student.leave_feedback(course_id, "Awesome", 11)
 
+    def test_search_from_active_courses_success(self):
+        student = Student.get_user_by_id("f63b0b2f7c48c85f")
+
+        test_course_1 = Course.add_new_course("Math 101", "b365cd8f07cd0520", Qualification("Math"), "50ce7062018a8c65",
+                                              "Mon 9-11", 25)
+        test_course_2 = Course.add_new_course("Physics 101", "b365cd8f07cd0520", Qualification("Physics"), "50ce7062018a8c65",
+                                              "Tue 10-12", 25)
+
+        student.register_for_a_course(test_course_1)
+        student.register_for_a_course(test_course_2)
+
+        filters = [{"name": ["Math 101"]}]
+        courses = student.search_from_active_courses(filters)
+
+        self.assertEqual(len(courses), 1)
+        self.assertEqual(courses[0].name, "Math 101")
+
+        Course.get_course_by_id(test_course_1).delete_course()
+        Course.get_course_by_id(test_course_2).delete_course()
+
+    def test_search_from_new_courses_success(self):
+        student = Student.get_user_by_id("f63b0b2f7c48c85f")
+
+        new_course_1 = Course.add_new_course("Chemistry 101", "b365cd8f07cd0520", Qualification("Chemistry"), "50ce7062018a8c65",
+                                             "Wed 13-15", 30)
+        new_course_2 = Course.add_new_course("Biology 101", "b365cd8f07cd0520", Qualification("Biology"), "50ce7062018a8c65",
+                                             "Thu 14-16", 30)
+
+        filters = [{"name": ["Chemistry 101", "Biology 101"]}]
+        courses = student.search_from_new_courses(filters)
+
+        course_names = {course.name for course in courses}
+        self.assertIn("Chemistry 101", course_names)
+        self.assertIn("Biology 101", course_names)
+
+        Course.get_course_by_id(new_course_1).delete_course()
+        Course.get_course_by_id(new_course_2).delete_course()
+
+    def test_search_from_active_courses_no_match(self):
+        student = Student.get_user_by_id("f63b0b2f7c48c85f")
+        filters = [{"name": ["Nonexistent Course"]}]
+        courses = student.search_from_active_courses(filters)
+        self.assertEqual(len(courses), 0)
+
+    def test_search_from_new_courses_no_match(self):
+        student = Student.get_user_by_id("f63b0b2f7c48c85f")
+        filters = [{"name": ["Nonexistent Course"]}]
+        courses = student.search_from_new_courses(filters)
+        self.assertEqual(len(courses), 0)
+
 if __name__ == "__main__":
     unittest.main()

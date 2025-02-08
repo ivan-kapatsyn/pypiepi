@@ -168,6 +168,73 @@ class Student(User):
 
         logger.info(f"Feedback successfully left for course '{course_id}' by student '{self.user_id}'.")
 
+    def search_from_active_courses(self, filters: List[dict]) -> List[Course]:
+        """
+        Searches for courses in the student's active courses list based on the provided filters.
+
+        Parameters:
+            filters (List[dict]): List of dictionaries specifying column filters.
+
+        Returns:
+            List[Course]: List of matching Course objects.
+        """
+        valid_columns = ["course_id", "name", "qualification", "room_id", "schedule", "max_participants"]
+
+        filter_conditions = []
+        filter_values = []
+
+        for filter_item in filters:
+            for column, allowed_values in filter_item.items():
+                if column not in valid_columns:
+                    raise ValueError(f"Invalid column name '{column}' in filters.")
+                filter_conditions.append(f"{column} IN %s")
+                filter_values.append(tuple(allowed_values))
+
+        active_course_ids = [course.course_id for course in self.active_courses]
+        if not active_course_ids:
+            return []
+        filter_conditions.append("course_id IN %s")
+        filter_values.append(tuple(active_course_ids))
+
+        db = DataBaseUtil()
+        filter_query = " AND ".join(filter_conditions)
+        course_data = db.load_many("course", filter_query, filter_values)
+
+        return [Course.get_course_by_id(record["course_id"]) for record in course_data]
+
+    def search_from_new_courses(self, filters: List[dict]) -> List[Course]:
+        """
+        Searches for courses not in the student's active courses list based on the provided filters.
+
+        Parameters:
+            filters (List[dict]): List of dictionaries specifying column filters.
+
+        Returns:
+            List[Course]: List of matching Course objects.
+        """
+        valid_columns = ["course_id", "name", "qualification", "room_id", "schedule", "max_participants"]
+
+        filter_conditions = []
+        filter_values = []
+
+        for filter_item in filters:
+            for column, allowed_values in filter_item.items():
+                if column not in valid_columns:
+                    raise ValueError(f"Invalid column name '{column}' in filters.")
+                filter_conditions.append(f"{column} IN %s")
+                filter_values.append(tuple(allowed_values))
+
+        active_course_ids = [course.course_id for course in self.active_courses]
+        if active_course_ids:
+            filter_conditions.append("course_id NOT IN %s")
+            filter_values.append(tuple(active_course_ids))
+
+        db = DataBaseUtil()
+        filter_query = " AND ".join(filter_conditions)
+        course_data = db.load_many("course", filter_query, filter_values)
+
+        return [Course.get_course_by_id(record["course_id"]) for record in course_data]
+
     @classmethod
     def _save_student(cls, user_id: str, study_program: str, register_number: int) -> None:
         student_data = {
