@@ -59,7 +59,7 @@ class Tutor(User):
 
         user_id = cls._generate_unique_user_id()
         registered_at = datetime.now().date()
-        cls._save_user(user_id, username, password, first_name, last_name, registered_at, remember_me, cls.__name__)
+        cls._save_user(user_id, username, password, first_name, last_name, registered_at, remember_me, "tutor")
         cls._save_tutor(user_id, qualifications)
 
         logger.info(f"Tutor registered successfully with username: {username}")
@@ -99,7 +99,7 @@ class Tutor(User):
     @staticmethod
     def _remove_token(token: int) -> None:
         db = DataBaseUtil()
-        db.delete_one("tokens", "token",token)
+        db.delete_one("tokens", "token", token)
         logger.info(f"Registration token '{token}' removed.")
 
     @staticmethod

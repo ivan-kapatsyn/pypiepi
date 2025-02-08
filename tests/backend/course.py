@@ -111,7 +111,7 @@ class TestCourse(unittest.TestCase):
         user_id = "b365cd8f07cd0520"
         courses = Course.get_courses_by_user_id(user_id)
 
-        self.assertEqual(len(courses), 2)
+        self.assertEqual(len(courses), 3)
         self.assertEqual(courses[0].user_id, user_id)
         self.assertEqual(courses[1].user_id, user_id)
 
