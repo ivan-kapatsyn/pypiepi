@@ -1,13 +1,15 @@
 import unittest
 from secrets import token_hex
 from src.backend.tutor import Tutor
+from src.backend.admin import Admin
 from src.backend.qualification import Qualification
 from src.backend.exceptions import DuplicationError, WrongTokenError
 
 class TestTutorDatabase(unittest.TestCase):
 
     def test_register_new_tutor_success(self):
-        token = Tutor.generate_token()
+        token = 123456789
+        Admin.add_token(token)
         test_username = token_hex(8)
 
         user_id = Tutor.register_new_user(test_username,"newpassword",
@@ -46,7 +48,8 @@ class TestTutorDatabase(unittest.TestCase):
                 )
 
     def test_register_new_tutor_removes_token(self):
-        token = Tutor.generate_token()
+        token = 123456789
+        Admin.add_token(token)
         test_username = token_hex(8)
 
         Tutor.register_new_user(

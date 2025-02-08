@@ -232,7 +232,6 @@ class Student(User):
         db = DataBaseUtil()
         filter_query = " AND ".join(filter_conditions)
         course_data = db.load_many("course", filter_query, filter_values)
-
         return [Course.get_course_by_id(record["course_id"]) for record in course_data]
 
     @classmethod
@@ -268,7 +267,7 @@ class Student(User):
     def _extend_fields_by_user_id(cls, user_id: str) -> Dict:
         student_data = cls._find_student_by_user_id(user_id)
         if student_data is None:
-            logger.warning(f"No tutor data for user '{user_id}'.")
+            logger.warning(f"No student data for user '{user_id}'.")
             return {}
 
         return {"user_type": "student", "study_program": student_data[1], "register_number": student_data[2]}

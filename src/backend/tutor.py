@@ -66,16 +66,6 @@ class Tutor(User):
         return user_id
 
     @classmethod
-    def generate_token(cls) -> int:
-        existing_tokens = cls._get_tokens()
-        while True:
-            new_token = randint(100, 999)
-            if new_token not in existing_tokens:
-                db = DataBaseUtil()
-                db.insert_one("tokens", {"token": new_token}, "token")
-                return new_token
-
-    @classmethod
     def __load_evaluations(cls, user_id) -> List[Evaluation]:
         course_ids = [course.course_id for course in Course.get_courses_by_user_id(user_id)]
         return Evaluation.get_evaluations_by_course_ids(course_ids)
@@ -89,12 +79,6 @@ class Tutor(User):
         tutor_data = cls._prepare_for_jsonb(tutor_data)
         db = DataBaseUtil()
         db.insert_one("tutor", tutor_data, "user_ID")
-
-    @staticmethod
-    def _get_tokens() -> set:
-        db = DataBaseUtil()
-        data = db.load_many("tokens")
-        return {item[0] for item in data}
 
     @staticmethod
     def _remove_token(token: int) -> None:
