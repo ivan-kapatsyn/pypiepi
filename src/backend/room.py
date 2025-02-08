@@ -49,6 +49,24 @@ class Room:
 
         return cls(*room_data)
 
+    @classmethod
+    def get_rooms_by_name_prefix(cls, name_prefix: str) -> List["Room"]:
+        """
+        Retrieves a list of rooms whose names start with the given prefix.
+
+        Args:
+            name_prefix (str): The prefix to match room names against.
+
+        Returns:
+            List[Room]: A list of Room instances whose names start with the given prefix.
+        """
+        db = DataBaseUtil()
+        search_value = f"{name_prefix}%"
+        results = db.load_many("room", "name LIKE %s", [search_value])
+
+        rooms = [cls.get_room_by_id(record[0]) for record in results]
+        return rooms
+
     @staticmethod
     def _find_room_by_id(room_id: str) -> Optional[List]:
         db = DataBaseUtil()
