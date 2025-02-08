@@ -1,55 +1,55 @@
-user_id,study_program
-f63b0b2f7c48c85f,economics
-f67d38dee48d641f,Computer Science
-16f9cbf0d5f0e513,marketing
-430112d4d154a44f,physics
-1c9b7a8801c65988,Sociology
-0fd78ece486e8df4,Data Science
-903d839e277ca6b9,Accounting and Finance
-968c68d2315a8b10,physics
-a76d22eb46a882d2,Artificial Intelligence
-17c2828310d5b53f,Geology
-1fc8a832c8b0e7eb,Computer Science
-77c348da88fc545f,Data Science
-39337032678769de,Cybersecurity
-4cb33c4df7a6ad3d,economics
-99b92b9c4c483607,Computer Science
-77032360e19b5c5d,marketing
-e3931e02fc68d82d,Computer Science
-da9572d6f327dacc,physics
-5c522dea727d73ff,Sociology
-34bd8ab074e7b98a,Data Science
-b53ea15d2bf8cddf,Accounting and Finance
-b793a74d2b46a9e2,physics
-acba40bab03a4ffa,Artificial Intelligence
-759574f70a587583,Cybersecurity
-2d1315b59416e860,Geology
-4637d59c67fa381d,Computer Science
-48c8f81933b65fec,Data Science
-a3b48d08bc213e18,Cybersecurity
-e95ebbd781fabcf6,economics
-d61fd8fe5c991ee6,Computer Science
-098596e62af1dd37,marketing
-03e31f7b56484c52,Computer Science
-c90b4854962bdf21,physics
-2900febd15740bcd,Sociology
-251889e87627aad1,Data Science
-03bcb22cc65703df,Accounting and Finance
-f3666c5231ecb4cf,physics
-1343e8c76c454d69,Artificial Intelligence
-015b84362e18c823,Cybersecurity
-fc9ff6de8851b42d,Geology
-437a5ec48076ed5f,Computer Science
-a5d4495a9a8de644,Data Science
-3d3a1ac4e4fca85e,Cybersecurity
-aad1d485d5bf23b3,economics
-de3e7cf34fb8076d,Computer Science
-0647e9f7670b1b8f,marketing
-46c544700961563f,Computer Science
-6a87b8e36947c92d,physics
-a533406c476523de,Sociology
-1e9f3df82508d44c,Data Science
-17a2fa4e2eb77044,Data Science
-2da6756c9a30c038,Accounting and Finance
-5018f42297a6c369,physics
-14d099c161cf3bea,Computer Science
+user_id,study_program,register_number
+f63b0b2f7c48c85f,economics,77410619
+f67d38dee48d641f,Computer Science,83174741
+16f9cbf0d5f0e513,marketing,89591297
+430112d4d154a44f,physics,59288891
+1c9b7a8801c65988,Sociology,41077558
+0fd78ece486e8df4,Data Science,25099092
+903d839e277ca6b9,Accounting and Finance,65462106
+968c68d2315a8b10,physics,72379707
+a76d22eb46a882d2,Artificial Intelligence,61915259
+17c2828310d5b53f,Geology,54842437
+1fc8a832c8b0e7eb,Computer Science,63462364
+77c348da88fc545f,Data Science,58540264
+39337032678769de,Cybersecurity,21876879
+4cb33c4df7a6ad3d,economics,86246875
+99b92b9c4c483607,Computer Science,15219630
+77032360e19b5c5d,marketing,59940563
+e3931e02fc68d82d,Computer Science,50013485
+da9572d6f327dacc,physics,69944016
+5c522dea727d73ff,Sociology,13487979
+34bd8ab074e7b98a,Data Science,46599769
+b53ea15d2bf8cddf,Accounting and Finance,87669659
+b793a74d2b46a9e2,physics,47099601
+acba40bab03a4ffa,Artificial Intelligence,79119736
+759574f70a587583,Cybersecurity,67822533
+2d1315b59416e860,Geology,22434033
+4637d59c67fa381d,Computer Science,99173678
+48c8f81933b65fec,Data Science,64086042
+a3b48d08bc213e18,Cybersecurity,96668421
+e95ebbd781fabcf6,economics,75944419
+d61fd8fe5c991ee6,Computer Science,75673986
+098596e62af1dd37,marketing,43905313
+03e31f7b56484c52,Computer Science,34392329
+c90b4854962bdf21,physics,79433734
+2900febd15740bcd,Sociology,93093740
+251889e87627aad1,Data Science,96037286
+03bcb22cc65703df,Accounting and Finance,10014191
+f3666c5231ecb4cf,physics,17857906
+1343e8c76c454d69,Artificial Intelligence,66329576
+015b84362e18c823,Cybersecurity,58962251
+fc9ff6de8851b42d,Geology,79349109
+437a5ec48076ed5f,Computer Science,48609693
+a5d4495a9a8de644,Data Science,19043273
+3d3a1ac4e4fca85e,Cybersecurity,20237745
+aad1d485d5bf23b3,economics,13847478
+de3e7cf34fb8076d,Computer Science,95632031
+0647e9f7670b1b8f,marketing,14035162
+46c544700961563f,Computer Science,52597792
+6a87b8e36947c92d,physics,71875737
+a533406c476523de,Sociology,88006774
+1e9f3df82508d44c,Data Science,59734796
+17a2fa4e2eb77044,Data Science,93040877
+2da6756c9a30c038,Accounting and Finance,15891898
+5018f42297a6c369,physics,11767954
+14d099c161cf3bea,Computer Science,20154883

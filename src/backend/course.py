@@ -170,7 +170,8 @@ class Course:
         Deletes the course from the system.
         """
         db = DataBaseUtil()
-        db.delete_one("course", "course_id", self.course_id)
+        db.delete_many("student_in_course", "course_id", [self.course_id])
+        db.delete_many("course", "course_id", [self.course_id])
         logger.info(f"Course with ID '{self.course_id}' deleted successfully.")
 
     @classmethod

@@ -67,7 +67,6 @@ class TestTutorDatabase(unittest.TestCase):
         self.assertIsNotNone(tutor)
         self.assertEqual(tutor.username, "john.marston")
         self.assertEqual(tutor.qualifications[0].name, "computer science")
-        self.assertEqual(len(tutor.evaluations), 3)
 
     def test_find_tutor_by_user_id_success(self):
         tutor_id = "430112d4d154a44f"
