@@ -109,7 +109,7 @@ class TestAdminDatabase(unittest.TestCase):
         Course.get_course_by_id(course3_id).delete_course()
 
     def test_find_courses_at_some_time_no_match(self):
-        courses = Admin.find_courses_at_some_time("Mon 15")
+        courses = Admin.find_courses_at_some_time("Mon 21")
         self.assertEqual(len(courses), 0)
 
     def test_add_token_success(self):
