@@ -1,3 +1,21 @@
 announcement_id,course_id,date,message
 d4f1293aa67b387b,39104442b2660b56,2025-01-23 17:54:03.532310,First announcement.
 bc6cb315bda647bf,39104442b2660b56,2025-01-23 17:54:03.532310,Second announcement.
+a3fbb7d8b9c83d62,74527542b2660b56,2025-01-23 18:00:10.532310,Important course update.
+b62a6976b2f49bcd,74527542b2660b56,2025-01-24 10:14:03.532310,Reminder for next class.
+c1e15a32d872063d,aa1285c87284171a,2025-01-24 12:30:03.532310,New module added to the course.
+d01e1a1cb08f96e8,aa1285c87284171a,2025-01-25 09:15:45.532310,Course materials available now.
+a5f7b9c2c8a0491b,bb365cc4dd09d5b1,2025-01-25 11:00:25.532310,Next class moved to Friday.
+b4c7d3d6c7b452cd,dd39104442b2660b,2025-01-26 14:20:53.532310,Project submission deadline extended.
+c9f9d2cde3a78b5f,dd39104442b2660b,2025-01-26 16:05:03.532310,Reminder: Submit your project.
+e5a1e4b9a4c1d0be,ee74527542b2660b,2025-01-27 10:40:30.532310,New digital marketing webinar added.
+d9b572f9e3db80f2,ee74527542b2660b,2025-01-27 14:02:50.532310,Join the next session on social media strategies.
+f6c3f0b1d08a76a1,ff1285c87284171a,2025-01-28 09:25:50.532310,Introduction to cybersecurity syllabus updated.
+a7f3a0f9d129647a,gg365cc4dd09d5b1,2025-01-28 12:18:03.532310,New Photoshop tutorials available.
+b32e0d5cb6f5d4ab,hh295cc4dd09d5b1,2025-01-29 10:12:45.532310,Public Speaking Essentials starts today!
+c2d9f17b0e25b6e9,ii39104442b2660b,2025-01-29 12:30:15.532310,SQL course updated with new exercises.
+f1d76bcd25711ed6,jj74527542b2660b,2025-01-30 09:30:35.532310,Blockchain module live now!
+d8b913f92fa145e8,kk365cc4dd09d5b1,2025-01-30 11:15:25.532310,Python course now includes Pandas tutorials.
+b0e2c3a9a08b6e52,ll295cc4dd09d5b1,2025-01-31 09:20:15.532310,Game Development: Unity updates available.
+c6f1d24f7a63492b,mm39104442b2660b,2025-01-31 11:30:45.532310,AI course new project assignments posted.
+a1c71f4d8c46496d,oo365cc4dd09d5b1,2025-01-31 14:10:20.532310,Ethical Hacking resources updated.

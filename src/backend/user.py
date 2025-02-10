@@ -239,6 +239,12 @@ class User:
         return data
 
     @staticmethod
+    def _get_tokens() -> set:
+        db = DataBaseUtil()
+        data = db.load_many("tokens")
+        return {item[0] for item in data}
+
+    @staticmethod
     def _extend_fields_by_user_id(user_id: str) -> Dict:
         """
         Placeholder for extending user fields.

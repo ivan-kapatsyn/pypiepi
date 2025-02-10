@@ -26,7 +26,8 @@
       "table_name": "student",
       "columns": [
         {"column_name": "user_ID", "data_type": "VARCHAR(16)", "constraints": "PRIMARY KEY REFERENCES users(user_ID) ON DELETE CASCADE" },
-        {"column_name": "study_program", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" }
+        {"column_name": "study_program", "data_type": "VARCHAR(200)", "constraints": "NOT NULL" },
+        {"column_name": "register_number", "data_type": "INTEGER", "constraints": "NOT NULL" }
       ]
     },
     {
