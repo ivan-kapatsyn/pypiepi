@@ -3,8 +3,12 @@ from numpy import number
 
 from src.backend.course import Course
 from src.backend.user import User
+
+from src.backend.plotting import generate_plot
+
 from src.ui.forms.room_overview import RoomOverview
 from src.ui.forms.token_generator import TokenGenerator
+
 
 
 class AdminRoutes:
@@ -32,12 +36,13 @@ class AdminRoutes:
         room_form.day.data = day
         room_form.hour.data = hour
         room_data = AdminRoutes.__get_room_data(day, hour)
+        plot_data = generate_plot()
 
         token_form = TokenGenerator()
         personal_bio_page = r'admin_personal_info.html'
         return render_template(personal_bio_page, username=admin.username,
                                user_id=user_id, remember_me=admin.remember_me,
-                               data=data, room_form=room_form,room_data=room_data, token_form=token_form)
+                               data=data, room_form=room_form,room_data=room_data, token_form=token_form, plot_data=plot_data,)
 
     @staticmethod
     @main_bp.route('<user_id>/save_token', methods=['POST'])
