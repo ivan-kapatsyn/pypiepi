@@ -23,6 +23,7 @@ def get_all_registration_dates_from_db():
 
 
 def get_all_registrations_per_week():
+
     """
     Groups user registrations by week and calculates a running total.
 
