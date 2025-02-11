@@ -72,7 +72,7 @@ class AdminRoutes:
 
     @staticmethod
     def __generate_plot():
-        # Holen der aggregierten Registrierungsdaten (Liste von Tupeln: (Week, Total))
+        # data stores all registered users with the function (list of tuples: (Week, Total))
         data = get_all_registrations_per_week()
 
         # Erstelle ein DataFrame aus den Daten
@@ -87,7 +87,7 @@ class AdminRoutes:
         # Verwende formatierten Datumsstrings als x-Achse
         plt.bar(df['Week'].dt.strftime("%Y-%m-%d"), df['Total'], color='#0d94b0')
 
-        plt.xlabel('Week (Monday)')
+        plt.xlabel('Week (starting from Monday)')
         plt.ylabel('Total Registered Users')
         plt.title('Registrations per Week')
         plt.xticks(rotation=45)
