@@ -43,59 +43,61 @@
     </script>
 </head>
 <body>
-<header>
-    <!-- Logo -->
-    <div class="header">
-        <img src="{{ url_for('static', filename='banner.png') }}" class="header-image" alt="TutorMe">
-        <h1 class="header-text">TutorMe</h1>
-        <!-- Login Info Dropdown -->
-        <div class="dropdown ms-auto">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                Login Info
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><span class="dropdown-item">Username: {{ username }}</span></li>
-                <li>
-                    <label class="dropdown-item">
-                        <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
-                        remembered on this device
-                    </label>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="/login/index">Logout</a>
-                </li>
-            </ul>
-        </div>
+
+<header class="header">
+    <img src="{{ url_for('static', filename='banner.png') }}" class="header-image" alt="TutorMe">
+    <h1 class="header-text">TutorMe</h1>
+    <div class="dropdown ms-auto">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-bs-toggle="dropdown" aria-expanded="false">
+            Login Info
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><span class="dropdown-item"><b>Username:</b> {{ username }}</span></li>
+            <li>
+                <label class="dropdown-item">
+                    <input type="checkbox" id="rememberCheckbox" {% if remember_me %}checked{% endif %}> Stay
+                    remembered on this device
+                </label>
+            </li>
+            <li>
+                <a class="dropdown-item" href="/login/index"><b>Logout</b></a>
+            </li>
+        </ul>
     </div>
 </header>
-<br>
-<br>
-<br>
-<h2 class="text-center">Search {{ "active" if is_active else "potential"}} courses</h2>
-<!-- Search Bar -->
-<div class="container mt-lg-2">
-    <form method="GET" action="{{ url_for('student.active_courses', user_id=user_id) if is_active else url_for('student.passive_courses', user_id=user_id)}}">
-        <div class="input-group">
-            <input type="text" class="form-control" name="search" id="search"
-                   placeholder="Search courses..." value="{{ search_query }}">
-            <button class="btn btn-primary" type="submit">Search</button>
-        </div>
-    </form>
-</div>
 
-<!-- Course List -->
-<div class="container mt-3">
-    <div class="list-group">
-        {% for course in courses %}
-        <a href="{{ url_for('course.info', user_id=user_id, course_id=course.course_id) }}"
-           class="list-group-item list-group-item-action">
-            <strong>{{ course.name }}</strong> <br>
-            Schedule: {{ course.schedule }} | Room: {{ course.room.name }}
-        </a>
-        {% else %}
-        <p class="text-muted">No courses found.</p>
-        {% endfor %}
+<br>
+<br>
+<br>
+
+<div class="main-container">
+    <h2 class="text-center">Search {{ "active" if is_active else "potential"}} courses</h2>
+    <!-- Search Bar -->
+    <div class="container mt-lg-2">
+        <form method="GET"
+              action="{{ url_for('student.active_courses', user_id=user_id) if is_active else url_for('student.passive_courses', user_id=user_id)}}">
+            <div class="input-group">
+                <input type="text" class="form-control" name="search" id="search"
+                       placeholder="Search courses..." value="{{ search_query }}">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Course List -->
+    <div class="container mt-3">
+        <div class="list-group">
+            {% for course in courses %}
+            <a href="{{ url_for('course.info', user_id=user_id, course_id=course.course_id) }}"
+               class="list-group-item list-group-item-action">
+                <strong>{{ course.name }}</strong> <br>
+                Schedule: {{ course.schedule }} | Room: {{ course.room.name }}
+            </a>
+            {% else %}
+            <p class="text-muted">No courses found.</p>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
