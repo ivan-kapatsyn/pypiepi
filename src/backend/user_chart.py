@@ -4,6 +4,7 @@ from src.utils.data_base_util import DataBaseUtil
 
 
 def get_all_registration_dates_from_db():
+
     """
     Retrieves all registration dates from the 'users' table in the database.
 
@@ -11,6 +12,7 @@ def get_all_registration_dates_from_db():
         List of dates (YYYY-MM-DD) representing when users registered.
 
     """
+
     db = DataBaseUtil()
 
     # Fetch all user records from the database
@@ -33,6 +35,7 @@ def get_all_registrations_per_week():
         - The second element is the total number of registered users up to that week.
 
     """
+
     registration_dates = get_all_registration_dates_from_db()
 
     # Dictionary to store user registrations per week (key = Monday of that week)
