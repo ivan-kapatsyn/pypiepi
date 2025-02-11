@@ -1,3 +1,4 @@
+""""
 import io
 import base64
 import pandas as pd
@@ -39,3 +40,4 @@ def generate_plot():
     plot_data = base64.b64encode(buf.getvalue()).decode('utf8')
 
     return plot_data
+"""
