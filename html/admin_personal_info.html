@@ -110,8 +110,13 @@
     </script>
     <script>
         function visit_course(room_id) {
-            const roomData = {{ room_data | tojson }};
-            if(!roomData.hasOwnProperty(room_id)) return;
+            const roomData = {
+            {
+                room_data | tojson
+            }
+        }
+            ;
+            if (!roomData.hasOwnProperty(room_id)) return;
             window.location.href = '/course/info/' + roomData[room_id] + '/{{ user_id }}';
         }
     </script>
@@ -321,7 +326,12 @@
 </svg>
 <script>
     window.addEventListener('load', function () {
-        const roomData = {{ room_data | tojson }};
+        const roomData = {
+        {
+            room_data | tojson
+        }
+    }
+        ;
         Object.keys(roomData).forEach(function (roomId) {
             loadRoom(roomId);
         });
@@ -343,6 +353,12 @@
     </div>
 </form>
 
+<div class="plotting-chart">
+    <h2>Registrations per Week</h2>
+    <!-- picture gets generated from base64 string -->
+    <img src="data:image/png;base64,{{ plot_data }}" alt="Registrations Chart">
+
+</div>
 
 </body>
 </html>
