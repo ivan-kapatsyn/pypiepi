@@ -89,7 +89,7 @@ class AdminRoutes:
 
         plt.xlabel('Week (starting from Monday)')
         plt.ylabel('Total Registered Users')
-        plt.title('Registrations per Week')
+        plt.title('Overall registrations')
         plt.xticks(rotation=45)
         plt.tight_layout()
 
