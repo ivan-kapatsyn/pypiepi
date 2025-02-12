@@ -194,17 +194,19 @@
     <div class="rooms-column">
         <h3><b>Room overview</b></h3>
         <form method="GET" action="{{ url_for('admin.personal_bio', user_id=user_id) }}">
-            <div>
-                {{ room_form.day.label }}<br>
-                {{ room_form.day() }}
-            </div>
-            <div>
-                {{ room_form.hour.label }}<br>
-                {{ room_form.hour() }}
-            </div>
-            <div>
-                <!-- Hinzufügen der Klasse 'login-button' für den Login-Button -->
-                {{ room_form.submit() }}
+            <div class="rooms-buttons">
+                <div>
+                    {{ room_form.day.label }}<br>
+                    {{ room_form.day() }}
+                </div>
+                <div>
+                    {{ room_form.hour.label }}<br>
+                    {{ room_form.hour() }}
+                </div>
+                <div>
+                    <!-- Hinzufügen der Klasse 'login-button' für den Login-Button -->
+                    {{ room_form.submit() }}
+                </div>
             </div>
         </form>
         <svg width="600" height="600" viewBox="0 -40 800 660" style="border:5px solid #000">

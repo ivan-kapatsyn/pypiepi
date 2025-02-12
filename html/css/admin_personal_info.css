@@ -135,7 +135,12 @@ text {
     margin-right: 50px;
 }
 
-
+.rooms-buttons {
+    display: flex;   /* Aktiviert das Flexbox-Layout */
+    gap: 40px;       /* Abstand zwischen den Buttons */
+    justify-content: center; /* Zentriert die Buttons horizontal */
+    align-items: flex-end; /* Richtet die Buttons vertikal aus */
+}
 
 
 .chart-image {
