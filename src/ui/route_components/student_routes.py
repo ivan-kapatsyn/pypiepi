@@ -2,11 +2,14 @@ from datetime import datetime
 from typing import List
 
 from flask import Blueprint, redirect, url_for, request, jsonify, render_template
+from pandas.core.computation.expressions import evaluate
 
 from src.backend.course import Course
 from src.backend.evaluation import Evaluation
 from src.backend.student import Student
 from src.backend.user import User
+from src.utils.data_base_util import DataBaseUtil
+from tests.backend.data_base_util import DataBaseUtilTestCase
 
 
 class StudentRoutes:
@@ -34,19 +37,16 @@ class StudentRoutes:
     def leave_feedback(course_id: str, user_id: str):
         rating = request.json.get('rating', '')
         feedback = request.json.get('feedback', '')
-        evaluation = Evaluation(
-            evaluation_id='1',
-            author=User.get_user_by_id(user_id),
-            date=datetime.now(),
-            numeric_evaluation=int(rating),
-            feedback=feedback,
-        )
-        # Todo save evaluation to the db
+        student = Student.get_user_by_id(user_id)
+        evaluation_id = student.leave_feedback(course_id, feedback, rating)
+        # Todo change it to Evaluation.get_by_id()
+        evaluation = DataBaseUtil().load_one('evaluation', evaluation_id)
         return jsonify({
-            'name': evaluation.author.first_name + ' ' + evaluation.author.last_name,
-            'date': evaluation.date.strftime("%d.%m.%Y %H:%M:%S"),
-            'grade': evaluation.numeric_evaluation,
-            'message': evaluation.feedback,
+            'name': student.first_name + ' ' + student.last_name,
+            # Todo change it to evaluation.date
+            'date': evaluation[4].strftime("%d.%m.%Y %H:%M:%S"),
+            'grade': rating,
+            'message': feedback,
         })
 
     @staticmethod
