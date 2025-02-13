@@ -5,6 +5,7 @@ from flask import Blueprint, redirect, url_for, request, jsonify, render_templat
 
 from src.backend.course import Course
 from src.backend.evaluation import Evaluation
+from src.backend.student import Student
 from src.backend.user import User
 
 
@@ -17,7 +18,8 @@ class StudentRoutes:
     @staticmethod
     @main_bp.route('/register_for_course/<course_id>/<user_id>')
     def register_for_course(course_id: str, user_id: str):
-        # Todo add user_id to the course in db
+        student = Student.get_user_by_id(user_id)
+        student.register_for_a_course(course_id)
         return redirect(url_for('course.info', course_id=course_id, user_id=user_id))
 
     @staticmethod
@@ -49,12 +51,7 @@ class StudentRoutes:
     @staticmethod
     @main_bp.route('/<user_id>/personal_bio', methods=['GET', 'POST'])
     def personal_bio(user_id: str):
-        # TODO Replace it with Student when it's ready
-        student = User.get_user_by_id(user_id)
-        # Todo Replace it with student.find_active_courses() or similar
-        active_courses: List[Course] = [
-            Course.get_course_by_id(course_id='dc295cc4dd09d5b1')
-        ]
+        student = Student.get_user_by_id(user_id)
         courses = [{
             "name": course.name,
             "day": StudentRoutes.__get_day_from_schedule(course.schedule),
@@ -62,7 +59,7 @@ class StudentRoutes:
             "end_time": StudentRoutes.__get_end_time_from_schedule(course.schedule),
             "url": url_for('course.info', user_id=student.user_id, course_id=course.course_id)
             # TODO Replace with student.active_courses
-        } for course in active_courses]
+        } for course in student.active_courses]
 
         data = [
             {"name": "Username", "value": student.username},
