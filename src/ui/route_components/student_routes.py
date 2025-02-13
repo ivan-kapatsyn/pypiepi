@@ -107,15 +107,11 @@ class StudentRoutes:
     @staticmethod
     @main_bp.route('/<user_id>/passive-courses', methods=['GET', 'POST'])
     def passive_courses(user_id: str):
-        # Todo obtain courses by student.get_active_courses()
-        courses = [
-            Course.get_course_by_id(course_id='dc295cc4dd09d5b1'),
-            Course.get_course_by_id(course_id='39104442b2660b56'),
-            Course.get_course_by_id(course_id='f61985b87284171a'),
-        ]
+        courses = []
 
         search_query = request.args.get('search', '')
-        courses = [course for course in courses if course.name.lower().startswith(search_query.lower())]
+        if search_query != '':
+            courses = Course.get_courses_by_name_start(search_query)
         return StudentRoutes.__render_search_page(user_id, search_query, courses, False)
 
     @staticmethod
