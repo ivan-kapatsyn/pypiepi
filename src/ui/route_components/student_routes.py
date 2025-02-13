@@ -25,7 +25,8 @@ class StudentRoutes:
     @staticmethod
     @main_bp.route('/drop_course/<course_id>/<user_id>')
     def drop_course(course_id: str, user_id: str):
-        # Todo remove user_id from the course in db
+        student = Student.get_user_by_id(user_id)
+        student.unregister_for_a_course(course_id)
         return redirect(url_for('student.personal_bio', user_id=user_id))
 
     @staticmethod
