@@ -145,6 +145,10 @@ text {
     margin-right: 50px;
 }
 
+.rooms-column h3 {
+    padding-bottom: 10px;
+}
+
 .rooms-buttons {
     display: flex;   /* Aktiviert das Flexbox-Layout */
     gap: 40px;       /* Abstand zwischen den Buttons */
@@ -155,6 +159,10 @@ text {
 
 .chart-image {
     width: 500px;
+}
+
+.plotting-chart h2 {
+    padding-bottom: 20px;
 }
 
 /* Reduziert die Größe des SVG (Raumübersicht) */
