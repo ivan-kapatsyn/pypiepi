@@ -59,7 +59,6 @@ class StudentRoutes:
             "start_time": StudentRoutes.__get_start_time_from_schedule(course.schedule),
             "end_time": StudentRoutes.__get_end_time_from_schedule(course.schedule),
             "url": url_for('course.info', user_id=student.user_id, course_id=course.course_id)
-            # TODO Replace with student.active_courses
         } for course in student.active_courses]
 
         data = [
@@ -67,9 +66,7 @@ class StudentRoutes:
             {"name": "First Name", "value": student.first_name},
             {"name": "Last Name", "value": student.last_name},
             {"name": "Bio", "value": student.bio},
-            {"name": "Study program",
-             # TODO replace value with student.study_program
-             "value": 'Data Science'
+            {"name": "Study program", "value": student.study_program
              },
 
         ]
@@ -85,8 +82,7 @@ class StudentRoutes:
     def update_data(user_id: str):
         try:
             success = True
-            # TODO replace with Student
-            tutor = User.get_user_by_id(user_id)
+            tutor = Student.get_user_by_id(user_id)
             suggestion = request.json
             info_to_update = suggestion["info_to_update"]
             tutor.update_user_values(info_to_update)
@@ -101,12 +97,8 @@ class StudentRoutes:
     @staticmethod
     @main_bp.route('/<user_id>/active-courses', methods=['GET', 'POST'])
     def active_courses(user_id: str):
-        # Todo obtain courses by student.get_active_courses()
-        courses = [
-            Course.get_course_by_id(course_id='dc295cc4dd09d5b1'),
-            Course.get_course_by_id(course_id='39104442b2660b56'),
-            Course.get_course_by_id(course_id='f61985b87284171a'),
-        ]
+        student = Student.get_user_by_id(user_id)
+        courses = student.active_courses
 
         search_query = request.args.get('search', '')
         courses = [course for course in courses if course.name.lower().startswith(search_query.lower())]
@@ -128,8 +120,7 @@ class StudentRoutes:
 
     @staticmethod
     def __render_search_page(user_id, search_query, courses, is_active):
-        # Todo Replace it with Student
-        student = User.get_user_by_id(user_id)
+        student = Student.get_user_by_id(user_id)
         return render_template('student_search_courses.html', user_id=user_id, courses=courses,
                                search_query=search_query, username=student.username,
                                remember_me=student.remember_me, is_active=is_active)
