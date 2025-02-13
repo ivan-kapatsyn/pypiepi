@@ -174,7 +174,7 @@
             {% endfor %}
         </div>
 
-        <h3><b>Generate new token</b></h3>
+        <h4><b>Generate new token</b></h4>
         <form id="generate-token-form" method="POST" action="{{ url_for('admin.save_token', user_id = user_id) }}">
             {{ token_form.hidden_tag() }}
             <div>
