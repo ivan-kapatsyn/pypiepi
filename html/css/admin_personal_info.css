@@ -124,6 +124,16 @@ text {
     margin-bottom: 20px; /* space between the info an tokens */
 }
 
+.first-column h3 {
+    border-bottom: 2px #2dcdbb; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #1eb5d1; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 4px; /* Platz zwischen Inhalt und Linie */
+}
+.first-column h4 {
+    border-bottom: 2px #891ed1; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #9370db; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 4px; /* Platz zwischen Inhalt und Linie */
+}
 
 /* all columns same distance (looks nicer) */
 .first-column {
