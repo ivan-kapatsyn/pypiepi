@@ -38,13 +38,13 @@ class StudentRoutes:
         rating = request.json.get('rating', '')
         feedback = request.json.get('feedback', '')
         student = Student.get_user_by_id(user_id)
-        evaluation_id = student.leave_feedback(course_id, feedback, rating)
+        evaluation_id = student.leave_feedback(course_id, feedback, float(rating))
         # Todo change it to Evaluation.get_by_id()
-        evaluation = DataBaseUtil().load_one('evaluation', evaluation_id)
+        evaluation = DataBaseUtil().load_one('evaluation', 'evaluation_id', evaluation_id)
         return jsonify({
             'name': student.first_name + ' ' + student.last_name,
             # Todo change it to evaluation.date
-            'date': evaluation[4].strftime("%d.%m.%Y %H:%M:%S"),
+            'date': evaluation[3].strftime("%d.%m.%Y %H:%M:%S"),
             'grade': rating,
             'message': feedback,
         })
