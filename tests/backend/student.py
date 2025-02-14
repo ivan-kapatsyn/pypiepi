@@ -17,7 +17,7 @@ class TestStudentDatabase(unittest.TestCase):
             first_name="Test",
             last_name="Student",
             study_program="Computer Science",
-            register_number=12345
+            register_number=111
         )
         self.assertIsNotNone(user_id)
 
@@ -25,7 +25,7 @@ class TestStudentDatabase(unittest.TestCase):
         self.assertIsNotNone(student)
         self.assertEqual(student.username, test_username)
         self.assertEqual(student.study_program, "Computer Science")
-        self.assertEqual(student.register_number, 12345)
+        self.assertEqual(student.register_number, 111)
         self.assertFalse(student.active_courses)
 
     def test_register_new_student_duplicate_username(self):
