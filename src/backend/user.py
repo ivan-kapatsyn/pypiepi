@@ -246,6 +246,12 @@ class User:
         return {item[0] for item in data}
 
     @staticmethod
+    def _remove_token(token: int) -> None:
+        db = DataBaseUtil()
+        db.delete_one("tokens", "token", token)
+        logger.info(f"Registration token '{token}' removed.")
+
+    @staticmethod
     def _extend_fields_by_user_id(user_id: str) -> Dict:
         """
         Placeholder for extending user fields.
