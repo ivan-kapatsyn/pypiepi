@@ -10,6 +10,73 @@
 - how you plan to achieve it.
 
 ----
+
+## Instalation
+
+# Project Installation Guide
+
+## Prerequisites
+
+Ensure you have the following installed on your system:
+
+- **Python 3.10+**: [Download here](https://www.python.org/downloads/)
+- **PostgreSQL**: [Download here](https://www.postgresql.org/download/)
+
+## Installation Steps
+
+### 1. Clone the Repository
+```sh
+git clone <your-repository-url>
+cd <your-project-directory>
+```
+
+### 2. Create a Virtual Environment (Recommended)
+```sh
+python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+```
+
+### 3. Install Dependencies
+```sh
+pip install -r requirements.txt
+```
+
+### 4. Set Up PostgreSQL Database
+- Create a new PostgreSQL database.
+- Update your project’s database configuration (e.g., in `.env` or `settings.py`).
+- Create a `.env` file from `test.env`.
+
+Example:
+```ini
+DATABASE_URL=postgresql://your_user:your_password@localhost/your_database
+```
+```sh
+cp test.env .env
+```
+
+### 5. Run Database Migrations
+```sh
+python manage.py migrate  # Django projects
+# or
+alembic upgrade head  # For SQLAlchemy projects
+```
+
+### 6. Install Frontend Libraries
+Download and install the required frontend libraries using npm:
+```sh
+npm install jquery bootstrap
+```
+
+Include them in your HTML if necessary:
+```html
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+<script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+```
+
+## Done!
+Your application should now be running successfully! 🚀
+----
 ## Functionalities
 
 ### Data Storage and Handling
