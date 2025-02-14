@@ -2,10 +2,14 @@ from datetime import datetime
 from typing import List
 
 from flask import Blueprint, redirect, url_for, request, jsonify, render_template
+from pandas.core.computation.expressions import evaluate
 
 from src.backend.course import Course
 from src.backend.evaluation import Evaluation
+from src.backend.student import Student
 from src.backend.user import User
+from src.utils.data_base_util import DataBaseUtil
+from tests.backend.data_base_util import DataBaseUtilTestCase
 
 
 class StudentRoutes:
@@ -15,15 +19,17 @@ class StudentRoutes:
     main_bp = Blueprint('student', __name__, url_prefix='/student')
 
     @staticmethod
-    @main_bp.route('/register_for_course/<course_id>/<user_id>')
+    @main_bp.route('/register_for_course/<course_id>/<user_id>', methods=['GET', 'POST'])
     def register_for_course(course_id: str, user_id: str):
-        # Todo add user_id to the course in db
+        student = Student.get_user_by_id(user_id)
+        student.register_for_a_course(course_id)
         return redirect(url_for('course.info', course_id=course_id, user_id=user_id))
 
     @staticmethod
-    @main_bp.route('/drop_course/<course_id>/<user_id>')
+    @main_bp.route('/drop_course/<course_id>/<user_id>', methods=['GET', 'POST'])
     def drop_course(course_id: str, user_id: str):
-        # Todo remove user_id from the course in db
+        student = Student.get_user_by_id(user_id)
+        student.unregister_for_a_course(course_id)
         return redirect(url_for('student.personal_bio', user_id=user_id))
 
     @staticmethod
@@ -31,47 +37,36 @@ class StudentRoutes:
     def leave_feedback(course_id: str, user_id: str):
         rating = request.json.get('rating', '')
         feedback = request.json.get('feedback', '')
-        evaluation = Evaluation(
-            evaluation_id='1',
-            author=User.get_user_by_id(user_id),
-            date=datetime.now(),
-            numeric_evaluation=int(rating),
-            feedback=feedback,
-        )
-        # Todo save evaluation to the db
+        student = Student.get_user_by_id(user_id)
+        evaluation_id = student.leave_feedback(course_id, feedback, float(rating))
+        # Todo change it to Evaluation.get_by_id()
+        evaluation = DataBaseUtil().load_one('evaluation', 'evaluation_id', evaluation_id)
         return jsonify({
-            'name': evaluation.author.first_name + ' ' + evaluation.author.last_name,
-            'date': evaluation.date.strftime("%d.%m.%Y %H:%M:%S"),
-            'grade': evaluation.numeric_evaluation,
-            'message': evaluation.feedback,
+            'name': student.first_name + ' ' + student.last_name,
+            # Todo change it to evaluation.date
+            'date': evaluation[3].strftime("%d.%m.%Y %H:%M:%S"),
+            'grade': rating,
+            'message': feedback,
         })
 
     @staticmethod
     @main_bp.route('/<user_id>/personal_bio', methods=['GET', 'POST'])
     def personal_bio(user_id: str):
-        # TODO Replace it with Student when it's ready
-        student = User.get_user_by_id(user_id)
-        # Todo Replace it with student.find_active_courses() or similar
-        active_courses: List[Course] = [
-            Course.get_course_by_id(course_id='dc295cc4dd09d5b1')
-        ]
+        student = Student.get_user_by_id(user_id)
         courses = [{
             "name": course.name,
             "day": StudentRoutes.__get_day_from_schedule(course.schedule),
             "start_time": StudentRoutes.__get_start_time_from_schedule(course.schedule),
             "end_time": StudentRoutes.__get_end_time_from_schedule(course.schedule),
             "url": url_for('course.info', user_id=student.user_id, course_id=course.course_id)
-            # TODO Replace with student.active_courses
-        } for course in active_courses]
+        } for course in student.active_courses]
 
         data = [
             {"name": "Username", "value": student.username},
             {"name": "First Name", "value": student.first_name},
             {"name": "Last Name", "value": student.last_name},
             {"name": "Bio", "value": student.bio},
-            {"name": "Study program",
-             # TODO replace value with student.study_program
-             "value": 'Data Science'
+            {"name": "Study program", "value": student.study_program
              },
 
         ]
@@ -87,11 +82,15 @@ class StudentRoutes:
     def update_data(user_id: str):
         try:
             success = True
-            # TODO replace with Student
-            tutor = User.get_user_by_id(user_id)
+            student = Student.get_user_by_id(user_id)
             suggestion = request.json
             info_to_update = suggestion["info_to_update"]
-            tutor.update_user_values(info_to_update)
+            key_list = info_to_update.keys()
+            temp = {}
+            for key in key_list:
+                temp[key.lower().replace(' ', '_')] = info_to_update[key]
+            info_to_update = temp
+            student.update_user_values(info_to_update)
 
         except Exception as e:
             success = False
@@ -103,12 +102,8 @@ class StudentRoutes:
     @staticmethod
     @main_bp.route('/<user_id>/active-courses', methods=['GET', 'POST'])
     def active_courses(user_id: str):
-        # Todo obtain courses by student.get_active_courses()
-        courses = [
-            Course.get_course_by_id(course_id='dc295cc4dd09d5b1'),
-            Course.get_course_by_id(course_id='39104442b2660b56'),
-            Course.get_course_by_id(course_id='f61985b87284171a'),
-        ]
+        student = Student.get_user_by_id(user_id)
+        courses = student.active_courses
 
         search_query = request.args.get('search', '')
         courses = [course for course in courses if course.name.lower().startswith(search_query.lower())]
@@ -117,21 +112,16 @@ class StudentRoutes:
     @staticmethod
     @main_bp.route('/<user_id>/passive-courses', methods=['GET', 'POST'])
     def passive_courses(user_id: str):
-        # Todo obtain courses by student.get_active_courses()
-        courses = [
-            Course.get_course_by_id(course_id='dc295cc4dd09d5b1'),
-            Course.get_course_by_id(course_id='39104442b2660b56'),
-            Course.get_course_by_id(course_id='f61985b87284171a'),
-        ]
+        courses = []
 
         search_query = request.args.get('search', '')
-        courses = [course for course in courses if course.name.lower().startswith(search_query.lower())]
+        if search_query != '':
+            courses = Course.get_courses_by_name_start(search_query)
         return StudentRoutes.__render_search_page(user_id, search_query, courses, False)
 
     @staticmethod
     def __render_search_page(user_id, search_query, courses, is_active):
-        # Todo Replace it with Student
-        student = User.get_user_by_id(user_id)
+        student = Student.get_user_by_id(user_id)
         return render_template('student_search_courses.html', user_id=user_id, courses=courses,
                                search_query=search_query, username=student.username,
                                remember_me=student.remember_me, is_active=is_active)

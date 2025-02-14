@@ -94,13 +94,6 @@ class DataBaseUtil:
             for key, value in obj.items()
         }
 
-        if "password" in obj:  # Check if the password key is in the object
-            obj["password"] = PasswordUtils.hash_password(obj["password"])
-
-        if "registered_at" in obj and not obj[
-            "registered_at"]:  # Check if the registered_at key is in the object and not filled
-            obj["registered_at"] = datetime.now().strftime('%d-%m-%Y')
-
         columns = ', '.join(obj.keys())  # Create a comma-separated string of column names
         values_placeholder = ', '.join(['%s'] * len(obj))  # Create a placeholder string for values
         query = f'INSERT INTO {table_name} ({columns}) VALUES ({values_placeholder});'
@@ -299,10 +292,10 @@ class DataBaseUtil:
 
         if results:  # Check if any results were returned
             print(f"Successfully loaded {len(results)} records from {table_name}.")
-            return results
         else:  # If no results were found
-            print(f"Error during batch load in {table_name}.")
-            return []
+            print(f"No records could be found in {table_name}.")
+
+        return results
 
     # -----DELETE ONE WITH ID---------
     def delete_one_with_id(self, table_name: str, id_value: Any) -> None:

@@ -165,6 +165,41 @@ class Course:
             logger.error(f"Error retrieving courses for schedule {day}, {start_hour}. The reason is {e}")
             return []
 
+    @classmethod
+    def get_courses_by_name_start(cls, name_start: str) -> List["Course"]:
+        """
+        Retrieves all courses associated with a given name.
+
+        Args:
+            :param name_start: A starting hour for the courses.
+
+        Returns:
+            List[Course]: A list of `Course` objects corresponding to the courses, where the course name starts with given argument
+
+        """
+        db = DataBaseUtil()
+        try:
+            course_data = db.load_many("course", 'LOWER(name) LIKE %s', [f'{name_start.lower()}%'])
+
+            return [
+                cls(
+                    course_id=course[0],
+                    user_id=course[1],
+                    name=course[2],
+                    qualification=Qualification(course[3]),
+                    room=Room.get_room_by_id(course[4]),
+                    schedule=course[5],
+                    max_participants=course[6],
+                    description=course[7],
+                    announcements=Announcement.get_announcements_by_course_id(course[0]),
+                )
+                for course in course_data
+            ]
+
+        except Exception as e:
+            logger.error(f"Error retrieving courses for the name {name_start}. The reason is {e}")
+            return []
+
     def delete_course(self):
         """
         Deletes the course from the system.

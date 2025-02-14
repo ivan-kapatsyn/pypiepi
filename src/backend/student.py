@@ -167,6 +167,7 @@ class Student(User):
         db.insert_one("evaluation", feedback_data, "evaluation_id")
 
         logger.info(f"Feedback successfully left for course '{course_id}' by student '{self.user_id}'.")
+        return evaluation_id
 
     def search_from_active_courses(self, filters: List[dict]) -> List[Course]:
         """

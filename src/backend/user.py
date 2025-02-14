@@ -208,13 +208,14 @@ class User:
         user_data = {
             "user_ID": user_id,
             "username": username,
-            "password": password,
+            "password": PasswordUtils.hash_password(password),
             "first_name": first_name,
             "last_name": last_name,
             "remember_me": remember_me,
             "user_type": user_type,
             "registered_at": registered_at
         }
+
         db = DataBaseUtil()
         db.insert_one("users", user_data, "user_ID")
 
