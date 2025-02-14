@@ -4,7 +4,7 @@ from datetime import datetime, date
 from src.backend.user import User
 from src.backend.course import Course
 from src.utils.data_base_util import DataBaseUtil
-from src.backend.exceptions import DuplicationError
+from src.backend.exceptions import DuplicationError, WrongTokenError
 
 # Configure logging
 import logging
@@ -47,6 +47,10 @@ class Student(User):
         """
         if cls._find_user_by_username(username) is not None:
             raise DuplicationError(f"Registration failed: User '{username}' already exists.")
+
+        if register_number not in cls._get_tokens():
+            raise WrongTokenError(f"Registration failed: Invalid register number '{register_number}'.")
+        cls._remove_token(register_number)
 
         user_id = cls._generate_unique_user_id()
         registered_at = datetime.now().date()
