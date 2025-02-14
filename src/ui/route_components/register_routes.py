@@ -33,7 +33,14 @@ class RegisterRoutes:
                     return render_template(register_page, form=form, error_message="Token has to be a number")
                 additional_info['study_program'] = request.form.get('student_info_2')
                 data = {**data, **additional_info}
-                user_id = Student.register_new_user(**data)
+                try:
+                    user_id = Student.register_new_user(**data)
+                except DuplicationError as e:
+                    flash(str(e), 'danger')
+                    return render_template(register_page, form=form, error_message=str(e))
+                except WrongTokenError as e:
+                    flash(str(e), 'danger')
+                    return render_template(register_page, form=form, error_message=str(e))
             elif user_type == 'tutor':
                 try:
                     additional_info['token'] = int(request.form.get('tutor_info_1'))
@@ -62,7 +69,14 @@ class RegisterRoutes:
                     return render_template(register_page, form=form, error_message="Token has to be a number")
                 additional_info['role'] = request.form.get('admin_info_2')
                 data = {**data, **additional_info}
-                user_id = Admin.register_new_user(**data)
+                try:
+                    user_id = Admin.register_new_user(**data)
+                except DuplicationError as e:
+                    flash(str(e), 'danger')
+                    return render_template(register_page, form=form, error_message=str(e))
+                except WrongTokenError as e:
+                    flash(str(e), 'danger')
+                    return render_template(register_page, form=form, error_message=str(e))
             return redirect(url_for(f'{user_type}.personal_bio', user_id=user_id))
 
 
