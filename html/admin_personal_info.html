@@ -173,10 +173,6 @@
         <form id="generate-token-form" method="POST" action="{{ url_for('admin.save_token', user_id = user_id) }}">
             {{ token_form.hidden_tag() }}
             <div>
-                {{ token_form.user_type.label }}<br>
-                {{ token_form.user_type() }}
-            </div>
-            <div>
                 {{ token_form.token.label }}<br>
                 {{ token_form.token(size=32) }}
             </div>

@@ -55,9 +55,7 @@ class AdminRoutes:
         admin = Admin.get_user_by_id(user_id)
         token_form = TokenGenerator()
         if token_form.validate_on_submit():
-            user_type = token_form.user_type.data
             token = token_form.token.data
-            # Todo think if we want to make token user specific
             admin.add_token(token)
         return Response(status=204)
 

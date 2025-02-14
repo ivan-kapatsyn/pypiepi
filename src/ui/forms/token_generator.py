@@ -6,11 +6,6 @@ from wtforms.validators import DataRequired, NumberRange
 
 
 class TokenGenerator(FlaskForm):
-    user_type = SelectField(
-        'User Type',
-        choices=[('student', 'Student'), ('tutor', 'Tutor'), ('admin', 'Admin')],
-        validators=[DataRequired()]
-    )
     token = IntegerField(
         label='Enter new token',
         validators=[
