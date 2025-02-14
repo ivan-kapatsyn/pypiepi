@@ -97,8 +97,8 @@ class DataBaseUtil:
         if "password" in obj:  # Check if the password key is in the object
             obj["password"] = PasswordUtils.hash_password(obj["password"])
 
-        if "registered_at" in obj and not obj[
-            "registered_at"]:  # Check if the registered_at key is in the object and not filled
+        if "registered_at" not in obj or not obj["registered_at"]:
+            # Check if the registered_at key is in the object and not filled
             obj["registered_at"] = datetime.now().strftime('%Y-%m-%d')
 
         columns = ', '.join(obj.keys())  # Create a comma-separated string of column names
