@@ -114,17 +114,19 @@ Give some outline as to what should be achieved at what time during project deve
 ----
 ## Group Details
 
-- Name: PyPieπ
-- Code: G11
+- Name: **PyPieπ**
+- Code: **G11**
 - Repository: [GitHub](https://github.com/ivan-kapatsyn/pypiepi)
-- Tutor Responsible: Frederik Hennecke
-- Team leader: Ivan Kapatsyn
+- Tutor Responsible: **Frederik Hennecke**
+- Team leader: **Ivan Kapatsyn**
 - Group members: Birte Maria Becker, Andrii Demydenko, Melis Ahu Gülcigil, Ivan Kapatsyn
 
-Include also the (detailed) contribution of each group member to the development of the project.
+### Responsibilities
 
-Example:
-**Member A**: Developed the data structure of the project. Helped _Member B_ on the web interface and user management. Refactoring on components X, Y, and Z. Responsible for the unit tests in P ant T.
+- **Ivan Kapatsyn:** Backend
+- **Andrii Demydenko:** Environment setup + Frontend + API
+- **Birte Maria Becker:** Frontend + API
+- **Melis Ahu Gülcigil:** Database integration
 
 ----
 ## Acknowlegdments
