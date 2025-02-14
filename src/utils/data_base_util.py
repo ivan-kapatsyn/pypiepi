@@ -99,7 +99,7 @@ class DataBaseUtil:
 
         if "registered_at" in obj and not obj[
             "registered_at"]:  # Check if the registered_at key is in the object and not filled
-            obj["registered_at"] = datetime.now().strftime('%d-%m-%Y')
+            obj["registered_at"] = datetime.now().strftime('%Y-%m-%d')
 
         columns = ', '.join(obj.keys())  # Create a comma-separated string of column names
         values_placeholder = ', '.join(['%s'] * len(obj))  # Create a placeholder string for values
