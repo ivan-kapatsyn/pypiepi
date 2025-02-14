@@ -56,21 +56,25 @@ text {
     dominant-baseline: middle;
 }
 
+
+
+
+/* header style */
 .header {
     background-color: #cccccc; /* Banner-Farbe */
-    color: black;              /* Textfarbe */
-    text-align: center;        /* Text zentrieren */
-    padding: 2px 0;           /* Oben und unten etwas Abstand */
+    color: black; /* Textfarbe */
+    text-align: center; /* Text zentrieren */
+    padding: 2px 0; /* Oben und unten etwas Abstand */
     font-family: Arial, sans-serif; /* Schriftart */
-    font-size: 15px;           /* Textgröße */
+    font-size: 15px; /* Textgröße */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Schattierung für ein weiches Aussehen */
-    position: fixed;           /* Fixiert den Banner oben */
-    top: 0;                    /* Setzt den Banner ganz nach oben */
-    left: 0;                   /* Setzt den Banner ganz nach links */
-    width: 100%;               /* Macht den Banner so breit wie der Bildschirm */
+    position: fixed; /* Fixiert den Banner oben */
+    top: 0; /* Setzt den Banner ganz nach oben */
+    left: 0; /* Setzt den Banner ganz nach links */
+    width: 100%; /* Macht den Banner so breit wie der Bildschirm */
     height: 10%;
-    z-index: 1000;             /* Stellt sicher, dass der Banner über anderen Elementen liegt */
-    border-bottom-left-radius: 15px;  /* Abrunden der unteren linken Ecke */
+    z-index: 1000; /* Stellt sicher, dass der Banner über anderen Elementen liegt */
+    border-bottom-left-radius: 15px; /* Abrunden der unteren linken Ecke */
     border-bottom-right-radius: 15px; /* Abrunden der unteren rechten Ecke */
     display: flex; /* Aktiviert Flexbox */
     align-items: center; /* Vertikal zentrieren */
@@ -78,6 +82,7 @@ text {
 
 }
 
+/* effect for hover */
 .header:hover {
     background-color: mediumturquoise; /* Etwas dunkler bei Hover */
     transition: background-color 0.3s ease; /* Sanfter Übergang */
@@ -88,10 +93,80 @@ text {
     max-height: 100%;
     height: auto; /* Hält das Seitenverhältnis des Bildes bei */
     align-content: start;
-
+    border-top-left-radius: 0px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 20px;
 }
 
 .header-text {
     flex-grow: 1; /* Hiermit wird der Text mittig ausgerichtet */
     text-align: center; /* Text im Container zentrieren */
+}
+
+.dropdown {
+    margin-right: 20px; /* Push the dropdown to the far right */
+}
+
+
+
+.main-container {
+  margin-top: 100px;
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  gap: 10px;
+}
+
+#data-container {
+    margin-bottom: 20px; /* space between the info an tokens */
+}
+
+.first-column h3 {
+    border-bottom: 2px #2dcdbb; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #1eb5d1; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 4px; /* Platz zwischen Inhalt und Linie */
+}
+.first-column h4 {
+    border-bottom: 2px #891ed1; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #9370db; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 4px; /* Platz zwischen Inhalt und Linie */
+}
+
+/* all columns same distance (looks nicer) */
+.first-column {
+    margin-left: -50px;
+}
+
+.rooms-column {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.rooms-column h3 {
+    padding-bottom: 10px;
+}
+
+.rooms-buttons {
+    display: flex;   /* Aktiviert das Flexbox-Layout */
+    gap: 40px;       /* Abstand zwischen den Buttons */
+    justify-content: center; /* Zentriert die Buttons horizontal */
+    align-items: flex-end; /* Richtet die Buttons vertikal aus */
+}
+
+
+.chart-image {
+    width: 500px;
+}
+
+.plotting-chart h2 {
+    padding-bottom: 20px;
+}
+
+/* Reduziert die Größe des SVG (Raumübersicht) */
+.rooms-column svg {
+    width: 400px;  /* Breite anpassen */
+    height: 400px; /* Höhe anpassen */
 }
