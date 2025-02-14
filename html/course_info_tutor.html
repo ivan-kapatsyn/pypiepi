@@ -244,7 +244,7 @@
             <h2><b>Announcements</b></h2>
             <div id="announcements_container">
                 {% for announcement in announcements %}
-                <span>- {{ announcement }}</span><br>
+                <span>- <strong>{{ announcement.date }}:</strong> {{ announcement.message }}</span><br>
                 {% endfor %}
                 <span id="data-announcement"></span>
                 <button id="edit-button-announcement" onclick="enableEdit('announcement')">Make an announcement</button>

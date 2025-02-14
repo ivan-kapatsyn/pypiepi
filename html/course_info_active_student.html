@@ -250,7 +250,7 @@
 <h2>Announcements</h2>
 <div id="announcements_container">
     {% for announcement in announcements %}
-    <span>- {{ announcement }}</span><br>
+    <span>- <strong>{{ announcement.date }}:</strong> {{ announcement.message }}</span><br>
     {% else %}
     <p class="text-muted">There is no announcement for this course.</p>
     {% endfor %}
