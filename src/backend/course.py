@@ -179,7 +179,7 @@ class Course:
         """
         db = DataBaseUtil()
         try:
-            course_data = db.load_many("course", "LOWER(name) LIKE LOWER(%s)", [name_start])
+            course_data = db.load_many("course", 'LOWER(name) LIKE %s', [f'{name_start.lower()}%'])
 
             return [
                 cls(
