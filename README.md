@@ -21,6 +21,7 @@ Ensure you have the following installed on your system:
 
 - **Python 3.10+**: [Download here](https://www.python.org/downloads/)
 - **PostgreSQL**: [Download here](https://www.postgresql.org/download/)
+- **Node.js & npm**: [Download here](https://nodejs.org/)
 
 ## Installation Steps
 
@@ -41,41 +42,32 @@ source venv/bin/activate  # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 4. Set Up PostgreSQL Database
-- Create a new PostgreSQL database.
-- Update your project’s database configuration (e.g., in `.env` or `settings.py`).
-- Create a `.env` file from `test.env`.
+### 4. Set Up environment variables
+- Create a new `.env` file at the root.
+- Copy the content of `test.env` and paste it into `.env`.
+- Replace `'...'` with the values described in the comments (except for `DUMMY_VARIABLE_USED_FOR_UNITTEST`).
 
-Example:
-```ini
-DATABASE_URL=postgresql://your_user:your_password@localhost/your_database
-```
-```sh
-cp test.env .env
-```
-
-### 5. Run Database Migrations
-```sh
-python manage.py migrate  # Django projects
-# or
-alembic upgrade head  # For SQLAlchemy projects
-```
-
-### 6. Install Frontend Libraries
+### 5. Install Frontend Libraries
 Download and install the required frontend libraries using npm:
 ```sh
 npm install jquery bootstrap
 ```
 
-Include them in your HTML if necessary:
-```html
-<script src="node_modules/jquery/dist/jquery.min.js"></script>
-<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-<script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+### 6. Initialise the local database
+Run the following script
+```sh
+python3 -m scripts.initialize_db
 ```
 
-## Done!
+### 7. Run the application
+Run the following script
+```sh
+python3 -m scripts.run
+```
+
+### Done!
 Your application should now be running successfully! 🚀
+
 ----
 ## Functionalities
 
