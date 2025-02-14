@@ -8,3 +8,4 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
     register_new_user = SubmitField('Register a new user')
+    readme = SubmitField('Open README')
