@@ -140,15 +140,7 @@
     </script>
     <script>
         function registerForCourse() {
-            // Call the Flask endpoint with the new data
-            fetch("/student/register_for_course/{{ course_id }}/{{ user_id }}", {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }).then(response => {
-
-            });
+            window.location.href = '/student/register_for_course/{{ course_id }}/{{ user_id }}';
         }
     </script>
     <script>

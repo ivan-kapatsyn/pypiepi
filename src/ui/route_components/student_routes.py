@@ -19,14 +19,14 @@ class StudentRoutes:
     main_bp = Blueprint('student', __name__, url_prefix='/student')
 
     @staticmethod
-    @main_bp.route('/register_for_course/<course_id>/<user_id>')
+    @main_bp.route('/register_for_course/<course_id>/<user_id>', methods=['GET', 'POST'])
     def register_for_course(course_id: str, user_id: str):
         student = Student.get_user_by_id(user_id)
         student.register_for_a_course(course_id)
         return redirect(url_for('course.info', course_id=course_id, user_id=user_id))
 
     @staticmethod
-    @main_bp.route('/drop_course/<course_id>/<user_id>')
+    @main_bp.route('/drop_course/<course_id>/<user_id>', methods=['GET', 'POST'])
     def drop_course(course_id: str, user_id: str):
         student = Student.get_user_by_id(user_id)
         student.unregister_for_a_course(course_id)
