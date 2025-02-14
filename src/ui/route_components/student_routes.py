@@ -82,10 +82,15 @@ class StudentRoutes:
     def update_data(user_id: str):
         try:
             success = True
-            tutor = Student.get_user_by_id(user_id)
+            student = Student.get_user_by_id(user_id)
             suggestion = request.json
             info_to_update = suggestion["info_to_update"]
-            tutor.update_user_values(info_to_update)
+            key_list = info_to_update.keys()
+            temp = {}
+            for key in key_list:
+                temp[key.lower().replace(' ', '_')] = info_to_update[key]
+            info_to_update = temp
+            student.update_user_values(info_to_update)
 
         except Exception as e:
             success = False
