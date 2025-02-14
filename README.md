@@ -13,17 +13,14 @@
 
 ## Instalation
 
-# Project Installation Guide
 
-## Prerequisites
+### Prerequisites
 
 Ensure you have the following installed on your system:
 
 - **Python 3.10+**: [Download here](https://www.python.org/downloads/)
 - **PostgreSQL**: [Download here](https://www.postgresql.org/download/)
 - **Node.js & npm**: [Download here](https://nodejs.org/)
-
-## Installation Steps
 
 ### 1. Clone the Repository
 ```sh
