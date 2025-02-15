@@ -248,15 +248,13 @@
     <div class="right-column">
 
 
-
         <div class="ratings">
-               <h2><b>Rating</b></h2>
+            <h2><b>Rating</b></h2>
             <h4>Average rating:</h4>
             <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
         </div>
 
         <div class="comments">
-
             <h2><b>Comments:</b></h2>
             {% for feedback in feedback_list %}
             <span><b>{{ feedback.i }}) {{ feedback.name }} at {{ feedback.date }} {{ feedback.rating }}:</b> {{ feedback.comment }}</span><br>
