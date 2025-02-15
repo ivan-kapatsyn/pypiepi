@@ -222,19 +222,23 @@
 
         <div class="left-container">
 
-             <h2><b>Announcements</b></h2>
-            <div id="announcements_container">
-                {% for announcement in announcements %}
-                <span>- <strong>{{ announcement.date }}:</strong> {{ announcement.message }}</span><br>
-                {% else %}
-                <p class="text-muted">There is no announcement for this course.</p>
-                {% endfor %}
+            <div class="announcements">
+                <h2><b>Announcements</b></h2>
+                <div id="announcements_container">
+                    {% for announcement in announcements %}
+                    <span>- <strong>{{ announcement.date }}:</strong> {{ announcement.message }}</span><br>
+                    {% else %}
+                    <p class="text-muted">There is no announcement for this course.</p>
+                    {% endfor %}
+                </div>
             </div>
 
-            <h2><b>Rating</b></h2>
-            <div>
-                <h4>Average rating:</h4>
-                <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
+            <div class="ratings">
+                <h2><b>Rating</b></h2>
+                <div>
+                    <h4>Average rating:</h4>
+                    <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
+                </div>
             </div>
 
             <div class="comments">
@@ -264,10 +268,9 @@
                 </div>
                 {% endfor %}
             </div>
-            <button class="drop-course" onclick="dropCourse()">Drop the course</button>
         </div>
 
-
+        <button class="drop-course" onclick="dropCourse()">Drop the course</button>
 
     </div>
 

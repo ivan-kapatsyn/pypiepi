@@ -53,16 +53,26 @@
     margin-left: 50px;
     margin-right: 50px;
     display: flex;
-    /* justify-content: space-between; */
-    /* max-width: 3000px; */
     gap: 100px;
 }
 #announcements_container {
     padding-bottom: 20px;
 }
 
+.announcements h2 {
+    border-bottom: 2px #007bff; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #9370db; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 6px; /* Platz zwischen Inhalt und Linie */
+}
+
 .comments {
     margin-top: 20px;
+}
+
+.comments h4 {
+    border-bottom: 2px #2dcdbb; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #1eb5d1; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 6px; /* space between label text and line */
 }
 
 #feedback-button {
@@ -94,10 +104,21 @@
     width: 100%;
     text-align: center; /* center the text inside the container */
     margin-bottom: 30px; /* so the button has some space underneath */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Zentriert den Inhalt */
 }
 
 #data-container {
-    width: 100%;
+    border: 1px solid #ccc;
+    width: 80%; /* Jetzt breiter */
+    margin-top: 10px;
+}
+
+.info-container h2 {
+    border-bottom: 2px #2dcdbb; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #1eb5d1; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 6px; /* Platz zwischen Inhalt und Linie */
 }
 
 /* this button seems to need the class not the id */
