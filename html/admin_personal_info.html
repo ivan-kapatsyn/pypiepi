@@ -110,12 +110,7 @@
     </script>
     <script>
         function visit_course(room_id) {
-            const roomData = {
-            {
-                room_data | tojson
-            }
-        }
-            ;
+            const roomData = {{ room_data | tojson }};
             if (!roomData.hasOwnProperty(room_id)) return;
             window.location.href = '/course/info/' + roomData[room_id] + '/{{ user_id }}';
         }
@@ -177,10 +172,6 @@
         <h4><b>Generate new token</b></h4>
         <form id="generate-token-form" method="POST" action="{{ url_for('admin.save_token', user_id = user_id) }}">
             {{ token_form.hidden_tag() }}
-            <div>
-                {{ token_form.user_type.label }}<br>
-                {{ token_form.user_type() }}
-            </div>
             <div>
                 {{ token_form.token.label }}<br>
                 {{ token_form.token(size=32) }}
@@ -352,12 +343,7 @@
         </svg>
         <script>
             window.addEventListener('load', function () {
-                const roomData = {
-                {
-                    room_data | tojson
-                }
-            }
-                ;
+                const roomData = {{ room_data | tojson }};
                 Object.keys(roomData).forEach(function (roomId) {
                     loadRoom(roomId);
                 });

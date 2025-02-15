@@ -81,12 +81,6 @@ class Tutor(User):
         db.insert_one("tutor", tutor_data, "user_ID")
 
     @staticmethod
-    def _remove_token(token: int) -> None:
-        db = DataBaseUtil()
-        db.delete_one("tokens", "token", token)
-        logger.info(f"Registration token '{token}' removed.")
-
-    @staticmethod
     def _find_tutor_by_user_id(user_id: str) -> Optional[List]:
         db = DataBaseUtil()
         try:

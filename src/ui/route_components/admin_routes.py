@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, Response
 from numpy import number
 
+from src.backend.admin import Admin
 from src.backend.course import Course
 from src.backend.user import User
 
@@ -27,14 +28,13 @@ class AdminRoutes:
     @staticmethod
     @main_bp.route('/<user_id>/personal_bio', methods=['GET', 'POST'])
     def personal_bio(user_id: str):
-        # TODO Replace it with Admin.get_user_by_id()
-        admin = User.get_user_by_id(user_id)
+        admin = Admin.get_user_by_id(user_id)
         data = [
             {"name": "Username", "value": admin.username},
             {"name": "First Name", "value": admin.first_name},
             {"name": "Last Name", "value": admin.last_name},
             {"name": "Bio", "value": admin.bio},
-            {"name": "Role", "value": "Senior Administrator"}
+            {"name": "Role", "value": admin.role}
         ]
         day = request.args.get('day', 'Mon')
         hour = request.args.get('hour', '9')
@@ -52,14 +52,11 @@ class AdminRoutes:
     @staticmethod
     @main_bp.route('<user_id>/save_token', methods=['POST'])
     def save_token(user_id: str):
-        # TODO Replace it with Admin.get_user_by_id()
-        admin = User.get_user_by_id(user_id)
+        admin = Admin.get_user_by_id(user_id)
         token_form = TokenGenerator()
         if token_form.validate_on_submit():
-            user_type = token_form.user_type.data
             token = token_form.token.data
-            # Todo Replace it with admin.add_token(Token(user_type, number))
-            print(f'{user_type}, {token}')
+            admin.add_token(token)
         return Response(status=204)
 
     @classmethod

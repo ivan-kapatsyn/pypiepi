@@ -19,7 +19,8 @@ class TestAdminDatabase(unittest.TestCase):
             password="securepassword",
             first_name="Test",
             last_name="Admin",
-            role="superuser"
+            role="superuser",
+            token=123
         )
         self.assertIsNotNone(user_id)
 
@@ -35,7 +36,8 @@ class TestAdminDatabase(unittest.TestCase):
                 password="newpassword",
                 first_name="New",
                 last_name="Admin",
-                role="moderator"
+                role="moderator",
+                token=222
             )
 
     def test_banish_user_success(self):

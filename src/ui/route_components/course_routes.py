@@ -6,6 +6,7 @@ from flask import Blueprint, Response, render_template, request, redirect, url_f
 from src.backend.announcement import Announcement
 from src.backend.course import Course
 from src.backend.evaluation import Evaluation
+from src.backend.room import Room
 from src.backend.tutor import Tutor
 from src.backend.user import User
 from src.ui.forms.create_new_course import CourseCreationForm
@@ -31,8 +32,7 @@ class CoursesRoutes:
                 course_id = Course.add_new_course(
                     name=course_name,
                     qualification=qualification,
-                    # Todo retrieve room_id by its name
-                    room_id="5618d4f653538d49",
+                    room_id=Room.get_rooms_by_name_prefix(room)[0],
                     schedule=schedule,
                     max_participants=max_participants
                 )
