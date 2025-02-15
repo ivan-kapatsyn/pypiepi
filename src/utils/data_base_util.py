@@ -1,7 +1,6 @@
 import json  # Import json for handling JSON data
 import os # Import os for operating system functionalities
 import secrets  # import for generating secure random numbers
-from datetime import datetime
 from typing import Any, Dict, List, Tuple
 import pandas as pd  # Import pandas for data manipulation and analysis
 import psycopg2  # Import psycopg2 for PostgreSQL database interaction
@@ -53,6 +52,10 @@ class DataBaseUtil:
     def __del__(self):
         """
         Closes the database connection and cursor when the object is deleted.
+
+        Attributes:
+        - connection (psycopg2.extensions.connection or None): Stores the database connection object.
+        - cursor (psycopg2.extras.DictCursor or None): Stores the database cursor object.
         """
         # Check if the cursor is not None
         if self.cursor is not None:
@@ -244,11 +247,9 @@ class DataBaseUtil:
             print(f"No entry found where {column} = {value}.")
             return None
 
-        if "qualification" in result_load and result_load[
-            "qualification"] is not None:  # Check if the qualification field exists and is not None
+        if "qualification" in result_load and result_load["qualification"] is not None:  # Check if the qualification field exists and is not None
             if isinstance(result_load["qualification"], str):  # If qualification is a string
-                result_load["qualification"] = json.loads(
-                    result_load["qualification"])
+                result_load["qualification"] = json.loads(result_load["qualification"])
             elif isinstance(result_load["qualification"], list):  # If qualification is already a list
                 pass
             else:
@@ -467,7 +468,6 @@ class DataBaseUtil:
         Raises:
         - Exception: If an error occurs during the saving process or if the data is not provided.
         """
-        # EnvVariableUtil.get_env_variable('CSV_FILE_PATH') csv_directory or
         csv_directory = PathUtil.get_data_path()  # Get the directory path for saving CSV files
         if not os.path.exists(csv_directory):  # Check if the directory does not exist
             os.makedirs(csv_directory)  # Create the directory if it does not exist
