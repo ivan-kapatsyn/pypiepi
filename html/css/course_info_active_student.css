@@ -82,3 +82,38 @@
 #feedback-button:hover {
     background-color: #35A4C6FF;
 }
+
+
+
+
+.info-container {
+    background-color: #ffffff; /* White background for the box */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    padding: 30px; /* Padding inside the box */
+    width: 100%;
+    text-align: center; /* center the text inside the container */
+    margin-bottom: 30px; /* so the button has some space underneath */
+}
+
+#data-container {
+    width: 100%;
+}
+
+/* this button seems to need the class not the id */
+.drop-course {
+    background-color: #14b8d5;
+    color: black;
+    font-size: 18px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+.drop-course:hover {
+    background-color: #0d94b0;
+}
