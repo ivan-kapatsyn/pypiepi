@@ -1,52 +1,49 @@
+/* basic styling */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-    height: 100vh; /* Höhe des Viewports */
-    display: flex; /* Aktiviert Flexbox */
-    flex-direction: column; /* Setzt Flex-Elemente untereinander */
-    justify-content: flex-start; /* Stellt sicher, dass der Header oben bleibt */
-    align-items: center; /* Zentriert vertikal */
-    height: 100vh; /* Höhe des Viewports */
-
+    display: flex;
+    flex-direction: ; /* elements stacked vertically */
+    justify-content: flex-start; /* starts at the top */
+    align-items: center; /* centers horizontally */
 }
 
-/* Banner-Stil */
+/* header style */
 .header {
     background-color: #cccccc; /* Banner-Farbe */
-    color: black;              /* Textfarbe */
-    text-align: center;        /* Text zentrieren */
-    padding: 2px 0;           /* Oben und unten etwas Abstand */
+    color: black; /* Textfarbe */
+    text-align: center; /* Text zentrieren */
+    padding: 2px 0; /* Oben und unten etwas Abstand */
     font-family: Arial, sans-serif; /* Schriftart */
-    font-size: 15px;           /* Textgröße */
+    font-size: 15px; /* Textgröße */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Schattierung für ein weiches Aussehen */
-    position: fixed;           /* Fixiert den Banner oben */
-    top: 0;                    /* Setzt den Banner ganz nach oben */
-    left: 0;                   /* Setzt den Banner ganz nach links */
-    width: 100%;               /* Macht den Banner so breit wie der Bildschirm */
+    position: fixed; /* Fixiert den Banner oben */
+    top: 0; /* Setzt den Banner ganz nach oben */
+    left: 0; /* Setzt den Banner ganz nach links */
+    width: 100%; /* Macht den Banner so breit wie der Bildschirm */
     height: 10%;
-    z-index: 1000;             /* Stellt sicher, dass der Banner über anderen Elementen liegt */
-    border-bottom-left-radius: 15px;  /* Abrunden der unteren linken Ecke */
+    z-index: 1000; /* Stellt sicher, dass der Banner über anderen Elementen liegt */
+    border-bottom-left-radius: 15px; /* Abrunden der unteren linken Ecke */
     border-bottom-right-radius: 15px; /* Abrunden der unteren rechten Ecke */
     display: flex; /* Aktiviert Flexbox */
     align-items: center; /* Vertikal zentrieren */
     justify-content: space-between; /* Text zentrieren und Bild nach links */
+
 }
 
-/* Optional: Effekt bei Hover */
+/* effect for hover */
 .header:hover {
     background-color: mediumturquoise; /* Etwas dunkler bei Hover */
     transition: background-color 0.3s ease; /* Sanfter Übergang */
 }
-
 
 .header-image {
     max-width: 100%; /* Verhindert, dass das Bild größer als der Header wird */
     max-height: 100%;
     height: auto; /* Hält das Seitenverhältnis des Bildes bei */
     align-content: start;
-
+    border-top-left-radius: 0px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 20px;
 }
 
 .header-text {
@@ -55,8 +52,10 @@ body {
 }
 
 .dropdown {
-    margin-left: auto; /* Push the dropdown to the far right */
+    margin-right: 20px; /* Push the dropdown to the far right */
 }
+
+
 
 /* Eingabefelder mit abgerundeten Ecken */
 .input-field {

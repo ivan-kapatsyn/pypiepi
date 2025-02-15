@@ -54,6 +54,8 @@ body {
     margin-right: 20px; /* Push the dropdown to the far right */
 }
 
+
+
 .announcements h2 {
     border-bottom: 2px #007bff; /* Blaue Linie */
     box-shadow: 0 4px 2px -2px #9370db; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
