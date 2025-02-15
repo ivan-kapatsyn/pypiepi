@@ -59,13 +59,13 @@ body {
 
 
 .main-container {
-  margin-top: calc(10% + 20px); /* 10% (Header heights??) plus 20px space */
-  display: flex;
-  justify-content: space-between;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  gap: 100px;
+    margin-top: 150px;
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 100px;
 }
 
 .left-column {
@@ -131,6 +131,7 @@ body {
 .schedule-container table {
     table-layout: fixed;
     width: 100%;
+    font-size: 12px;
 }
 
 /* both the table header and the table data are the same size */
@@ -140,6 +141,12 @@ body {
     text-align: center;
     border-radius: 5px;
 }
+
+.schedule-table tr {
+    height: auto; /* Höhe wird dynamisch angepasst */
+    min-height: 50px; /* Mindesthöhe setzen */
+}
+
 
 /* the highlighted hours in schedule */
 .event-cell {
@@ -158,6 +165,7 @@ body {
     justify-content: center;
     margin: 0 auto; /* important for centering (idk why) */
     margin-top: 20px; /* button has some space above */
+    margin-bottom: 20px;
 }
 
 #see-passive-courses:hover {
