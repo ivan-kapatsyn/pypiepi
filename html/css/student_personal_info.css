@@ -68,7 +68,7 @@ body {
     gap: 100px;
 }
 
-.left-column {
+.left-column, .right-column {
     flex: 1;
     width: auto;
 }
