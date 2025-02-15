@@ -220,61 +220,73 @@
 
     <div class="left-column">
 
+        <div class="left-container">
 
-        <h2>Rating</h2>
-        <div>
-            <h4>Average rating:</h4>
-            <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
-        </div>
-        <div>
-
-            <h4>Comments:</h4>
-            <div id="comments-container">
-                {% for feedback in feedback_list %}
-                <span>{{ feedback.i }}) {{ feedback.name }} at {{ feedback.date }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
+             <h2><b>Announcements</b></h2>
+            <div id="announcements_container">
+                {% for announcement in announcements %}
+                <span>- <strong>{{ announcement.date }}:</strong> {{ announcement.message }}</span><br>
+                {% else %}
+                <p class="text-muted">There is no announcement for this course.</p>
                 {% endfor %}
             </div>
-            <button id="feedback-button" onclick="showFeedbackForm()">Leave a Feedback</button>
-            <div id="feedback-form"></div>
-        </div>
 
-        <h2>Announcements</h2>
-        <div id="announcements_container">
-            {% for announcement in announcements %}
-            <span>- <strong>{{ announcement.date }}:</strong> {{ announcement.message }}</span><br>
-            {% else %}
-            <p class="text-muted">There is no announcement for this course.</p>
-            {% endfor %}
+            <h2><b>Rating</b></h2>
+            <div>
+                <h4>Average rating:</h4>
+                <span class="rating" data-rating="{{ average_rating }}">{{ average_rating }}</span>
+            </div>
+
+            <div class="comments">
+                <h4><b>Comments:</b></h4>
+                <div id="comments-container">
+                    {% for feedback in feedback_list %}
+                    <span>{{ feedback.i }}) {{ feedback.name }} at {{ feedback.date }} {{ feedback.rating }}: {{ feedback.comment }}</span><br>
+                    {% endfor %}
+                </div>
+                <button id="feedback-button" onclick="showFeedbackForm()">Leave a Feedback</button>
+                <div id="feedback-form"></div>
+            </div>
+
+
         </div>
     </div>
 
 
     <div class="middle-column">
-        <h2>General Info</h2>
-        <div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 50%;">
-            {% for item in course_data %}
-            <div>
-                <span style="font-weight: bold;">{{ item.name }}:</span>
-                <span id="data-{{ item.name }}">{{ item.value }}</span>
+        <div class="info-container">
+            <h2><b>General Info</b></h2>
+            <div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 50%;">
+                {% for item in course_data %}
+                <div>
+                    <span style="font-weight: bold;">{{ item.name }}:</span>
+                    <span id="data-{{ item.name }}">{{ item.value }}</span>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
+
+        <div class="drop-button">
+            <button class="drop-course" onclick="dropCourse()">Drop the course</button>
+        </div>
+
     </div>
 
     <div class="left-column">
-        <h2>Listeners</h2>
-        <div id="students_container">
-            {% for student in students_list %}
-            <div>
-                <span>{{ student.i }})  {{ student.first_name }} {{ student.last_name }}: </span>
-                <span style="font-style: italic">{{ student.study_program }}</span>
+        <div class="listeners">
+            <h2><b>Listeners</b></h2>
+            <div id="students_container">
+                {% for student in students_list %}
+                <div>
+                    <span>{{ student.i }})  {{ student.first_name }} {{ student.last_name }}: </span>
+                    <span style="font-style: italic">{{ student.study_program }}</span>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
     </div>
 
 
-    <button onclick="dropCourse()">Drop the course</button>
 </div>
 
 </body>
