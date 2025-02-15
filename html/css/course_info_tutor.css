@@ -70,7 +70,7 @@ body {
     border-radius: 10px;
     width: 75%; /* Button takes 50% of the container's width */
     display: flex;
-    justify-content: start;
+    justify-content: center;
     margin: 0 auto; /* important for centering (idk why) */
     margin-top: 20px; /* button has some space above */
 }
