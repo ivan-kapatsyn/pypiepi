@@ -125,7 +125,7 @@
     <script>
         function applyRatingColors() {
             document.querySelectorAll('.rating').forEach(span => {
-                const rating = parseFloat(span.dataset.rating);
+                const rating = parseFloat(span.dataset.rating).toFixed(3);
                 const normalized = rating / 10;
                 const red = Math.round((1 - normalized) * 255);
                 const green = Math.round(normalized * 255);
@@ -147,7 +147,10 @@
                     'Content-Type': 'application/json',
                 },
             }).then(response => {
-
+                if(!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                window.location.href = '/student/f63b0b2f7c48c85f/personal_bio';
             });
         }
     </script>
@@ -247,7 +250,7 @@
 <h2>Announcements</h2>
 <div id="announcements_container">
     {% for announcement in announcements %}
-    <span>- {{ announcement }}</span><br>
+    <span>- <strong>{{ announcement.date }}:</strong> {{ announcement.message }}</span><br>
     {% else %}
     <p class="text-muted">There is no announcement for this course.</p>
     {% endfor %}

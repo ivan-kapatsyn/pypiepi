@@ -125,7 +125,7 @@
     <script>
         function applyRatingColors() {
             document.querySelectorAll('.rating').forEach(span => {
-                const rating = parseFloat(span.dataset.rating);
+                const rating = parseFloat(span.dataset.rating).toFixed(3);
                 const normalized = rating / 10;
                 const red = Math.round((1 - normalized) * 255);
                 const green = Math.round(normalized * 255);
@@ -140,15 +140,7 @@
     </script>
     <script>
         function registerForCourse() {
-            // Call the Flask endpoint with the new data
-            fetch("/student/register_for_course/{{ course_id }}/{{ user_id }}", {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }).then(response => {
-
-            });
+            window.location.href = '/student/register_for_course/{{ course_id }}/{{ user_id }}';
         }
     </script>
     <script>
