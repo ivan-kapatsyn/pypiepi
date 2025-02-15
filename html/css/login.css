@@ -67,7 +67,11 @@ body {
 }
 
 
-
+.main-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
 
 /* Container for the entire login block (including the button) */
 .login-container {
@@ -155,7 +159,7 @@ form div {
     background-color: mediumslateblue;
     color: white;
     border-radius: 20px; /* Rounded corners */
-    width: 100px;
+    width: 120px;
     height: 30px;
     font-size: 12px;
     cursor: pointer;
@@ -166,7 +170,5 @@ form div {
 }
 
 .readme {
-    position: fixed;
-    bottom: 10px;
-    left: 20px;
+    margin-top: auto;
 }
