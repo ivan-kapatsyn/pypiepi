@@ -52,10 +52,6 @@ class DataBaseUtil:
     def __del__(self):
         """
         Closes the database connection and cursor when the object is deleted.
-
-        Attributes:
-        - connection (psycopg2.extensions.connection or None): Stores the database connection object.
-        - cursor (psycopg2.extras.DictCursor or None): Stores the database cursor object.
         """
         # Check if the cursor is not None
         if self.cursor is not None:
