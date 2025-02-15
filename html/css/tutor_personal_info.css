@@ -119,11 +119,15 @@ body {
     width: 800px;
 }
 
-
+/* so that the schedule does not take up so much space */
+.schedule-container {
+    width: 600px;
+}
 
 .schedule-container table {
     table-layout: fixed;
     width: 100%;
+    font-size: 12px;
 }
 
 /* both the table header and the table data are the same size */
@@ -132,6 +136,11 @@ body {
     width: 20%; /* for 5 column of the same size */
     text-align: center;
     border-radius: 5px;
+}
+
+.schedule-table tr {
+    height: auto; /* Höhe wird dynamisch angepasst */
+    min-height: 50px; /* Mindesthöhe setzen */
 }
 
 /* the highlighted hours in schedule */
