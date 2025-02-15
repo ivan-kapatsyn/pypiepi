@@ -13,7 +13,7 @@
                     $.ajax({
                         url: '/login/get_suggestions',
                         method: 'GET',
-                        data: { query: query },
+                        data: {query: query},
                         success: function (data) {
                             let suggestionsBox = $('#suggestions');
                             suggestionsBox.empty();
@@ -53,7 +53,7 @@
                 url: '/login/process_suggestion',
                 method: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({ username: username, user_id: userId }),
+                data: JSON.stringify({username: username, user_id: userId}),
                 success: function (response) {
                     if (response.redirect) {
                         window.location.href = response.redirect; // Perform the redirect
@@ -69,11 +69,12 @@
 
 <body>
 
-    <div class="header">
-       <img src="{{ url_for('static', filename='banner.png') }}" class="header-image" alt="TutorMe">
-        <h1 class="header-text">TutorMe</h1>
-    </div>
+<div class="header">
+    <img src="{{ url_for('static', filename='banner.png') }}" class="header-image" alt="TutorMe">
+    <h1 class="header-text">TutorMe</h1>
+</div>
 
+<div class="main-container">
     <div class="login-container">
         <h1>Login</h1>
         <form method="POST">
@@ -100,5 +101,14 @@
             </div>
         </form>
     </div>
+
+    <div class="readme">
+        <form method="POST">
+            <div>
+                {{ form.readme(class="readme-button") }}
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>

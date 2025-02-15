@@ -1,7 +1,7 @@
 # Tutor Me: A Tool for Students, by Students
 
 ----
-![Logo](config_files/banner_group.png)
+<img src="config_files/banner_group.png" alt="Logo" width="500">
 
 ## Description
 

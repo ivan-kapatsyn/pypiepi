@@ -1,8 +1,12 @@
 from typing import List
+from markdown import markdown
 
 from src.backend.user import User
 from src.ui.forms.login_form import LoginForm
-from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
+from src.utils.path_util import PathUtil
+from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify, render_template_string, \
+    send_from_directory
+
 
 class LoginRoutes:
     main_bp = Blueprint('login', __name__, url_prefix='/login')
@@ -46,5 +50,21 @@ class LoginRoutes:
                     flash('Invalid username or password', 'danger')
             if form.register_new_user.data:
                 return redirect(url_for('register.new_user'))
+            if form.readme.data:
+                return redirect(url_for('login.readme'))
         login_page = r'login.html'
         return render_template(login_page, form=form)
+
+    @staticmethod
+    @main_bp.route('/readme', methods=['GET'])
+    def readme():
+        with open(f"{PathUtil.get_project_path()}/README.md", "r", encoding="utf-8") as f:
+            md_content = f.read()
+
+        html_content = markdown(md_content)
+        return render_template_string(f"<html><body>{html_content}</body></html>")
+
+    @staticmethod
+    @main_bp.route('/config_files/<path:filename>')
+    def serve_config_files(filename):
+        return send_from_directory(f'{PathUtil.get_project_path()}/config_files', filename)

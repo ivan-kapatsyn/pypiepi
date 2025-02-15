@@ -67,7 +67,11 @@ body {
 }
 
 
-
+.main-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
 
 /* Container for the entire login block (including the button) */
 .login-container {
@@ -149,4 +153,22 @@ form div {
 
 .register-link a:hover {
     text-decoration: underline; /* Underline on hover */
+}
+
+.readme-button {
+    background-color: mediumslateblue;
+    color: white;
+    border-radius: 20px; /* Rounded corners */
+    width: 120px;
+    height: 30px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.readme-button:hover {
+    background-color: #333333;
+}
+
+.readme {
+    margin-top: auto;
 }
