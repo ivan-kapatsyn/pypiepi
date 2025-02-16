@@ -152,6 +152,7 @@ body {
 .event-cell {
     color: black;
     cursor: pointer;
+    margin-top: -5px;
 }
 
 #see-passive-courses {
