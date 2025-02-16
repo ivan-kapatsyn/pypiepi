@@ -10,5 +10,5 @@ class UserRoutes:
     @main_bp.route('/<user_id>/toggle_remember_me', methods=['GET', 'POST'])
     def toggle_remember_me(user_id: str):
         user = User.get_user_by_id(user_id)
-        user.toggle_saved_button()
+        user.toggle_remember_me()
         return Response(status=204)
