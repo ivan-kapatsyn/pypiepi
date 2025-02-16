@@ -152,7 +152,11 @@ body {
 .event-cell {
     color: black;
     cursor: pointer;
-    margin-top: -5px;
+    height: 60px;
+}
+
+.no-event-cell {
+    height: 60px;
 }
 
 #see-passive-courses {
@@ -166,7 +170,7 @@ body {
     justify-content: center;
     margin: 0 auto; /* important for centering (idk why) */
     margin-top: 20px; /* button has some space above */
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 #see-passive-courses:hover {
