@@ -195,10 +195,10 @@
 
     </div>
 
-    <div class="left-column">
+    <div class="right-column">
         <div class="schedule-container">
             <h3><b>Schedule</b></h3>
-            <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
+            <table>
                 <thead>
                 <tr>
                     <th>Time</th>
@@ -221,39 +221,44 @@
                     </td>
                     {% for day in days %}
                     <td>
+
                         {% set ns = namespace(event_found=False) %}
                         {% for event in events %}
                         {% if not ns.event_found %}
                         {% if event.day == day and event.start_time == time %}
+                        <!-- Event beginnt genau in dieser Stunde -->
+
                         <div class="event-cell" onclick="window.location.href='{{ event.url }}'"
-                             style="background-color: #5bc7dd">
+                             style="background-color: #5bc7dd; text-align: center;">
                             {{ event.name }}
                         </div>
                         {% set ns.event_found = True %}
-                        {% else %}
-                        {% if event.day == day and (event.start_time|int) < (time|int) and (event.end_time|int) >
-                        (time|int)
-                        %}
-                        <div class="event-cell" onclick="window.location.href='{{ event.url }}'"
-                             style="background-color: #5bc7dd;color: #5bc7dd">
-                            tut
+                        {% elif event.day == day and event.start_time <= time and event.end_time > time %}
+                        <!-- Event läuft bereits und ist fortlaufend -->
+                        <div class="event-cell-no-text" onclick="window.location.href='{{ event.url }}'"
+                             style="background-color: #5bc7dd; color: #5bc7dd;">
+                            {{ event.name }}
                         </div>
+
                         {% set ns.event_found = True %}
                         {% endif %}
                         {% endif %}
-                        {% endif %}
                         {% endfor %}
+
                         {% if not ns.event_found %}
-                        <div style="color: #cccccc;background-color: #cccccc">
+                        <!-- Leere Zelle: statt unsichtbar nun als graue Zelle angezeigt -->
+                        <div class="no-event-cell" style="background-color: #cccccc; color: #cccccc;">
                             ne tut
                         </div>
                         {% endif %}
+
                     </td>
                     {% endfor %}
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
+
         </div>
 
         <div>

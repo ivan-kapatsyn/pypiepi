@@ -19,12 +19,10 @@ class Student(User):
     def __init__(self, user_id: str, username: str, password: str,
                  first_name: str, last_name: str, registered_at: date,
                  remember_me: bool = False, bio: str = None, user_type: str = "student",
-                 study_program: str = None, register_number: int = None,
-                 active_courses: Optional[List[Course]] = None):
+                 study_program: str = None, register_number: int = None):
         super().__init__(user_id, username, password, first_name, last_name, registered_at, bio, remember_me, user_type)
         self.study_program = study_program or None
         self.register_number = register_number or None
-        self.active_courses = active_courses if active_courses is not None else self._load_courses()
 
     @classmethod
     def register_new_user(cls, username: str, password: str, first_name: str, last_name: str,
@@ -77,8 +75,9 @@ class Student(User):
             raise ValueError(f"Course with ID '{course_id}' not found.")
 
         active_course_ids = set()
-        if self.active_courses is not None:
-            active_course_ids = {course.course_id for course in self.active_courses}
+        courses = self.active_courses
+        if courses is not None:
+            active_course_ids = {course.course_id for course in courses}
         if course_id in active_course_ids:
             logger.warning(f"Student already registered for course '{course_id}'.")
             return
@@ -86,8 +85,6 @@ class Student(User):
         if len(course.student_ids) >= course.max_participants:
             logger.warning(f"Course '{course_id}' is full. Registration not allowed.")
             return
-
-        self.active_courses.append(course)
 
         student_in_course_id = self._generate_unique_user_id()
 
@@ -122,10 +119,6 @@ class Student(User):
         if course_id not in active_course_ids:
             logger.warning(f"Student '{course_id}' is not registered for course '{course_id}'.")
             return
-
-        for active_course in self.active_courses:
-            if active_course.course_id == course_id:
-                self.active_courses.remove(active_course)
 
         db = DataBaseUtil()
         student_in_course_data = db.load_many("student_in_course", "course_ID = %s", [course_id])
@@ -268,7 +261,8 @@ class Student(User):
             data = None
         return data
 
-    def _load_courses(self):
+    @property
+    def active_courses(self):
         db = DataBaseUtil()
         student_courses = db.load_many("student_in_course", "student_ID = %s", [self.user_id])
         course_ids = [record[1] for record in student_courses]

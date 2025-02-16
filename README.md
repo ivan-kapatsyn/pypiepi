@@ -3,15 +3,52 @@
 ----
 <img src="config_files/banner_group.png" alt="Logo" width="500">
 
+
 ## Description
 
-- what your project is
-- why you chose this project and goal, and
-- how you plan to achieve it.
+The project aims to develop a web-based tutor management system designed
+specifically for students. This application allows students to organize and
+participate in tutoring sessions, and enables senior students to assist their peers
+by offering tutoring services. The platform facilitates interaction among
+students and tutors, making it easier for users to find tutoring sessions based
+subjects, ratings, or specific topics. Tutoring sessions are courses designed for
+students to participate in, created by tutors on various subjects and topics.
+These sessions can have different maximum student capacities, levels, and
+formats—either one-time or recurring on specific days—while students can
+easily filter and choose sessions based on their preference
+
+
+We chose this project because many students struggle with understanding
+specific course topics, even after attending regular lectures. By creating this
+platform, we hope to provide a space where senior students can offer their help,
+creating a collaborative and supportive learning environment. In addition,
+tutors will have the opportunity to receive recognition for their efforts in helping others.
+
+By completing this project, we aim to provide students with a valuable tool to
+improve their learning experience, while also offering tutors the chance to make
+a positive impact in their academic community.
+
+----
+## Group Details
+
+- Name: **PyPieπ**
+- Code: **G11**
+- Repository: [GitHub](https://github.com/ivan-kapatsyn/pypiepi)
+- Tutor Responsible: **Frederik Hennecke**
+- Team leader: **Ivan Kapatsyn**
+- Group members: Birte Maria Becker, Andrii Demydenko, Melis Ahu Gülcigil, Ivan Kapatsyn
+
+### Responsibilities
+
+- **Ivan Kapatsyn:** Backend
+- **Andrii Demydenko:** Environment setup + Frontend + API
+- **Birte Maria Becker:** Frontend + API
+- **Melis Ahu Gülcigil:** Database integration
+
 
 ----
 
-## Instalation
+## Installation
 
 
 ### Prerequisites
@@ -63,71 +100,71 @@ python3 -m scripts.run
 ```
 
 ### Done!
-Your application should now be running successfully! 🚀
+Your application should now be running successfully!
+
+----
+## How to Use
+
+On the homepage, you have the option to log in or register as a new user. 
+To register as a new user, click on the registration button, which redirects 
+you to a page where you enter your personal information and specify whether 
+you want to register as a Student or a Tutor. You will also need to provide 
+a valid token, as registration only works with a valid token. Once registration 
+is successful, the Student or Tutor is redirected to their main page, where the 
+views for Students and Tutors differ slightly. The Student can edit their personal 
+information, view the courses they are enrolled in, and search for additional 
+courses. The Tutor can also edit their personal information, view current comments, 
+check their Average Rating, see the schedules for the courses they created, and 
+add new courses. The website is designed so that each button clearly indicates 
+its function.
 
 ----
 ## Functionalities
 
+
 ### Data Storage and Handling
 
-Will you be using a database system (eg. SQL, MongoDB,...)?
-How will you load and process data, and what libraries do you plan to use for this (eg. pandas/polars, numpy,...)?
+- PostgreSQL is used for data storage, ensuring secure management of user accounts, session data, and ratings.
+- Data is processed and stored in a normalized relational database.
+- Sensitive data, such as passwords, is encrypted to ensure security and compliance with data protection standards.
 
-### User Management
+### User Management/Roles
 
-Will your project have distinct users?
-If so, how do you store and check credentials?
-Are there different roles (eg. customer/admin) with privileges?
+- TutorMe has different user roles: Student, Tutor, and Admin.
+- **Student**: Can join tutoring courses and provide feedback after courses.
+- **Tutor**: Can create and manage courses, but cannot attend them.
+- **Admin**: Has the ability to access key statistics about the number of registered users.
+- A user can be both a Student and a Tutor but will have separate accounts with different privileges, and options.
+- Users must register with a valid token. Authentication is required to access the plattform
 
 ### Interface
 
-What kind of interface are you planning (CLI/GUI)?
-What operating system will it run on, or will it be a web-based app?
-What libraries do you need for this?
+- The application has a user-friendly web-based UI, with the backend preferably running on Windows. 
+- It uses Flask for the backend and PostgreSQL for data storage, along with other necessary libraries and frameworks
+- The interface include features such as course searching and user feedback
 
-### Statistical Analysis
+### Statistical Analysis and Visualization
 
-What statistical analyses will you conduct on your data?
-Will specialized libraries be required for this, and if so, which?
-What quintessential point(s)/takeaways are you planning to substantiate?
-
-### Visualizations
-
-How can you effectively communicate your takeaways (probably from statistical analysis) visually?
-I.e., what kinds of visual representations are suitable for your project?
-Will they be included in a dashboard-like part of your interface, or non-interactive infographics?
-With what libraries will you implement this?
+- Matplotlib is considered for implementing visualizations, such as displaying tutor ratings.
+- The system provides key statistics, such as a bar chart of the number of registered users for the admins and course ratings.
 
 ----
-## Installation and Usage
 
-This should inform anyone who looks at your project repository on how they can install and run the project code on their own machine, e.g. by cloning this repository, installing dependencies and running some main script.
+## Possible Ideas for the future
 
-----
-## Timeline
-
-Give some outline as to what should be achieved at what time during project development.
+- forums for the courses
+- reset passwords
+- direct messages
 
 ----
-## Group Details
+## Used Packages
 
-- Name: **PyPieπ**
-- Code: **G11**
-- Repository: [GitHub](https://github.com/ivan-kapatsyn/pypiepi)
-- Tutor Responsible: **Frederik Hennecke**
-- Team leader: **Ivan Kapatsyn**
-- Group members: Birte Maria Becker, Andrii Demydenko, Melis Ahu Gülcigil, Ivan Kapatsyn
-
-### Responsibilities
-
-- **Ivan Kapatsyn:** Backend
-- **Andrii Demydenko:** Environment setup + Frontend + API
-- **Birte Maria Becker:** Frontend + API
-- **Melis Ahu Gülcigil:** Database integration
-
-----
-## Acknowlegdments
-
-Here, you can (and should) mention all libraries you used, data sources, as well as other credits such as inspirations for your projects, papers that helped with your methodology or similar things.
-
-If you want, you can create subsections for all of these, or just create bullet-points for it. If possible, provide a link to the original source(s).
+- **pandas:** Used for data manipulation and analysis, especially for handling tabular data.
+- **numpy:** Provides support for numerical computations and efficient array operations.
+- **flask:** A lightweight web framework for building the backend of the application.
+- **flask-wtf:** Integrates Flask with WTForms to handle web forms securely.
+- **python-dotenv:** Loads environment variables from a .env file to manage configuration settings.
+- **psycopg2:** A PostgreSQL adapter for Python, enabling interaction with the database.
+- **bcrypt:** Handles password hashing and verification for secure authentication.
+- **matplotlib:** Used for creating visualizations, such as charts and graphs.
+- **markdown:** Converts Markdown text into HTML for rendering formatted content.

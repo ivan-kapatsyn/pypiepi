@@ -5,19 +5,22 @@ from src.backend.course import Course
 from src.backend.qualification import Qualification
 from src.utils.data_base_util import DataBaseUtil
 from src.backend.exceptions import DuplicationError
+from src.backend.admin import Admin
 
 
 class TestStudentDatabase(unittest.TestCase):
 
     def test_register_new_student_success(self):
         test_username = token_hex(8)
+        token = 123123123
+        Admin.add_token(token)
         user_id = Student.register_new_user(
             username=test_username,
             password="securepassword",
             first_name="Test",
             last_name="Student",
             study_program="Computer Science",
-            register_number=111
+            register_number=token
         )
         self.assertIsNotNone(user_id)
 
@@ -25,7 +28,7 @@ class TestStudentDatabase(unittest.TestCase):
         self.assertIsNotNone(student)
         self.assertEqual(student.username, test_username)
         self.assertEqual(student.study_program, "Computer Science")
-        self.assertEqual(student.register_number, 111)
+        self.assertEqual(student.register_number, token)
         self.assertFalse(student.active_courses)
 
     def test_register_new_student_duplicate_username(self):

@@ -14,13 +14,15 @@ class TestAdminDatabase(unittest.TestCase):
 
     def test_register_new_admin_success(self):
         test_username = token_hex(8)
+        token = 123123123
+        Admin.add_token(token)
         user_id = Admin.register_new_user(
             username=test_username,
             password="securepassword",
             first_name="Test",
             last_name="Admin",
             role="superuser",
-            token=123
+            token=token
         )
         self.assertIsNotNone(user_id)
 

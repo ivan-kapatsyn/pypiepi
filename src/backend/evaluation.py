@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 import logging
 from src.utils.data_base_util import DataBaseUtil
 
@@ -48,3 +48,29 @@ class Evaluation:
         except Exception as e:
             logger.error(f"Error retrieving evaluations for course IDs '{[course_ids]}': {e}")
             return []
+
+    @staticmethod
+    def get_by_id(evaluation_id: str) -> Optional["Evaluation"]:
+        """
+        Retrieves a single evaluation by its ID.
+
+        Args:
+            evaluation_id (str): The unique ID of the evaluation.
+
+        Returns:
+            Evaluation: The evaluation instance if found, otherwise None.
+        """
+        db = DataBaseUtil()
+        data = db.load_one("evaluation", "evaluation_id", evaluation_id)
+        if data:
+            return Evaluation(
+                    evaluation_id=data[0],
+                    course_id=data[1],
+                    author_id=data[2],
+                    date=data[3],
+                    feedback=data[4],
+                    grade=data[5],
+            )
+        else:
+            logger.info(f"No evaluation found with ID '{evaluation_id}'")
+            return None
