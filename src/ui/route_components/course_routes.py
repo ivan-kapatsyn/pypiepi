@@ -7,6 +7,7 @@ from src.backend.announcement import Announcement
 from src.backend.course import Course
 from src.backend.evaluation import Evaluation
 from src.backend.room import Room
+from src.backend.student import Student
 from src.backend.tutor import Tutor
 from src.backend.user import User
 from src.ui.forms.create_new_course import CourseCreationForm
@@ -48,8 +49,7 @@ class CoursesRoutes:
     def info(user_id: str, course_id: str):
         user = User.get_user_by_id(user_id)
         course = Course.get_course_by_id(course_id)
-        # Todo replace with Student.get_user_by_id
-        student_list = [User.get_user_by_id(student_id) for student_id in course.student_ids]
+        student_list = [Student.get_user_by_id(student_id) for student_id in course.student_ids]
         evaluations = Evaluation.get_evaluations_by_course_ids([course_id])
         user_type = user.user_type
         if user_type == 'tutor':
@@ -105,15 +105,14 @@ class CoursesRoutes:
         return course_data
 
     @staticmethod
-    def __construct_student_data(students: List[User]):
+    def __construct_student_data(students: List[Student]):
         result = []
         for i, student in enumerate(students):
             result.append({
                 'i': i + 1,
                 'first_name': student.first_name,
                 'last_name': student.last_name,
-                # Todo replace it with student.study_program or similar
-                'study_program': "Some study program",
+                'study_program': student.study_program,
             })
         return result
 
