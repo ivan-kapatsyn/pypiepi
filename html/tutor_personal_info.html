@@ -206,7 +206,7 @@
     <div class="right-column">
         <div class="schedule-container">
             <h3><b>Schedule</b></h3>
-            <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
+            <table>
                 <thead>
                 <tr>
                     <th>Time</th>
@@ -241,7 +241,7 @@
                         {% set ns.event_found = True %}
                         {% elif event.day == day and event.start_time <= time and event.end_time > time %}
                         <!-- Event läuft bereits und ist fortlaufend -->
-                        <div class="event-cell" onclick="window.location.href='{{ event.url }}'"
+                        <div class="event-cell-no-text" onclick="window.location.href='{{ event.url }}'"
                              style="background-color: #5bc7dd; color: #5bc7dd;">
                             {{ event.name }}
                         </div>
@@ -251,7 +251,7 @@
                         {% endfor %}
                         {% if not ns.event_found %}
                         <!-- Leere Zelle: statt unsichtbar nun als graue Zelle angezeigt -->
-                        <div style="background-color: #cccccc; color: #cccccc;">
+                        <div class= "no-event-cell" style="background-color: #cccccc; color: #cccccc;">
                             ne tut
                         </div>
                         {% endif %}
