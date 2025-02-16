@@ -168,7 +168,3 @@ its function.
 - **bcrypt:** Handles password hashing and verification for secure authentication.
 - **matplotlib:** Used for creating visualizations, such as charts and graphs.
 - **markdown:** Converts Markdown text into HTML for rendering formatted content.
-
-----
-# Dataset Source
-https://drive.google.com/file/d/1sSsHiFJTXLgCXRJZtRArWYXoYiEe6vHw/view
