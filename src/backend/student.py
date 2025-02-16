@@ -205,7 +205,7 @@ class Student(User):
         filter_values.append(tuple(active_course_ids))
         if course_name_start:
             filter_conditions.append("LOWER(name) LIKE %s")
-            filter_values.append(tuple(f'{course_name_start.lower()}%'))
+            filter_values.append((f'{course_name_start.lower()}%',))
 
         db = DataBaseUtil()
         filter_query = " AND ".join(filter_conditions)
