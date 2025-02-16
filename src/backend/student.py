@@ -8,8 +8,10 @@ from src.backend.exceptions import DuplicationError, WrongTokenError
 
 # Configure logging
 import logging
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+
 
 class Student(User):
     changeable_type_fields = {"study_program", "register_number"}
@@ -166,12 +168,13 @@ class Student(User):
         logger.info(f"Feedback successfully left for course '{course_id}' by student '{self.user_id}'.")
         return evaluation_id
 
-    def search_from_active_courses(self, filters: List[dict]) -> List[Course]:
+    def search_from_active_courses(self, filters: List[dict], course_name_start:str='') -> List[Course]:
         """
         Searches for courses in the student's active courses list based on the provided filters.
 
         Parameters:
             filters (List[dict]): List of dictionaries specifying column filters.
+            course_name_start (str): Course name to start searching from.
 
         Returns:
             List[Course]: List of matching Course objects.
@@ -193,6 +196,9 @@ class Student(User):
             return []
         filter_conditions.append("course_id IN %s")
         filter_values.append(tuple(active_course_ids))
+        if course_name_start != '':
+            filter_conditions.append("LOWER(name) LIKE %s")
+            filter_values.append((f'{course_name_start.lower()}%',))
 
         db = DataBaseUtil()
         filter_query = " AND ".join(filter_conditions)
@@ -200,12 +206,13 @@ class Student(User):
 
         return [Course.get_course_by_id(record["course_id"]) for record in course_data]
 
-    def search_from_new_courses(self, filters: List[dict]) -> List[Course]:
+    def search_from_new_courses(self, filters: List[dict], course_name_start: str = '') -> List[Course]:
         """
         Searches for courses not in the student's active courses list based on the provided filters.
 
         Parameters:
             filters (List[dict]): List of dictionaries specifying column filters.
+            course_name_start (str): The starting name of the course.
 
         Returns:
             List[Course]: List of matching Course objects.
@@ -226,6 +233,9 @@ class Student(User):
         if active_course_ids:
             filter_conditions.append("course_id NOT IN %s")
             filter_values.append(tuple(active_course_ids))
+        if course_name_start != '':
+            filter_conditions.append("LOWER(name) LIKE %s")
+            filter_values.append((f'{course_name_start.lower()}%',))
 
         db = DataBaseUtil()
         filter_query = " AND ".join(filter_conditions)
