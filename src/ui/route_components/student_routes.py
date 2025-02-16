@@ -103,7 +103,7 @@ class StudentRoutes:
     @main_bp.route('/<user_id>/active-courses', methods=['GET', 'POST'])
     def active_courses(user_id: str):
         student = Student.get_user_by_id(user_id)
-        search_query = request.args.get('search', None)
+        search_query = request.args.get('search', '')
         courses = student.search_from_active_courses(filters=[],
                                                      course_name_start=search_query)
         return StudentRoutes.__render_search_page(user_id, search_query, courses, True)
