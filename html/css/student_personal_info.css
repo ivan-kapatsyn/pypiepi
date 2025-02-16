@@ -132,6 +132,9 @@ body {
     table-layout: fixed;
     width: 100%;
     font-size: 12px;
+    border-collapse: collapse; /* Ensures clean borders without spacing */
+    border: 1px solid black; /* Outer border for the table */
+    border-spacing: 0; /* Extra measure to prevent spacing */
 }
 
 /* both the table header and the table data are the same size */
@@ -139,8 +142,9 @@ body {
 .schedule-container td {
     width: 20%; /* for 5 column of the same size */
     text-align: center;
-    border-radius: 5px;
 }
+
+
 
 .schedule-table tr {
     height: auto; /* Höhe wird dynamisch angepasst */
@@ -148,15 +152,25 @@ body {
 }
 
 
+
 /* the highlighted hours in schedule */
 .event-cell {
     color: black;
     cursor: pointer;
     height: 60px;
+    width: 100%;
+}
+
+.event-cell-no-text {
+    cursor: pointer;
+    height: 63px;
+    margin-top: -5px;
+    width: 100%;
 }
 
 .no-event-cell {
     height: 60px;
+    width: 100%;
 }
 
 #see-passive-courses {
