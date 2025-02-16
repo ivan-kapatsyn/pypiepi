@@ -10,6 +10,62 @@
 - how you plan to achieve it.
 
 ----
+
+## Instalation
+
+
+### Prerequisites
+
+Ensure you have the following installed on your system:
+
+- **Python 3.10+**: [Download here](https://www.python.org/downloads/)
+- **PostgreSQL**: [Download here](https://www.postgresql.org/download/)
+- **Node.js & npm**: [Download here](https://nodejs.org/)
+
+### 1. Clone the Repository
+```sh
+git clone <your-repository-url>
+cd <your-project-directory>
+```
+
+### 2. Create a Virtual Environment (Recommended)
+```sh
+python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+```
+
+### 3. Install Dependencies
+```sh
+pip install -r requirements.txt
+```
+
+### 4. Set Up environment variables
+- Create a new `.env` file at the root.
+- Copy the content of `test.env` and paste it into `.env`.
+- Replace `'...'` with the values described in the comments (except for `DUMMY_VARIABLE_USED_FOR_UNITTEST`).
+
+### 5. Install Frontend Libraries
+Download and install the required frontend libraries using npm:
+```sh
+npm install jquery bootstrap
+```
+
+### 6. Initialise the local database
+Run the following script
+```sh
+python3 -m scripts.initialize_db
+```
+
+### 7. Run the application
+Run the following script
+```sh
+python3 -m scripts.run
+```
+
+### Done!
+Your application should now be running successfully! 🚀
+
+----
 ## Functionalities
 
 ### Data Storage and Handling
@@ -55,17 +111,19 @@ Give some outline as to what should be achieved at what time during project deve
 ----
 ## Group Details
 
-- Name: PyPieπ
-- Code: G11
+- Name: **PyPieπ**
+- Code: **G11**
 - Repository: [GitHub](https://github.com/ivan-kapatsyn/pypiepi)
-- Tutor Responsible: Frederik Hennecke
-- Team leader: Ivan Kapatsyn
+- Tutor Responsible: **Frederik Hennecke**
+- Team leader: **Ivan Kapatsyn**
 - Group members: Birte Maria Becker, Andrii Demydenko, Melis Ahu Gülcigil, Ivan Kapatsyn
 
-Include also the (detailed) contribution of each group member to the development of the project.
+### Responsibilities
 
-Example:
-**Member A**: Developed the data structure of the project. Helped _Member B_ on the web interface and user management. Refactoring on components X, Y, and Z. Responsible for the unit tests in P ant T.
+- **Ivan Kapatsyn:** Backend
+- **Andrii Demydenko:** Environment setup + Frontend + API
+- **Birte Maria Becker:** Frontend + API
+- **Melis Ahu Gülcigil:** Database integration
 
 ----
 ## Acknowlegdments
