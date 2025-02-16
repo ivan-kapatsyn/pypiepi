@@ -291,6 +291,7 @@ class DataBaseUtil:
             print(f"Successfully loaded {len(results)} records from {table_name}.")
         else:  # If no results were found
             print(f"No records could be found in {table_name}.")
+            return []
 
         return results
 
