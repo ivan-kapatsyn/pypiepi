@@ -73,8 +73,9 @@ class Student(User):
             raise ValueError(f"Course with ID '{course_id}' not found.")
 
         active_course_ids = set()
-        if self.active_courses is not None:
-            active_course_ids = {course.course_id for course in self.active_courses}
+        courses = self.active_courses
+        if courses is not None:
+            active_course_ids = {course.course_id for course in courses}
         if course_id in active_course_ids:
             logger.warning(f"Student already registered for course '{course_id}'.")
             return
@@ -82,8 +83,6 @@ class Student(User):
         if len(course.student_ids) >= course.max_participants:
             logger.warning(f"Course '{course_id}' is full. Registration not allowed.")
             return
-
-        self.active_courses.append(course)
 
         student_in_course_id = self._generate_unique_user_id()
 

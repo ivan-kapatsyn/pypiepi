@@ -17,8 +17,7 @@ logger = logging.getLogger(__name__)
 
 class Course:
     def __init__(self, course_id: str, user_id: str, name: str, qualification: Qualification,
-                 room: Room, schedule: str, max_participants: int, description: Optional[str] = None,
-                 announcements: Optional[List[Announcement]] = None):
+                 room: Room, schedule: str, max_participants: int, description: Optional[str] = None):
         self.course_id = course_id
         self.user_id = user_id
         self.name = name
@@ -27,7 +26,6 @@ class Course:
         self.schedule = schedule
         self.max_participants = max_participants
         self.description = description or None
-        self.announcements = announcements or []
 
     @classmethod
     def add_new_course(cls, name: str, user_id: str, qualification: Qualification, room_id: str,
@@ -86,8 +84,7 @@ class Course:
             "room": Room.get_room_by_id(course_data[4]),
             "schedule": course_data[5],
             "max_participants": course_data[6],
-            "description": course_data[7],
-            "announcements": Announcement.get_announcements_by_course_id(course_id)
+            "description": course_data[7]
         }
 
         return cls(**course_data)
@@ -117,8 +114,7 @@ class Course:
                     room=Room.get_room_by_id(course[4]),
                     schedule=course[5],
                     max_participants=course[6],
-                    description=course[7],
-                    announcements=Announcement.get_announcements_by_course_id(course[0]),
+                    description=course[7]
                 )
                 for course in course_data
             ]
@@ -154,8 +150,7 @@ class Course:
                     room=Room.get_room_by_id(course[4]),
                     schedule=course[5],
                     max_participants=course[6],
-                    description=course[7],
-                    announcements=Announcement.get_announcements_by_course_id(course[0]),
+                    description=course[7]
                 )
                 for course in course_data if cls.__check_if_start_hour_inside_time_range(start_hour, course[5])
             ]
@@ -189,8 +184,7 @@ class Course:
                     room=Room.get_room_by_id(course[4]),
                     schedule=course[5],
                     max_participants=course[6],
-                    description=course[7],
-                    announcements=Announcement.get_announcements_by_course_id(course[0]),
+                    description=course[7]
                 )
                 for course in course_data
             ]
@@ -209,6 +203,10 @@ class Course:
         db.delete_many("evaluation", "course_id", [self.course_id])
         db.delete_many("course", "course_id", [self.course_id])
         logger.info(f"Course with ID '{self.course_id}' deleted successfully.")
+
+    @property
+    def announcements(self):
+        return Announcement.get_announcements_by_course_id(self.course_id)
 
     @classmethod
     def _is_duplicate(cls, room_id: str, schedule: str) -> bool:
