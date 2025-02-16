@@ -20,13 +20,9 @@ class Tutor(User):
     def __init__(self, user_id: str, username: str, password: str,
                  first_name: str, last_name: str, registered_at: date,
                  remember_me: bool = False, bio: str = None, user_type: str = "tutor",
-                 qualifications: Optional[List[Qualification]] = None,
-                 active_courses: Optional[List[Course]] = None,
-                 evaluations: Optional[List[Evaluation]] = None):
+                 qualifications: Optional[List[Qualification]] = None):
         super().__init__(user_id, username, password, first_name, last_name, registered_at, bio, remember_me, user_type)
         self.qualifications = qualifications or []
-        self.active_courses = active_courses if active_courses is not None else Course.get_courses_by_user_id(user_id)
-        self.evaluations = evaluations if evaluations is not None else self.__load_evaluations(user_id)
 
     @classmethod
     def register_new_user(cls, username: str, password: str, first_name: str, last_name: str,
@@ -65,10 +61,14 @@ class Tutor(User):
         logger.info(f"Tutor registered successfully with username: {username}")
         return user_id
 
-    @classmethod
-    def __load_evaluations(cls, user_id) -> List[Evaluation]:
-        course_ids = [course.course_id for course in Course.get_courses_by_user_id(user_id)]
+    @property
+    def evaluations(self) -> List[Evaluation]:
+        course_ids = [course.course_id for course in Course.get_courses_by_user_id(self.user_id)]
         return Evaluation.get_evaluations_by_course_ids(course_ids)
+
+    @property
+    def active_courses(self) -> List[Course]:
+        return Course.get_courses_by_user_id(self.user_id)
 
     @classmethod
     def _save_tutor(cls, user_id: str, qualifications: List[Qualification]) -> None:
@@ -96,5 +96,4 @@ class Tutor(User):
             logger.warning(f"No tutor data for user '{user_id}'.")
             return {}
 
-        return {"qualifications": [Qualification(q) for q in tutor_data[1]],
-                "active_courses": Course.get_courses_by_user_id(user_id), "evaluations": cls.__load_evaluations(user_id)}
+        return {"qualifications": [Qualification(q) for q in tutor_data[1]]}
