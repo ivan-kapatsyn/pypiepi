@@ -1,52 +1,41 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-    height: 100vh; /* Höhe des Viewports */
-    display: flex; /* Aktiviert Flexbox */
-    flex-direction: column; /* Setzt Flex-Elemente untereinander */
-    justify-content: flex-start; /* Stellt sicher, dass der Header oben bleibt */
-    align-items: center; /* Zentriert vertikal */
-    height: 100vh; /* Höhe des Viewports */
-
-}
-
-/* Banner-Stil */
+/* header style */
 .header {
     background-color: #cccccc; /* Banner-Farbe */
-    color: black;              /* Textfarbe */
-    text-align: center;        /* Text zentrieren */
-    padding: 2px 0;           /* Oben und unten etwas Abstand */
+    color: black; /* Textfarbe */
+    text-align: center; /* Text zentrieren */
+    padding: 2px 0; /* Oben und unten etwas Abstand */
     font-family: Arial, sans-serif; /* Schriftart */
-    font-size: 15px;           /* Textgröße */
+    font-size: 15px; /* Textgröße */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Schattierung für ein weiches Aussehen */
-    position: fixed;           /* Fixiert den Banner oben */
-    top: 0;                    /* Setzt den Banner ganz nach oben */
-    left: 0;                   /* Setzt den Banner ganz nach links */
-    width: 100%;               /* Macht den Banner so breit wie der Bildschirm */
+    position: fixed; /* Fixiert den Banner oben */
+    top: 0; /* Setzt den Banner ganz nach oben */
+    left: 0; /* Setzt den Banner ganz nach links */
+    width: 100%; /* Macht den Banner so breit wie der Bildschirm */
     height: 10%;
-    z-index: 1000;             /* Stellt sicher, dass der Banner über anderen Elementen liegt */
-    border-bottom-left-radius: 15px;  /* Abrunden der unteren linken Ecke */
+    z-index: 1000; /* Stellt sicher, dass der Banner über anderen Elementen liegt */
+    border-bottom-left-radius: 15px; /* Abrunden der unteren linken Ecke */
     border-bottom-right-radius: 15px; /* Abrunden der unteren rechten Ecke */
     display: flex; /* Aktiviert Flexbox */
     align-items: center; /* Vertikal zentrieren */
     justify-content: space-between; /* Text zentrieren und Bild nach links */
+
 }
 
-/* Optional: Effekt bei Hover */
+/* effect for hover */
 .header:hover {
     background-color: mediumturquoise; /* Etwas dunkler bei Hover */
     transition: background-color 0.3s ease; /* Sanfter Übergang */
 }
-
 
 .header-image {
     max-width: 100%; /* Verhindert, dass das Bild größer als der Header wird */
     max-height: 100%;
     height: auto; /* Hält das Seitenverhältnis des Bildes bei */
     align-content: start;
-
+    border-top-left-radius: 0px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 20px;
 }
 
 .header-text {
@@ -55,79 +44,97 @@ body {
 }
 
 .dropdown {
-    margin-left: auto; /* Push the dropdown to the far right */
+    margin-right: 20px; /* Push the dropdown to the far right */
 }
 
-/* Eingabefelder mit abgerundeten Ecken */
-.input-field {
-    border-radius: 10px; /* Abgerundete Ecken für die Textboxen */
-    padding: 10px; /* Etwas Padding für den Inhalt */
-    border: 1px solid #ccc; /* Einfache Randlinie */
-    width: 100%; /* Breite auf 100% setzen (falls gewünscht) */
-    height: 30px;
-    box-sizing: border-box; /* Box-Modell anpassen */
+
+.main-container {
+    margin-top: 50px;
+    margin-left: 50px;
+    margin-right: 50px;
+    display: flex;
+    gap: 100px;
+}
+#announcements_container {
+    padding-bottom: 20px;
 }
 
-.register-container {
+.announcements h2 {
+    border-bottom: 2px #007bff; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #9370db; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 6px; /* Platz zwischen Inhalt und Linie */
+}
+
+.comments {
+    margin-top: 20px;
+}
+
+.comments h4 {
+    border-bottom: 2px #2dcdbb; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #1eb5d1; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 6px; /* space between label text and line */
+}
+
+#feedback-button {
+    background-color: #45daba;
+    color: black;
+    font-size: 15px;
+    padding: 5px 10px; /* padding in the button itself */
+    border-radius: 10px;
+    width: 40%; /* Button takes 50% of the container's width */
+    display: flex;
+    justify-content: center;
+    margin: 0 auto; /* important for centering (idk why) */
+    margin-top: 20px; /* button has some space above */
+    text-align: center;
+}
+
+#feedback-button:hover {
+    background-color: #35A4C6FF;
+}
+
+
+
+
+.info-container {
     background-color: #ffffff; /* White background for the box */
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
     padding: 30px; /* Padding inside the box */
     width: 100%;
-    max-width: 400px; /* Limit the width */
-    text-align: center; /* Center the text inside the container */
-    margin-top: 100px; /* Verhindert, dass der Container direkt an den Header anschlägt */
+    text-align: center; /* center the text inside the container */
+    margin-bottom: 30px; /* so the button has some space underneath */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Zentriert den Inhalt */
 }
 
-.user-type-select-button {
-    background-color: #14B8D5;
-    color: black;
-    border-radius: 10px;
-    padding: 5px 10px;
-    cursor: pointer;
+#data-container {
+    border: 1px solid #ccc;
+    width: 80%; /* Jetzt breiter */
+    margin-top: 10px;
 }
 
-.user-type-select-button:hover {
-    background-color: #0d94b0;
+.info-container h2 {
+    border-bottom: 2px #2dcdbb; /* Blaue Linie */
+    box-shadow: 0 4px 2px -2px #1eb5d1; /* whatever you set the blur to (3rd value), set the spread (4th value) to the negative of it */
+    padding-bottom: 6px; /* Platz zwischen Inhalt und Linie */
 }
 
-.qualifications_input{
-    align-self: flex-start;
-    margin-left: -20px;
-}
-
-.create-button {
-    background-color: #45DABA;
+/* this button seems to need the class not the id */
+.drop-course {
+    background-color: #14b8d5;
     color: black;
     font-size: 18px;
-    padding: 15px 20px;
+    padding: 5px 10px;
     border-radius: 10px;
-    width: 80%; /* Button takes 80% of the container's width */
-    cursor: pointer;
+    width: 50%;
     display: flex;
     justify-content: center;
-    margin: 0 auto; /* Falls notwendig für zusätzliche Zentrierung (ist wohl nötig) */
+    margin: 0 auto;
+    margin-top: 10px;
 }
 
-.create-button:hover {
-    background-color: teal;
-}
-
-form div {
-    margin-bottom: 15px; /* Space between fields */
-    text-align: left; /* Align text to the left */
-}
-
-h1 {
-    color: #333;
-}
-
-
-
-#tutor-qualification-attribute-list .attribute-item {
-    margin-left: 20px; /* Adjust this value to control the shift */
-}
-
-.hidden {
-    display: none;
+.drop-course:hover {
+    background-color: #0d94b0;
 }
