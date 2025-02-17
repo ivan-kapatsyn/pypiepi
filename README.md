@@ -133,7 +133,7 @@ its function.
 - TutorMe has different user roles: Student, Tutor, and Admin.
 - **Student**: Can join tutoring courses and provide feedback after courses.
 - **Tutor**: Can create and manage courses, but cannot attend them.
-- **Admin**: Has the ability to access key statistics about the number of registered users.
+- **Admin**: Has the ability to access key statistics about the number of registered users as well as the room overview at the specific day and hour. 
 - A user can be both a Student and a Tutor but will have separate accounts with different privileges, and options.
 - Users must register with a valid token. Authentication is required to access the plattform
 
