@@ -132,7 +132,7 @@ class CoursesRoutes:
                 'i': i + 1,
                 'rating': feedback.grade,
                 'name': User.get_user_by_id(feedback.author_id).first_name + ' ' + User.get_user_by_id(feedback.author_id).last_name,
-                'date': feedback.date.strftime("%d.%m.%Y %H:%M:%S"),
+                'date': feedback.date.strftime("%Y-%m-%d, %H:%M"),
                 'comment': feedback.feedback,
             })
         return result
@@ -143,7 +143,7 @@ class CoursesRoutes:
         for ann in announcements:
             result.append({
                 'announcement_id': ann.announcement_id,
-                'date': ann.date.strftime("%Y-%m-%d, %H:%M"),  # Format the date as desired
+                'date': ann.date.strftime("%Y-%m-%d, %H:%M"),  # this way, there are no seconds
                 'message': ann.message
             })
         return result
