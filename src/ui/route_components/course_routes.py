@@ -73,7 +73,7 @@ class CoursesRoutes:
                                students_list=CoursesRoutes.__construct_student_data(student_list),
                                average_rating=CoursesRoutes.__get_average_evaluation(evaluations),
                                feedback_list=CoursesRoutes.__construct_feedback_data(evaluations),
-                               announcements=course.announcements
+                               announcements=CoursesRoutes.__construct_announcement_data(course.announcements)
                                )
 
     @staticmethod
@@ -86,7 +86,7 @@ class CoursesRoutes:
     @main_bp.route('/add_announcement/<course_id>/', methods=['POST'])
     def add_announcement(course_id: str):
         message = request.json['message']
-        Announcement.add_new_announcement(course_id,message)
+        Announcement.add_new_announcement(course_id, message)
         return Response(status=204)
 
     @staticmethod
@@ -132,7 +132,18 @@ class CoursesRoutes:
                 'i': i + 1,
                 'rating': feedback.grade,
                 'name': User.get_user_by_id(feedback.author_id).first_name + ' ' + User.get_user_by_id(feedback.author_id).last_name,
-                'date': feedback.date.strftime("%d.%m.%Y %H:%M:%S"),
+                'date': feedback.date.strftime("%Y-%m-%d, %H:%M"),
                 'comment': feedback.feedback,
+            })
+        return result
+
+    @staticmethod
+    def __construct_announcement_data(announcements: List[Announcement]):
+        result = []
+        for ann in announcements:
+            result.append({
+                'announcement_id': ann.announcement_id,
+                'date': ann.date.strftime("%Y-%m-%d, %H:%M"),  # this way, there are no seconds
+                'message': ann.message
             })
         return result
