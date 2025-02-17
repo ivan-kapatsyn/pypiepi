@@ -94,7 +94,7 @@ class TestCourse(unittest.TestCase):
     def test_delete_course(self):
         course_id = Course.add_new_course(
             name="Advanced Programming",
-            user_id="430112d4d154a44f",
+            user_id="14d099c161cf3bea",
             qualification=Qualification("Math"),
             room_id="0fc47a8b9acc2ab3",
             schedule="Thu 12-14",
