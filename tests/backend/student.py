@@ -8,7 +8,7 @@ from src.backend.exceptions import DuplicationError
 from src.backend.admin import Admin
 
 
-class TestStudentDatabase(unittest.TestCase):
+class TestStudent(unittest.TestCase):
 
     def test_register_new_student_success(self):
         test_username = token_hex(8)
@@ -91,7 +91,8 @@ class TestStudentDatabase(unittest.TestCase):
         self.assertIn(test_course_id, active_course_ids)
 
     def test_course_capacity_check(self):
-        course_id = Course.add_new_course("Test", "b365cd8f07cd0520", Qualification("Test"), "a3cfc82a59a8ea4b", "Mon 10-11", 1)
+        course_id = Course.add_new_course("Test", "b365cd8f07cd0520", Qualification("Test"),
+                                          "a3cfc82a59a8ea4b", "Mon 13-15", 1)
         student = Student.get_user_by_id("f63b0b2f7c48c85f")
         student.register_for_a_course(course_id)
         student = Student.get_user_by_id("0fd78ece486e8df4")
@@ -150,9 +151,9 @@ class TestStudentDatabase(unittest.TestCase):
         student = Student.get_user_by_id("f63b0b2f7c48c85f")
 
         test_course_1 = Course.add_new_course("Math 101", "b365cd8f07cd0520", Qualification("Math"), "50ce7062018a8c65",
-                                              "Mon 9-11", 25)
+                                              "Mon 14-15", 25)
         test_course_2 = Course.add_new_course("Physics 101", "b365cd8f07cd0520", Qualification("Physics"), "50ce7062018a8c65",
-                                              "Tue 10-12", 25)
+                                              "Tue 14-15", 25)
 
         student.register_for_a_course(test_course_1)
         student.register_for_a_course(test_course_2)
@@ -170,7 +171,7 @@ class TestStudentDatabase(unittest.TestCase):
         student = Student.get_user_by_id("f63b0b2f7c48c85f")
 
         new_course_1 = Course.add_new_course("Chemistry 101", "b365cd8f07cd0520", Qualification("Chemistry"), "50ce7062018a8c65",
-                                             "Wed 13-15", 30)
+                                             "Wed 15-16", 30)
         new_course_2 = Course.add_new_course("Biology 101", "b365cd8f07cd0520", Qualification("Biology"), "50ce7062018a8c65",
                                              "Thu 14-16", 30)
 

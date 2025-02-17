@@ -10,7 +10,7 @@ from src.utils.data_base_util import DataBaseUtil
 from src.backend.exceptions import DuplicationError
 
 
-class TestAdminDatabase(unittest.TestCase):
+class TestAdmin(unittest.TestCase):
 
     def test_register_new_admin_success(self):
         test_username = token_hex(8)

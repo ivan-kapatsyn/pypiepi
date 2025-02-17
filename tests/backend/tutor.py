@@ -5,7 +5,7 @@ from src.backend.admin import Admin
 from src.backend.qualification import Qualification
 from src.backend.exceptions import DuplicationError, WrongTokenError
 
-class TestTutorDatabase(unittest.TestCase):
+class TestTutor(unittest.TestCase):
 
     def test_register_new_tutor_success(self):
         token = 123456789
