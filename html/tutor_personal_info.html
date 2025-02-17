@@ -192,6 +192,7 @@
                     <span id="data-{{ item.name }}">{{ item.value }} </span>
                     <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
                     {% else %}
+                    <span id="data-{{ item.name }}">{{ item.value }}</span>
                     <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">+</button>
                     {% endif %}
                 </div>

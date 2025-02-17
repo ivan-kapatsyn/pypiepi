@@ -36,7 +36,7 @@ class TutorRoutes:
 
         ]
         qualification_data = [
-            {"name": "qualification_1", "value": qual.name}
+            {"name": f"qualification_{i+1}", "value": qual.name}
         for i, qual in enumerate(tutor.qualifications)]
         qualification_data.append({"name": "qualification_new", "value": ''})
         average_rating, feedbacks = TutorRoutes.__construct_feedback_data(tutor.evaluations)
@@ -66,7 +66,7 @@ class TutorRoutes:
                         qualification_index_to_update = int(qualification_index_to_update) - 1
                         qualifications[qualification_index_to_update] = Qualification(info_to_update[key])
                     else:
-                        qualifications.append(info_to_update[key])
+                        qualifications.append(Qualification(info_to_update[key]))
 
                     temp['qualification'] = qualifications
                 else:
