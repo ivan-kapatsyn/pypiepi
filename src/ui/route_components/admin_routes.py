@@ -5,7 +5,7 @@ from src.backend.admin import Admin
 from src.backend.course import Course
 from src.backend.user import User
 
-# from src.backend.plotting import generate_plot
+
 
 from src.ui.forms.room_overview import RoomOverview
 from src.ui.forms.token_generator import TokenGenerator
@@ -17,18 +17,24 @@ import matplotlib.pyplot as plt
 from src.backend.user_chart import get_all_registrations_per_week
 
 
-
 class AdminRoutes:
+    # Days of the week for the timetable
     TIMETABLE_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+
+    # Time slots from 9 AM to 6 PM
     TIMETABLE_TIME = [f"{hour}AM" if hour < 12 else (f"{hour - 12}PM" if hour > 12 else "12PM") for hour in
                       range(9, 19)]
 
+    # Blueprint for the '/admin' routes
     main_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
     @staticmethod
     @main_bp.route('/<user_id>/personal_bio', methods=['GET', 'POST'])
     def personal_bio(user_id: str):
+        # Fetch user data based on user_id
         admin = Admin.get_user_by_id(user_id)
+
+        # Prepare data to display in the personal bio section
         data = [
             {"name": "Username", "value": admin.username},
             {"name": "First Name", "value": admin.first_name},
@@ -36,14 +42,26 @@ class AdminRoutes:
             {"name": "Bio", "value": admin.bio},
             {"name": "Role", "value": admin.role}
         ]
+
+        # Get query parameters for day and hour, default to Monday and 9AM
         day = request.args.get('day', 'Mon')
         hour = request.args.get('hour', '9')
+
+        # Initialize forms
         room_form = RoomOverview()
         room_form.day.data = day
         room_form.hour.data = hour
+
+        # Get the room data for the selected day and hour
         room_data = AdminRoutes.__get_room_data(day, hour)
+
+        # Generate a plot (for registered users per week)
         plot_data = AdminRoutes.__generate_plot()
+
+        # Token generation form
         token_form = TokenGenerator()
+
+        # Render the template with the gathered data
         personal_bio_page = r'admin_personal_info.html'
         return render_template(personal_bio_page, username=admin.username,
                                user_id=user_id, remember_me=admin.remember_me,
@@ -62,28 +80,39 @@ class AdminRoutes:
             for key in key_list:
                 temp[key.lower().replace(' ', '_')] = info_to_update[key]
             info_to_update = temp
+
+            # Update the user data
             admin.update_user_values(info_to_update)
 
         except Exception as e:
             success = False
             raise e
         finally:
+            # Return a response based on success or failure
             status = 204 if success else 500
             return jsonify(success=success), status
 
     @staticmethod
     @main_bp.route('<user_id>/save_token', methods=['POST'])
     def save_token(user_id: str):
+        # Retrieve the admin user by user_id
         admin = Admin.get_user_by_id(user_id)
+
+        # Validate the token generation form and save the token
         token_form = TokenGenerator()
         if token_form.validate_on_submit():
             token = token_form.token.data
             admin.add_token(token)
+
+        # Respond with a success status (no content returned)
         return Response(status=204)
 
     @classmethod
-    def __get_room_data(cls, day ='Mon', hour='9'):
+    def __get_room_data(cls, day='Mon', hour='9'):
+        # Fetch courses based on the selected day and hour
         courses = Course.get_courses_by_schedule(day, hour)
+
+        # Create a dictionary mapping room IDs to course IDs
         room_data = {
             course.room.room_id: course.course_id for course in courses
         }
@@ -91,33 +120,31 @@ class AdminRoutes:
 
     @staticmethod
     def __generate_plot():
-        # data stores all registered users with the function (list of tuples: (Week, Total))
+        # Retrieve all user registration data per week
         data = get_all_registrations_per_week()
 
-        # Erstelle ein DataFrame aus den Daten
+        # Create a DataFrame from the registration data
         df = pd.DataFrame(data, columns=['Week', 'Total'])
 
-        # Falls nötig, stelle sicher, dass die 'Week'-Spalte als Datetime interpretiert wird
+        # Ensure 'Week' is interpreted as a datetime type
         df['Week'] = pd.to_datetime(df['Week'])
 
-        # Erstellen des Plots
+        # Create the plot with matplotlib
         plt.figure(figsize=(10, 6))
-
-        # Verwende formatierten Datumsstrings als x-Achse
         plt.bar(df['Week'].dt.strftime("%Y-%m-%d"), df['Total'], color='#0d94b0')
 
+        # Set labels and title for the plot
         plt.xlabel('Week (starting from Monday)')
         plt.ylabel('Total Registered Users')
         plt.title('Overall registrations')
         plt.xticks(rotation=45)
         plt.tight_layout()
 
-        # Den Plot in einen BytesIO-Puffer speichern
+        # Save the plot to a BytesIO buffer
         buf = io.BytesIO()
         plt.savefig(buf, format='png')
         buf.seek(0)
 
-        # Den Puffer in einen Base64-String kodieren
+        # Convert the buffer to a base64 string and return it
         plot_data = base64.b64encode(buf.getvalue()).decode('utf8')
-
         return plot_data
