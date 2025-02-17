@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import List
 
-from flask import Blueprint, Response, render_template, request, redirect, url_for
+from flask import Blueprint, Response, render_template, request, redirect, url_for, jsonify
 
 from src.backend.announcement import Announcement
 from src.backend.course import Course
@@ -45,6 +45,28 @@ class CoursesRoutes:
         return render_template(page, form=form, tutor_name=tutor.first_name,
                                tutor_surname=tutor.last_name, username=tutor.username,
                                user_id=user_id, remember_me=tutor.remember_me)
+
+    @staticmethod
+    @main_bp.route('/<course_id>/update-data', methods=['GET', 'POST'])
+    def update_data(course_id: str):
+        try:
+            success = True
+            course = Course.get_course_by_id(course_id)
+            suggestion = request.json
+            info_to_update: dict = suggestion["info_to_update"]
+            key_list = info_to_update.keys()
+            temp = {}
+            for key in key_list:
+                temp[key.lower().replace(' ', '_')] = info_to_update[key]
+            info_to_update = temp
+            # Todo update course data
+
+        except Exception as e:
+            success = False
+            raise e
+        finally:
+            status = 204 if success else 500
+            return jsonify(success=success), status
 
     @staticmethod
     @main_bp.route('/info/<course_id>/<user_id>')
