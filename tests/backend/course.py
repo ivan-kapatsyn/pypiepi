@@ -16,7 +16,7 @@ class TestCourse(unittest.TestCase):
             user_id="430112d4d154a44f",
             qualification=Qualification("Math"),
             room_id=test_room_id,
-            schedule="Fri 12-14",
+            schedule="Tue 12-14",
             max_participants=25
         )
 
@@ -24,8 +24,9 @@ class TestCourse(unittest.TestCase):
         self.assertIsNotNone(course)
         self.assertEqual(course.name, "Advanced Programming")
         self.assertEqual(course.room.room_id, test_room_id)
-        self.assertEqual(course.schedule, "Fri 12-14")
+        self.assertEqual(course.schedule, "Tue 12-14")
         self.assertEqual(course.max_participants, 25)
+        course.delete_course()
 
     def test_add_new_course_room_not_found(self):
         with self.assertRaises(Exception):
@@ -94,7 +95,7 @@ class TestCourse(unittest.TestCase):
     def test_delete_course(self):
         course_id = Course.add_new_course(
             name="Advanced Programming",
-            user_id="430112d4d154a44f",
+            user_id="14d099c161cf3bea",
             qualification=Qualification("Math"),
             room_id="0fc47a8b9acc2ab3",
             schedule="Thu 12-14",

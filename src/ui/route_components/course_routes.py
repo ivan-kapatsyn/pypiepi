@@ -6,7 +6,7 @@ from flask import Blueprint, Response, render_template, request, redirect, url_f
 from src.backend.announcement import Announcement
 from src.backend.course import Course
 from src.backend.evaluation import Evaluation
-from src.backend.exceptions import DuplicationError
+from src.backend.exceptions import DuplicationError, TutorAvailabilityError
 from src.backend.qualification import Qualification
 from src.backend.room import Room
 from src.backend.student import Student
@@ -43,10 +43,11 @@ class CoursesRoutes:
                     )
                     return redirect(url_for('course.info', user_id=tutor.user_id, course_id=course_id))
                 except DuplicationError:
-                    form.error_message.data = f'There is an overlapping for {room.name} during {schedule}'
-                # Todo replace with a correct error when a Tutor has already a Course at that time
-                except Exception as e:
-                    form.error_message.data = f'There is an overlapping for you during {schedule}'
+                    form.error_message.data = f'There is an overlapping for {room.name} during {schedule}.'
+                except TutorAvailabilityError:
+                    form.error_message.data = f'There is an overlapping for you during {schedule}.'
+                except Exception as error:
+                    form.error_message.data = f'An unknown error occurred. Please try again.'
 
         page = r'create_new_course.html'
         return render_template(page, form=form, tutor_name=tutor.first_name,

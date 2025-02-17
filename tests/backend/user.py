@@ -3,7 +3,7 @@ from secrets import token_hex
 from src.backend.exceptions import DuplicationError
 from src.backend.user import User
 
-class TestUserDatabase(unittest.TestCase):
+class TestUser(unittest.TestCase):
 
     def test_authenticate_success(self):
         user = User.authenticate("john.doe", "newpassword")

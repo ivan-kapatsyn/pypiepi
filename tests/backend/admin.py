@@ -10,7 +10,7 @@ from src.utils.data_base_util import DataBaseUtil
 from src.backend.exceptions import DuplicationError
 
 
-class TestAdminDatabase(unittest.TestCase):
+class TestAdmin(unittest.TestCase):
 
     def test_register_new_admin_success(self):
         test_username = token_hex(8)
@@ -96,7 +96,7 @@ class TestAdminDatabase(unittest.TestCase):
         self.assertEqual(len(users), 0)
 
     def test_find_courses_at_some_time_success(self):
-        course1_id = Course.add_new_course("Intro to Programming", "430112d4d154a44f", Qualification("CS"), "8386436599a51b1b",
+        course1_id = Course.add_new_course("Intro to Programming", "14d099c161cf3bea", Qualification("CS"), "8386436599a51b1b",
                                            "Mon 9-12", 30)
         course2_id = Course.add_new_course("Data Structures", "f63b0b2f7c48c85f", Qualification("CS"), "cb352106bf060d03",
                                            "Mon 10-12", 30)

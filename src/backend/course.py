@@ -5,7 +5,7 @@ from src.backend.qualification import Qualification
 from src.backend.room import Room
 from src.backend.announcement import Announcement
 from src.utils.data_base_util import DataBaseUtil
-from src.backend.exceptions import DuplicationError
+from src.backend.exceptions import DuplicationError, TutorAvailabilityError
 from secrets import token_hex
 
 # Configure logging
@@ -49,12 +49,16 @@ class Course:
         Raises:
             Exception: If the specified room does not exist.
             DuplicationError: If a course with the same room and schedule already exists.
+            TutorAvailabilityError: If the tutor is not available at the specified schedule.
         """
         if Room.get_room_by_id(room_id) is None:
             raise Exception(f"Room {room_id} does not exist.")
 
         if cls._is_duplicate(room_id, schedule):
             raise DuplicationError(f"A course in room '{room_id}' at schedule '{schedule}' already exists.")
+
+        if not cls._is_tutor_available(user_id, schedule):
+            raise TutorAvailabilityError(f"Tutor with ID '{user_id}' is not available at schedule '{schedule}'.")
 
         course_id = cls._generate_unique_course_id()
         cls._save_course(course_id, user_id, name, qualification, room_id, schedule, max_participants)
@@ -219,6 +223,14 @@ class Course:
         if cls.__check_overlaps(room_schedules):
             return True
         return False
+
+    @classmethod
+    def _is_tutor_available(cls, user_id: str, schedule: str) -> bool:
+        tutor_courses = cls.get_courses_by_user_id(user_id)
+        tutor_schedules = [course.schedule for course in tutor_courses]
+        tutor_schedules.append(schedule)
+
+        return not cls.__check_overlaps(tutor_schedules)
 
     @classmethod
     def __check_overlaps(cls, schedules: list[str]) -> bool:
