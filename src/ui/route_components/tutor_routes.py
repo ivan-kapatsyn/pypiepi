@@ -96,7 +96,7 @@ class TutorRoutes:
                 'comment': feedback.feedback
             })
             average += feedback.grade
-        return average / len(feedbacks), result
+        return round(float(average / len(feedbacks)), 2), result
 
     @staticmethod
     def __get_day_from_schedule(schedule):
