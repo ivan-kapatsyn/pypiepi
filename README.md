@@ -48,7 +48,39 @@ a positive impact in their academic community.
 
 ----
 
-## Installation
+## Functionalities
+
+
+### Data Storage and Handling
+
+- PostgreSQL is used for data storage, ensuring secure management of user accounts, session data, and ratings.
+- Data is processed and stored in a normalized relational database.
+- Sensitive data, such as passwords, is encrypted to ensure security and compliance with data protection standards.
+
+### User Management/Roles
+
+- TutorMe has different user roles: Student, Tutor, and Admin.
+- **Student**: Can join tutoring courses and provide feedback after courses.
+- **Tutor**: Can create and manage courses, but cannot attend them.
+- **Admin**: Has the ability to access key statistics about the number of registered users.
+- A user can be both a Student and a Tutor but will have separate accounts with different privileges, and options.
+- Users must register with a valid token. Authentication is required to access the plattform
+
+### Interface
+
+- The application has a user-friendly web-based UI, with the backend preferably running on Windows. 
+- It uses Flask for the backend and PostgreSQL for data storage, along with other necessary libraries and frameworks
+- The interface include features such as course searching and user feedback
+
+### Statistical Analysis and Visualization
+
+- Matplotlib is considered for implementing visualizations, such as displaying tutor ratings.
+- The system provides key statistics, such as a bar chart of the number of registered users for the admins and course ratings.
+
+
+----
+
+## Installation and Usage
 
 
 ### Prerequisites
@@ -103,7 +135,7 @@ python3 -m scripts.run
 Your application should now be running successfully!
 
 ----
-## How to Use
+### How to Use
 
 On the homepage, you have the option to log in or register as a new user. 
 To register as a new user, click on the registration button, which redirects 
@@ -119,42 +151,10 @@ add new courses. The website is designed so that each button clearly indicates
 its function.
 
 ----
-## Functionalities
+
+## Timeline
 
 
-### Data Storage and Handling
-
-- PostgreSQL is used for data storage, ensuring secure management of user accounts, session data, and ratings.
-- Data is processed and stored in a normalized relational database.
-- Sensitive data, such as passwords, is encrypted to ensure security and compliance with data protection standards.
-
-### User Management/Roles
-
-- TutorMe has different user roles: Student, Tutor, and Admin.
-- **Student**: Can join tutoring courses and provide feedback after courses.
-- **Tutor**: Can create and manage courses, but cannot attend them.
-- **Admin**: Has the ability to access key statistics about the number of registered users.
-- A user can be both a Student and a Tutor but will have separate accounts with different privileges, and options.
-- Users must register with a valid token. Authentication is required to access the plattform
-
-### Interface
-
-- The application has a user-friendly web-based UI, with the backend preferably running on Windows. 
-- It uses Flask for the backend and PostgreSQL for data storage, along with other necessary libraries and frameworks
-- The interface include features such as course searching and user feedback
-
-### Statistical Analysis and Visualization
-
-- Matplotlib is considered for implementing visualizations, such as displaying tutor ratings.
-- The system provides key statistics, such as a bar chart of the number of registered users for the admins and course ratings.
-
-----
-
-## Possible Ideas for the future
-
-- forums for the courses
-- reset passwords
-- direct messages
 
 ----
 ## Used Packages
