@@ -17,35 +17,6 @@ These sessions can have different maximum student capacities, levels, and
 formats—either one-time or recurring on specific days—while students can
 easily filter and choose sessions based on their preference
 
-
-We chose this project because many students struggle with understanding
-specific course topics, even after attending regular lectures. By creating this
-platform, we hope to provide a space where senior students can offer their help,
-creating a collaborative and supportive learning environment. In addition,
-tutors will have the opportunity to receive recognition for their efforts in helping others.
-
-By completing this project, we aim to provide students with a valuable tool to
-improve their learning experience, while also offering tutors the chance to make
-a positive impact in their academic community.
-
-----
-## Group Details
-
-- Name: **PyPieπ**
-- Code: **G11**
-- Repository: [GitHub](https://github.com/ivan-kapatsyn/pypiepi)
-- Tutor Responsible: **Frederik Hennecke**
-- Team leader: **Ivan Kapatsyn**
-- Group members: Birte Maria Becker, Andrii Demydenko, Melis Ahu Gülcigil, Ivan Kapatsyn
-
-### Responsibilities
-
-- **Ivan Kapatsyn:** Backend
-- **Andrii Demydenko:** Environment setup + Frontend + API
-- **Birte Maria Becker:** Frontend + API
-- **Melis Ahu Gülcigil:** Database integration
-
-
 ----
 
 ## Functionalities
@@ -134,7 +105,6 @@ python3 -m scripts.run
 ### Done!
 Your application should now be running successfully!
 
-----
 ### How to Use
 
 On the homepage, you have the option to log in or register as a new user. 
@@ -154,10 +124,30 @@ its function.
 
 ## Timeline
 
+<img src="config_files/timeline.jpg" alt="Logo" width="700">
+
+----
+## Group Details
+
+- Name: **PyPieπ**
+- Code: **G11**
+- Repository: [GitHub](https://github.com/ivan-kapatsyn/pypiepi)
+- Tutor Responsible: **Frederik Hennecke**
+- Team leader: **Ivan Kapatsyn**
+- Group members: Birte Maria Becker, Andrii Demydenko, Melis Ahu Gülcigil, Ivan Kapatsyn
+
+### Responsibilities
+
+- **Ivan Kapatsyn:** Backend
+- **Andrii Demydenko:** Environment setup + Frontend + API
+- **Birte Maria Becker:** Frontend + API
+- **Melis Ahu Gülcigil:** Database integration
 
 
 ----
-## Used Packages
+## Acknowledgements
+
+### Packages we used
 
 - **pandas:** Used for data manipulation and analysis, especially for handling tabular data.
 - **numpy:** Provides support for numerical computations and efficient array operations.
@@ -168,3 +158,15 @@ its function.
 - **bcrypt:** Handles password hashing and verification for secure authentication.
 - **matplotlib:** Used for creating visualizations, such as charts and graphs.
 - **markdown:** Converts Markdown text into HTML for rendering formatted content.
+
+### Inspiration
+
+We chose this project because many students struggle with understanding
+specific course topics, even after attending regular lectures. By creating this
+platform, we hope to provide a space where senior students can offer their help,
+creating a collaborative and supportive learning environment. In addition,
+tutors will have the opportunity to receive recognition for their efforts in helping others.
+
+By completing this project, we aim to provide students with a valuable tool to
+improve their learning experience, while also offering tutors the chance to make
+a positive impact in their academic community. 
