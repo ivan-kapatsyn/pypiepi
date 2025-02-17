@@ -162,7 +162,7 @@ class CoursesRoutes:
     def __get_average_evaluation(evaluation: List[Evaluation]):
         if len(evaluation) == 0:
             return None
-        return sum([x.grade for x in evaluation]) / len(evaluation)
+        return round(float(sum([x.grade for x in evaluation]) / len(evaluation)), 2)
 
     @staticmethod
     def __construct_feedback_data(feedbacks: List[Evaluation]):
