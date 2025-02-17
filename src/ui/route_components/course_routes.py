@@ -44,6 +44,9 @@ class CoursesRoutes:
                     return redirect(url_for('course.info', user_id=tutor.user_id, course_id=course_id))
                 except DuplicationError:
                     form.error_message.data = f'There is an overlapping for {room.name} during {schedule}'
+                # Todo replace with a correct error when a Tutor has already a Course at that time
+                except Exception as e:
+                    form.error_message.data = f'There is an overlapping for you during {schedule}'
 
         page = r'create_new_course.html'
         return render_template(page, form=form, tutor_name=tutor.first_name,

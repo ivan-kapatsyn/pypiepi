@@ -38,7 +38,7 @@ class TutorRoutes:
         qualification_data = [
             {"name": f"qualification_{i+1}", "value": qual.name}
         for i, qual in enumerate(tutor.qualifications)]
-        qualification_data.append({"name": "qualification_new", "value": ''})
+        qualification_data.append({"name": "qualification_new", "value": len(qualification_data) + 1})
         average_rating, feedbacks = TutorRoutes.__construct_feedback_data(tutor.evaluations)
         personal_bio_page = r'tutor_personal_info.html'
         return render_template(personal_bio_page, username=tutor.username,

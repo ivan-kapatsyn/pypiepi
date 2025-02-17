@@ -79,9 +79,23 @@
                 })
                 .then(data => {
                     if (data.success) {
-                        // Update the UI
-                        document.getElementById('data-' + name).innerText = newValue;
-                        resetButtons();
+                        if (name.includes('qualification_new')){
+
+                            let input = document.getElementById('data-qualification_new');
+                            let next_ind = input.getAttribute("next_ind");
+                            input.remove();
+                            let next_row = `<div> <span>${next_ind}) </span>
+                                            <span id="data-qualification_${next_ind}">${newValue}</span>
+                                            <button id="edit-button-qualification_${next_ind}" onclick="enableEdit('qualification_${next_ind}')">Edit</button></div>`;
+                            let qualification_new = `<div><span id="data-qualification_new" next_ind="${parseInt(next_ind) + 1}"></span>
+                                                     <button id="edit-button-qualification_new" onclick="enableEdit('qualification_new')">+</button></div>`;
+                            resetButtons(name, next_row+qualification_new);
+
+                        }
+                        else {// Update the UI
+                            document.getElementById('data-' + name).innerText = newValue;
+                            resetButtons(name);
+                        }
                     } else {
                         alert('Failed to update data!');
                     }
@@ -98,10 +112,16 @@
             resetButtons(name);
         }
 
-        function resetButtons(name) {
+        function resetButtons(name, editButtonHtmlSuggestion=null) {
             // Replace "Ok" and "Cancel" with the "Edit" button
             const container = document.getElementById('data-container');
-            const editButtonHtml = `<button id="edit-button-${name}" onclick="enableEdit('${name}')">Edit</button>`;
+            let editButtonHtml;
+            if (editButtonHtmlSuggestion !== null) {
+                editButtonHtml = editButtonHtmlSuggestion;
+            }
+            else {
+                editButtonHtml = `<button id="edit-button-${name}" onclick="enableEdit('${name}')">Edit</button>`;
+            }
             container.querySelector('#ok-button').outerHTML = editButtonHtml;
             if (document.getElementById('cancel-button')) {
                 document.getElementById('cancel-button').remove();
@@ -192,7 +212,7 @@
                     <span id="data-{{ item.name }}">{{ item.value }} </span>
                     <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
                     {% else %}
-                    <span id="data-{{ item.name }}">{{ item.value }}</span>
+                    <span id="data-{{ item.name }}" next_ind="{{ item.value }}"></span>
                     <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">+</button>
                     {% endif %}
                 </div>
