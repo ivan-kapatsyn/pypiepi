@@ -181,7 +181,7 @@ class User:
     @staticmethod
     def _prepare_for_jsonb(fields: dict) -> dict:
         if "qualification" in fields:
-            fields["qualification"] = dumps(fields["qualification"])
+            fields["qualification"] = dumps([qualification.name for qualification in fields["qualification"]])
         return fields
 
     @staticmethod

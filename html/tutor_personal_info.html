@@ -181,6 +181,21 @@
 
                 </div>
                 {% endfor %}
+                <div>
+                    <span style="font-weight: bold;">Qualification:</span>
+
+                </div>
+                {% for item in qualification_data %}
+                <div>
+                    {% if item.name != 'qualification_new' %}
+                    <span>{{ item.name.split('_') | last }}) </span>
+                    <span id="data-{{ item.name }}">{{ item.value }} </span>
+                    <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
+                    {% else %}
+                    <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">+</button>
+                    {% endif %}
+                </div>
+                {% endfor %}
             </div>
         </div>
 
