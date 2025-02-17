@@ -6,6 +6,7 @@ from flask import Blueprint, Response, render_template, request, redirect, url_f
 from src.backend.announcement import Announcement
 from src.backend.course import Course
 from src.backend.evaluation import Evaluation
+from src.backend.exceptions import DuplicationError
 from src.backend.qualification import Qualification
 from src.backend.room import Room
 from src.backend.student import Student
@@ -27,19 +28,22 @@ class CoursesRoutes:
             if form.submit.data and form.validate_on_submit():
                 course_name = form.course_name.data
                 qualification = form.qualification.data
-                room = form.room.data
+                room = Room.get_room_by_id(room_id=form.room.data)
                 schedule = form.schedule.data
                 max_participants = form.max_participants.data
 
-                course_id = Course.add_new_course(
-                    name=course_name,
-                    user_id=user_id,
-                    qualification=Qualification(qualification),
-                    room_id=Room.get_rooms_by_name_prefix(room)[0].room_id,
-                    schedule=schedule,
-                    max_participants=max_participants
-                )
-                return redirect(url_for('course.info', user_id=tutor.user_id, course_id=course_id))
+                try:
+                    course_id = Course.add_new_course(
+                        name=course_name,
+                        user_id=user_id,
+                        qualification=Qualification(qualification),
+                        room_id=room.room_id,
+                        schedule=schedule,
+                        max_participants=max_participants
+                    )
+                    return redirect(url_for('course.info', user_id=tutor.user_id, course_id=course_id))
+                except DuplicationError:
+                    form.error_message.data = f'There is an overlapping for {room.name} during {schedule}'
 
         page = r'create_new_course.html'
         return render_template(page, form=form, tutor_name=tutor.first_name,
