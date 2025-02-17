@@ -83,26 +83,26 @@ class TestTutorDatabase(unittest.TestCase):
 
     def test_update_tutor_values_success(self):
         tutor = Tutor.get_user_by_id("14d099c161cf3bea")
-        updates = {"qualification": ["Test1", "Test2"]}
+        updates = {"qualification": [Qualification("Test1"), Qualification("Test2")]}
 
         tutor.update_user_values(updates)
         updated_tutor = Tutor.get_user_by_id("14d099c161cf3bea")
 
-        self.assertEqual(updated_tutor.qualifications[0].name, updates["qualification"][0])
-        self.assertEqual(updated_tutor.qualifications[1].name, updates["qualification"][1])
+        self.assertEqual(updated_tutor.qualifications[0].name, updates["qualification"][0].name)
+        self.assertEqual(updated_tutor.qualifications[1].name, updates["qualification"][1].name)
         self.assertEqual(updated_tutor.first_name, tutor.first_name)
 
     def test_update_user_and_tutor_fields(self):
         tutor = Tutor.get_user_by_id("14d099c161cf3bea")
-        updates = {"first_name": "Test", "last_name": "Name", "qualification": ["Test3", "Test4"]}
+        updates = {"first_name": "Test", "last_name": "Name", "qualification": [Qualification("Test3"), Qualification("Test4")]}
 
         tutor.update_user_values(updates)
         updated_tutor = Tutor.get_user_by_id("14d099c161cf3bea")
 
         self.assertEqual(updated_tutor.first_name, updates["first_name"])
         self.assertEqual(updated_tutor.last_name, updates["last_name"])
-        self.assertEqual(updated_tutor.qualifications[0].name, updates["qualification"][0])
-        self.assertEqual(updated_tutor.qualifications[1].name, updates["qualification"][1])
+        self.assertEqual(updated_tutor.qualifications[0].name, updates["qualification"][0].name)
+        self.assertEqual(updated_tutor.qualifications[1].name, updates["qualification"][1].name)
 
 
 if __name__ == "__main__":

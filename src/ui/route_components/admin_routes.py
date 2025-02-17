@@ -50,6 +50,28 @@ class AdminRoutes:
                                data=data, room_form=room_form,room_data=room_data, token_form=token_form, plot_data=plot_data,)
 
     @staticmethod
+    @main_bp.route('/<user_id>/update-data', methods=['GET', 'POST'])
+    def update_data(user_id: str):
+        try:
+            success = True
+            admin = Admin.get_user_by_id(user_id)
+            suggestion = request.json
+            info_to_update: dict = suggestion["info_to_update"]
+            key_list = info_to_update.keys()
+            temp = {}
+            for key in key_list:
+                temp[key.lower().replace(' ', '_')] = info_to_update[key]
+            info_to_update = temp
+            admin.update_user_values(info_to_update)
+
+        except Exception as e:
+            success = False
+            raise e
+        finally:
+            status = 204 if success else 500
+            return jsonify(success=success), status
+
+    @staticmethod
     @main_bp.route('<user_id>/save_token', methods=['POST'])
     def save_token(user_id: str):
         admin = Admin.get_user_by_id(user_id)

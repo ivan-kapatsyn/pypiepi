@@ -47,7 +47,7 @@
 
             // Replace name with an input field
             const currentValue = nameSpan.innerText;
-            nameSpan.innerHTML = `<input id="edit-input" value="" style="width: 70%;">`;
+            nameSpan.innerHTML = `<input id="edit-input" value='${currentValue}' style="width: 70%;">`;
 
             // Replace "Edit" button with "Ok" and "Cancel"
             if (name === 'announcement') {
@@ -66,7 +66,7 @@
         function saveData(name) {
             const newValue = document.getElementById('edit-input').value;
             // Call the Flask endpoint with the new data
-            fetch('/tutor/{{ user_id }}/update-data', {
+            fetch('/course/{{ course_id }}/update-data', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -125,7 +125,7 @@
     <script>
         function applyRatingColors() {
             document.querySelectorAll('.rating').forEach(span => {
-                const rating = parseFloat(span.dataset.rating);
+                const rating = parseFloat(span.dataset.rating).toFixed(2);
                 const normalized = rating / 10;
                 const red = Math.round((1 - normalized) * 255);
                 const green = Math.round(normalized * 255);
@@ -279,9 +279,14 @@
             <div id="data-container" style="padding: 10px; border: 1px solid #ccc; width: 300px;">
                 {% for item in course_data %}
                 <div>
+                    {% if item.name not in ['Tutor', 'Available seats'] %}
                     <span style="font-weight: bold;">{{ item.name }}:</span>
                     <span id="data-{{ item.name }}">{{ item.value }}</span>
                     <button id="edit-button-{{ item.name }}" onclick="enableEdit('{{ item.name }}')">Edit</button>
+                    {% else %}
+                    <span style="font-weight: bold;">{{ item.name }}</span>
+                    <span id="data-{{ item.name }}">{{ item.value }}</span>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>

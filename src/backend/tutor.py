@@ -74,7 +74,7 @@ class Tutor(User):
     def _save_tutor(cls, user_id: str, qualifications: List[Qualification]) -> None:
         tutor_data = {
             "user_ID": user_id,
-            "qualification": [qualification.name for qualification in qualifications],
+            "qualification": qualifications,
         }
         tutor_data = cls._prepare_for_jsonb(tutor_data)
         db = DataBaseUtil()

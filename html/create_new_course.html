@@ -72,6 +72,9 @@
     <h2>Create New Course</h2>
     <form method="POST">
         {{ form.hidden_tag() }}
+        {% if form.error_message.data %}  {# Display message only if it has content #}
+        <p style="color: red;">{{ form.error_message.data }}</p>
+        {% endif %}
         <div>
             {{ form.course_name.label }}<br>
             {{ form.course_name(class="input-field", size=20, id="course-name") }}
@@ -85,7 +88,7 @@
         </div>
         <div>
             {{ form.room.label }}<br>
-            {{ form.room(class="input-field", size=32, id="room") }}
+            {{ form.room(class="form-control") }}
         </div>
         <div>
             {{ form.schedule.label(class="schedule-text") }}<br>

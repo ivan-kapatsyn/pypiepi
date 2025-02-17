@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, request, jsonify, url_for
 
 from src.backend.course import Course
 from src.backend.evaluation import Evaluation
+from src.backend.qualification import Qualification
 from src.backend.tutor import Tutor
 from src.backend.user import User
 
@@ -26,21 +27,23 @@ class TutorRoutes:
             "url": url_for('course.info', user_id=tutor.user_id, course_id=course.course_id)
         }
             for course in tutor.active_courses]
+
         data = [
             {"name": "Username", "value": tutor.username},
             {"name": "First Name", "value": tutor.first_name},
             {"name": "Last Name", "value": tutor.last_name},
             {"name": "Bio", "value": tutor.bio},
-            {"name": "Qualification",
-             "value": '\n'.join([f'{i+1}) {qual.name}' for i, qual in enumerate(tutor.qualifications)])
-             },
 
         ]
+        qualification_data = [
+            {"name": f"qualification_{i+1}", "value": qual.name}
+        for i, qual in enumerate(tutor.qualifications)]
+        qualification_data.append({"name": "qualification_new", "value": len(qualification_data) + 1})
         average_rating, feedbacks = TutorRoutes.__construct_feedback_data(tutor.evaluations)
         personal_bio_page = r'tutor_personal_info.html'
         return render_template(personal_bio_page, username=tutor.username,
                                user_id=user_id, remember_me=tutor.remember_me,
-                               data=data,
+                               data=data, qualification_data=qualification_data,
                                events=courses,
                                days=TutorRoutes.TIMETABLE_DAYS, times=TutorRoutes.TIMETABLE_TIME,
                                average_rating=average_rating, feedback_list=feedbacks)
@@ -53,16 +56,21 @@ class TutorRoutes:
             tutor = Tutor.get_user_by_id(user_id)
             suggestion = request.json
             info_to_update: dict = suggestion["info_to_update"]
-            if 'Qualification' in info_to_update.keys():
-                # Special case as qualification comes in the form of '1) ... 2) ...', so we need to break it down
-                value = info_to_update["Qualification"]
-                value = list(map(lambda x: x[:-2] if x[-1].isdigit() else x, value.split(') ')[1:]))
-                info_to_update["Qualification"] = value
-                del info_to_update["Qualification"]
             key_list = info_to_update.keys()
             temp = {}
             for key in key_list:
-                temp[key.lower().replace(' ', '_')] = info_to_update[key]
+                if 'qualification' in key:
+                    qualifications = tutor.qualifications
+                    qualification_index_to_update = key.split('_')[-1]
+                    if qualification_index_to_update != 'new':
+                        qualification_index_to_update = int(qualification_index_to_update) - 1
+                        qualifications[qualification_index_to_update] = Qualification(info_to_update[key])
+                    else:
+                        qualifications.append(Qualification(info_to_update[key]))
+
+                    temp['qualification'] = qualifications
+                else:
+                    temp[key.lower().replace(' ', '_')] = info_to_update[key]
             info_to_update = temp
             tutor.update_user_values(info_to_update)
 

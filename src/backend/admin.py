@@ -160,17 +160,17 @@ class Admin(User):
     @classmethod
     def _save_admin(cls, user_id: str, role: str) -> None:
         admin_data = {
-            "admin_id": user_id,
+            "user_ID": user_id,
             "role": role
         }
         db = DataBaseUtil()
-        db.insert_one("admin", admin_data, "admin_id")
+        db.insert_one("admin", admin_data, "user_ID")
 
     @staticmethod
     def _find_admin_by_user_id(user_id: str) -> Optional[List]:
         db = DataBaseUtil()
         try:
-            data = db.load_one("admin", "admin_id", user_id)
+            data = db.load_one("admin", "user_ID", user_id)
         except Exception as e:
             data = None
         return data

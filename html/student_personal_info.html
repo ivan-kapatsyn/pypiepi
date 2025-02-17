@@ -134,7 +134,7 @@
     <script>
         function applyRatingColors() {
             document.querySelectorAll('.rating').forEach(span => {
-                const rating = parseFloat(span.dataset.rating);
+                const rating = parseFloat(span.dataset.rating).toFixed(2);
                 const normalized = rating / 10;
                 const red = Math.round((1 - normalized) * 255);
                 const green = Math.round(normalized * 255);
