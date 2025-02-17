@@ -61,12 +61,23 @@ class CoursesRoutes:
             course = Course.get_course_by_id(course_id)
             suggestion = request.json
             info_to_update: dict = suggestion["info_to_update"]
-            key_list = info_to_update.keys()
+            key_mapping = {  # Remapping for compatability with db fields
+                "course_name": "name",
+                "qualification": "qualifications",
+                "room": "room_id"
+            }
             temp = {}
-            for key in key_list:
-                temp[key.lower().replace(' ', '_')] = info_to_update[key]
+            for key, value in info_to_update.items():
+                transformed_key = key.lower().replace(' ', '_')
+                if transformed_key == "room":
+                    room = Room.get_rooms_by_name_prefix(value)[0]
+                    temp["room_id"] = room.room_id
+                else:
+                    transformed_key = key_mapping.get(transformed_key, transformed_key)  # Use mapping if available
+                    temp[transformed_key] = value
+
             info_to_update = temp
-            # Todo update course data
+            course.update_course_values(info_to_update)
 
         except Exception as e:
             success = False

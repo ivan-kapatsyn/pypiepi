@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from datetime import datetime, timedelta
 
 from src.backend.qualification import Qualification
@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 class Course:
+    changeable_course_fields = {"name", "qualifications", "room_id", "schedule", "max_participants", "description"}
+
     def __init__(self, course_id: str, user_id: str, name: str, qualification: Qualification,
                  room: Room, schedule: str, max_participants: int, description: Optional[str] = None):
         self.course_id = course_id
@@ -169,6 +171,36 @@ class Course:
         db.delete_many("evaluation", "course_id", [self.course_id])
         db.delete_many("course", "course_id", [self.course_id])
         logger.info(f"Course with ID '{self.course_id}' deleted successfully.")
+
+    def update_course_values(self, updates: Dict[str, Any]) -> None:
+        """
+        Updates fields for a course in the database.
+
+        Args:
+            updates (Dict[str, Any]): Dictionary of fields and values to update.
+        """
+        updates = self.__validate_updates(updates)
+
+        if not updates:
+            logger.warning("No valid fields to update for the course.")
+            return
+
+        db = DataBaseUtil()
+        db.update_one("course", "course_ID", self.course_id, updates)
+
+        logger.info(f"Updated course data: {updates}")
+
+        for key, value in updates.items():
+            setattr(self, key, value)
+
+    def __validate_updates(self, updates: Dict[str, Any]) -> Dict[str, Any]:
+        validated_updates = {k: v for k, v in updates.items() if k in self.changeable_course_fields}
+
+        invalid_fields = set(updates) - set(validated_updates)
+        if invalid_fields:
+            logger.warning(f"Ignored invalid fields: {invalid_fields}.")
+
+        return validated_updates
 
     @property
     def announcements(self):
